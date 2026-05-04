@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Repair:Flow </title>
       <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -13,7 +13,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
    <div class="antialiased bg-gray-50 dark:bg-gray-900">
     <nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
       <div class="flex flex-wrap justify-between items-center">
@@ -52,7 +51,7 @@
             </svg>
             <span class="sr-only">Toggle sidebar</span>
           </button>
-          <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
+          <a href="{{  route('dashboard') }}" class="flex items-center justify-between mr-4">
             <img
               src="https://flowbite.s3.amazonaws.com/logo.svg"
               class="mr-3 h-8"
@@ -735,13 +734,17 @@
               class="py-1 text-gray-700 dark:text-gray-300"
               aria-labelledby="dropdown"
             >
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >Sign out</a
-                >
-              </li>
+             <li>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="block w-full text-left py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                            Sign out
+                        </button>
+                    </form>
+                </li>
             </ul>
           </div>
         </div>
@@ -850,9 +853,9 @@
               </li>
               <li>
                 <a
-                  href="#"
+                  href="{{  route('brand.index') }}"
                   class="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                  >Kanban</a
+                  >Brands</a
                 >
               </li>
               <li>
@@ -1330,55 +1333,15 @@
     </aside>
 
     <main class="p-4 md:ml-64 h-auto pt-20">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div
-          class="border-2 border-dashed border-gray-300 rounded-lg dark:border-gray-600 h-32 md:h-64"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        ></div>
-      </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      ></div>
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-      </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      ></div>
-      <div class="grid grid-cols-2 gap-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        ></div>
-      </div>
+
+
+        @yield('content')
+
     </main>
   </div>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+
 </body>
 </html>
