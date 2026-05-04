@@ -13,6 +13,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
    <div class="antialiased bg-gray-50 dark:bg-gray-900">
     <nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
       <div class="flex flex-wrap justify-between items-center">
@@ -57,7 +58,7 @@
               class="mr-3 h-8"
               alt="Flowbite Logo"
             />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Repair Flow</span>
           </a>
           <form action="#" method="GET" class="hidden md:block md:pl-2">
             <label for="topbar-search" class="sr-only">Search</label>
@@ -627,11 +628,11 @@
             <div class="py-3 px-4">
               <span
                 class="block text-sm font-semibold text-gray-900 dark:text-white"
-                >Neil Sims</span
+                >{{ auth()->user()->name?? 'User test' }}</span
               >
               <span
                 class="block text-sm text-gray-900 truncate dark:text-white"
-                >name@flowbite.com</span
+                >{{ auth()->user()->email?? 'Email test' }}</span
               >
             </div>
             <ul
@@ -823,7 +824,7 @@
                 ></path>
               </svg>
               <span class="flex-1 ml-3 text-left whitespace-nowrap"
-                >Pages</span
+                >Devices</span
               >
               <svg
                 aria-hidden="true"
@@ -1035,7 +1036,7 @@
                   clip-rule="evenodd"
                 ></path>
               </svg>
-              <span class="ml-3">Docs</span>
+              <span class="ml-3">Orders</span>
             </a>
           </li>
           <li>
@@ -1054,7 +1055,7 @@
                   d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"
                 ></path>
               </svg>
-              <span class="ml-3">Components</span>
+              <span class="ml-3">Requests</span>
             </a>
           </li>
           <li>
