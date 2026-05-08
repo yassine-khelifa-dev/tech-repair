@@ -15,7 +15,10 @@ class BrandController extends Controller
      */
     public function index()
     {
-        return view('brands.index');
+        $brands = Brand::all();
+        return view('brands.index', [
+            'brands' => $brands
+        ]);
     }
 
     /**
@@ -23,6 +26,7 @@ class BrandController extends Controller
      */
     public function create( Request $request)
     {
+        return view('brands.create');
     }
 
     /**
@@ -56,7 +60,8 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        //
+        return view('brands.edit', ['brand' => $brand]);
+
     }
 
     /**
@@ -64,7 +69,17 @@ class BrandController extends Controller
      */
     public function update(Request $request, Brand $brand)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|min:3|max:255|unique:brands,name,' . $brand->id,
+        ]);
+
+        $brand->update( $data );
+
+        if($brand->wasChanged())
+            return redirect()->route('brand.index')->with('success', 'Brand has bene updated');
+        else
+            return redirect()->route('brand.index');
+
     }
 
     /**
@@ -72,6 +87,8 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        //
+     //  $brand->delete();
+
+       return redirect()->route('brand.index')->with('success', 'Brand has bene deleted');
     }
 }
