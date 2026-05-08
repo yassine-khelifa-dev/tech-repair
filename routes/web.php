@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeviceTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\BrandController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function () {
 
     // Admin Pages:
     Route::resource('brand', BrandController::class);
+    Route::resource('devicetype', DeviceTypeController::class);
+
 });
 
 require __DIR__.'/auth.php';
