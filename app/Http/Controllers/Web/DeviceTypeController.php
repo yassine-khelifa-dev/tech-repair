@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Http\Requests\StoreDeviceTypeRequest;
 use App\Models\DeviceType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
+
 
 class DeviceTypeController extends Controller
 {
@@ -14,7 +16,6 @@ class DeviceTypeController extends Controller
      */
     public function index()
     {
-
         $devicetypes = DeviceType::all();
 
         return view('devicetype.index', [
