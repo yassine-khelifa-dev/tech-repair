@@ -108,5 +108,56 @@
     </table>
 </div>
 
+@if ($devicemodels->hasPages())
+    <div class="mt-5 flex items-center justify-between text-white rounded-lg border border-default bg-neutral-primary-soft px-4 py-3 text-sm text-body">
+
+        <div>
+            Showing
+            <span class="font-semibold text-heading">{{ $devicemodels->firstItem() }}</span>
+            to
+            <span class="font-semibold text-heading">{{ $devicemodels->lastItem() }}</span>
+            of
+            <span class="font-semibold text-heading">{{ $devicemodels->total() }}</span>
+            results
+        </div>
+
+        <div class="flex items-center gap-2">
+            @if ($devicemodels->onFirstPage())
+                <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                    Previous
+                </span>
+            @else
+                <a href="{{ $devicemodels->previousPageUrl() }}"
+                   class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Previous
+                </a>
+            @endif
+
+            @foreach ($devicemodels->getUrlRange(1, $devicemodels->lastPage()) as $page => $url)
+                @if ($page == $devicemodels->currentPage())
+                    <span class="rounded-md bg-red-500 px-3 py-2 text-white">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}"
+                       class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            @if ($devicemodels->hasMorePages())
+                <a href="{{ $devicemodels->nextPageUrl() }}"
+                   class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Next
+                </a>
+            @else
+                <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                    Next
+                </span>
+            @endif
+        </div>
+    </div>
+@endif
 
 @endsection

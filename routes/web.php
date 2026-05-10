@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Web\DeviceModelController;
-use App\Http\Controllers\Web\DeviceTypeController;
+use App\Http\Controllers\Web\Device\DeviceModelController;
+use App\Http\Controllers\Web\Device\DeviceTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\BrandController;
 use Illuminate\Support\Facades\Route;

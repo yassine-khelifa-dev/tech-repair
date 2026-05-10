@@ -91,5 +91,55 @@
     </table>
 </div>
 
+@if ($brands->hasPages())
+    <div class="mt-5 flex items-center text-white justify-between rounded-lg border border-default bg-neutral-primary-soft px-4 py-3 text-sm text-body">
+        <div>
+            Showing
+            <span class="font-semibold text-heading">{{ $brands->firstItem() }}</span>
+            to
+            <span class="font-semibold text-heading">{{ $brands->lastItem() }}</span>
+            of
+            <span class="font-semibold text-heading">{{ $brands->total() }}</span>
+            results
+        </div>
+
+        <div class="flex items-center gap-2">
+            @if ($brands->onFirstPage())
+                <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                    Previous
+                </span>
+            @else
+                <a href="{{ $brands->previousPageUrl() }}"
+                   class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Previous
+                </a>
+            @endif
+
+            @foreach ($brands->getUrlRange(1, $brands->lastPage()) as $page => $url)
+                @if ($page == $brands->currentPage())
+                    <span class="rounded-md bg-red-500 px-3 py-2 text-white">
+                        {{ $page }}
+                    </span>
+                @else
+                    <a href="{{ $url }}"
+                       class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            @if ($brands->hasMorePages())
+                <a href="{{ $brands->nextPageUrl() }}"
+                   class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    Next
+                </a>
+            @else
+                <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                    Next
+                </span>
+            @endif
+        </div>
+    </div>
+@endif
 
 @endsection

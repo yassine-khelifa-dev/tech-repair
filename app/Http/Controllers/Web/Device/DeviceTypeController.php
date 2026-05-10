@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Web\Device;
 
 use App\Http\Requests\StoreDeviceTypeRequest;
 use App\Models\DeviceType;
@@ -16,9 +16,9 @@ class DeviceTypeController extends Controller
      */
     public function index()
     {
-        $devicetypes = DeviceType::all();
+        $devicetypes = DeviceType::latest()->paginate(3);
 
-        return view('devicetype.index', [
+        return view('device.type.index', [
          "devicetypes" => $devicetypes
         ]);
     }
@@ -28,7 +28,7 @@ class DeviceTypeController extends Controller
      */
     public function create()
     {
-         return view('devicetype.create');
+         return view('device.type.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class DeviceTypeController extends Controller
      */
     public function edit(DeviceType $devicetype)
     {
-        return view('devicetype.edit', ['devicetype' => $devicetype]);
+        return view('device.type.edit', ['devicetype' => $devicetype]);
 
     }
 

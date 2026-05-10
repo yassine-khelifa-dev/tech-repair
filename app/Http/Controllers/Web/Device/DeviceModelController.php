@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Web\Device;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDeviceModelRequest;
@@ -18,9 +18,9 @@ class DeviceModelController extends Controller
      */
     public function index()
     {
-        $devicemodels = DeviceModel::with(['brand', 'type' ])->get();
+        $devicemodels = DeviceModel::with(['brand', 'type' ])->latest()->paginate(5);
 
-        return view('devicemodel.index', [
+        return view('device.model.index', [
              "devicemodels" => $devicemodels
         ]);
     }
@@ -32,7 +32,7 @@ class DeviceModelController extends Controller
     {
         $devicetypes = DeviceType::all();
         $brands = Brand::all();
-        return view('devicemodel.create', compact('devicetypes', 'brands'));
+        return view('device.model.create', compact('devicetypes', 'brands'));
     }
 
     /**
@@ -56,23 +56,38 @@ class DeviceModelController extends Controller
      */
     public function show(DeviceModel $deviceModel)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DeviceModel $deviceModel)
+    public function edit(DeviceModel $devicemodel)
     {
-        //
+        $devicemodel->load(['type', 'brand']);
+        $brands = Brand::all();
+        $devicetypes = DeviceType::all();
+
+        return view('device.model.edit', compact('devicemodel', 'brands', 'devicetypes'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DeviceModel $deviceModel)
+    public function update(Request $request, DeviceModel $devicemodel)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|min:3|max:255|unique:device_models,name,' . $devicemodel->id,
+            'type_id' => 'required',
+            'brand_id' => 'required'
+        ]);
+
+        $devicemodel->update( $data );
+
+        if($devicemodel->wasChanged())
+            return redirect()->route('devicemodel.index')->with('success', 'device model has bene updated');
+        else
+            return redirect()->route('devicemodel.index');
     }
 
     /**
