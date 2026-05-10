@@ -24,7 +24,7 @@ class StoreDeviceModelRequest extends FormRequest
         return [
             'name' => 'required|min:5|max:255|unique:device_models,name',
             'brand_id' => 'required|integer|exists:brands,id',
-            'type_id' => 'required|integer|exists:device_types,id'
+            'device_type_id' => 'required|integer|exists:device_types,id'
         ];
     }
 }

@@ -31,7 +31,7 @@ class UpdateDeviceModelRequest extends FormRequest
                 ->ignore($this->route('devicemodel')->id),
             ],
             'brand_id' => 'required|integer|exists:brands,id',
-            'type_id' => 'required|integer|exists:device_types,id'
+            'device_type_id' => 'required|integer|exists:device_types,id'
         ];
     }
 }

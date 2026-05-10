@@ -5,7 +5,7 @@
 <form action="{{  route('devicemodel.update', $devicemodel->id) }}" method="post">
     @csrf
     @method('PUT')
-    
+
   <div class="space-y-12">
 
 
@@ -67,12 +67,12 @@
 
         <div class="mt-5 text-white">
 
-            <label for="type_id"
+            <label for="device_type_id"
                 class="mb-2.5 block text-sm font-medium text-white">
                 Select a Device Type
             </label>
-            <select id="type_id"
-                    name="type_id"
+            <select id="device_type_id"
+                    name="device_type_id"
                     class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
 
                 <option class="bg-black text-white" value="{{  null }}" selected>

@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Web\Device\DeviceAttributeController;
+use App\Http\Controllers\Web\Device\DeviceModelAttributeValueController;
 use App\Http\Controllers\Web\Device\DeviceModelController;
 use App\Http\Controllers\Web\Device\DeviceTypeController;
+
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Web\BrandController;
+use App\Http\Controllers\Web\Device\BrandController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('brand', BrandController::class);
     Route::resource('devicetype', DeviceTypeController::class);
     Route::resource('devicemodel', DeviceModelController::class);
+    Route::resource('device-attribute', DeviceAttributeController::class);
+    Route::resource('device-attribute-value', DeviceModelAttributeValueController::class);
+
 
 });
 

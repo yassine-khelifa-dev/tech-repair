@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Web\Device;
 
 use App\Http\Controllers\Controller;
+
 use App\Http\Requests\StoreBrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\Request;
@@ -16,9 +17,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::latest()->paginate(4);
-        return view('brands.index', [
-            'brands' => $brands
-        ]);
+        return view('device.brand.index',compact('brands'));
     }
 
     /**
@@ -26,7 +25,7 @@ class BrandController extends Controller
      */
     public function create( Request $request)
     {
-        return view('brands.create');
+        return view('device.brand.create');
     }
 
     /**
@@ -60,7 +59,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        return view('brands.edit', ['brand' => $brand]);
+        return view('device.brand.edit', ['brand' => $brand]);
 
     }
 

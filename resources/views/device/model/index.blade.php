@@ -52,7 +52,7 @@
                     </th>
 
                     <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                        {{  $devicemodel->type->name }}
+                        {{  $devicemodel->type->name  ?? 'none'}}
                     </th>
 
 
