@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Device;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeviceTypeRequest extends FormRequest
+class StoreDeviceModelRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +22,9 @@ class StoreDeviceTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'name' => 'required|min:2|max:255|unique:device_types,name',
+            'name' => 'required|min:5|max:255|unique:device_models,name',
+            'brand_id' => 'required|integer|exists:brands,id',
+            'type_id' => 'required|integer|exists:device_types,id'
         ];
     }
 }

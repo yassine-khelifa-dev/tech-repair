@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Web\Device;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreDeviceModelRequest;
+use App\Http\Requests\Device\StoreDeviceModelRequest;
+use App\Http\Requests\Device\UpdateDeviceModelRequest;
 use App\Models\Brand;
 use App\Models\DeviceModel;
 use App\Models\DeviceType;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 
@@ -74,13 +74,9 @@ class DeviceModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DeviceModel $devicemodel)
+    public function update(UpdateDeviceModelRequest $request, DeviceModel $devicemodel)
     {
-        $data = $request->validate([
-            'name' => 'required|min:3|max:255|unique:device_models,name,' . $devicemodel->id,
-            'type_id' => 'required',
-            'brand_id' => 'required'
-        ]);
+        $data = $request->validated();
 
         $devicemodel->update( $data );
 

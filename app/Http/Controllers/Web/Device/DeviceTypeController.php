@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Web\Device;
 
-use App\Http\Requests\StoreDeviceTypeRequest;
 use App\Models\DeviceType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\Device\StoreDeviceTypeRequest;
+use App\Http\Requests\Device\UpdateDeviceTypeRequest;
 
 class DeviceTypeController extends Controller
 {
@@ -57,11 +57,9 @@ class DeviceTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DeviceType $devicetype)
+    public function update(UpdateDeviceTypeRequest $request, DeviceType $devicetype)
     {
-         $data = $request->validate([
-            'name' => 'required|min:3|max:255|unique:device_types,name,' . $devicetype->id,
-        ]);
+         $data = $request->validated([]);
 
         $devicetype->update( $data );
 
