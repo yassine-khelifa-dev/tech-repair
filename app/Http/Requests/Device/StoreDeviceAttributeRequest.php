@@ -4,7 +4,7 @@ namespace App\Http\Requests\Device;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeviceModelRequest extends FormRequest
+class StoreDeviceAttributeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,14 @@ class StoreDeviceModelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:5|max:255|unique:device_models,name',
-            'brand_id' => 'required|integer|exists:brands,id',
+            'name' => 'required|min:3|max:255',
+            'code' => 'required|min:2|max:20',
+            'input_type' => 'required|min:2|max:255',
+            'sort_order' => 'required|integer',
             'device_type_id' => 'required|integer|exists:device_types,id'
         ];
     }
+
+
 }
-
-
 
