@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('css')
 </head>
 <body>
    <div class="antialiased bg-gray-50 dark:bg-gray-900">
@@ -900,13 +901,13 @@
 
                       <li>
                         <a
-                            href="{{ route('device-attribute-value.index') }}"
+                            href="{{ route('device-attribute-option.index') }}"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75
-                            {{ request()->routeIs('device-attribute-value.*')
+                            {{ request()->routeIs('device-attribute-option.*')
                                 ? 'bg-red-500 text-white'
                                 : 'text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700' }}"
                         >
-                            Attribute values
+                            Attribute Option
                         </a>
                     </li>
 
@@ -1390,8 +1391,8 @@
     </main>
   </div>
 
-
-      <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+ @yield('script')
+ <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 
 </body>
 </html>

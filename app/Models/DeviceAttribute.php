@@ -14,6 +14,10 @@ class DeviceAttribute extends Model
         return $this->belongsTo(DeviceType::class, 'device_type_id');
     }
 
+    public function options(){
+        return $this->hasMany(DeviceAttributeOption::class);
+    }
+
 }
 
 
