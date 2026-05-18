@@ -53,7 +53,32 @@
 
                                 <span class="inline-flex items-center rounded-md bg-gray-800 px-3 py-1 text-sm text-white border border-gray-700">
                                     {{ $option->value }}
+
+                                  {{-- edit --}}
+                                    <a href="{{ route('device-attribute-option.edit', $option->id) }}"
+                                    class="text-blue-400 hover:text-blue-300">
+                                        ✏️
+                                    </a>
+
+                                     {{-- delete --}}
+                                    <form action="{{ route('device-attribute-option.destroy', $option->id) }}"
+                                        method="POST">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                onclick="return confirm('Delete this option?')"
+                                                class="text-red-400 hover:text-red-300">
+
+                                            🗑️
+
+                                        </button>
+
+                                    </form>
                                 </span>
+
+
 
                             @endforeach
 

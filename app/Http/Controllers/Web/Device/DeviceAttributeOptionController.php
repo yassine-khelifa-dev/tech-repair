@@ -20,6 +20,9 @@ class DeviceAttributeOptionController extends Controller
                 ->get()
                 ->groupBy('device_attribute_id');
 
+
+       // return response()->json($attr_options);
+
         return view('device.option.index', compact('attr_options'));
     }
 
@@ -28,8 +31,8 @@ class DeviceAttributeOptionController extends Controller
      */
     public function create()
     {
-        $device_attributes = DeviceAttribute::with('type')->get();
-        return view('device.option.create', compact('device_attributes' ));
+        $deviceAttributes = DeviceAttribute::with(['type', 'options'])->get();
+        return view('device.option.create', compact('deviceAttributes'));
     }
 
     /**

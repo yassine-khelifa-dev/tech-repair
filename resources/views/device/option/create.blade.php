@@ -24,7 +24,7 @@
                 <option class="bg-black text-white" value="{{  null }}" selected>
                     Choose an attribute
                 </option>
-                @foreach ($device_attributes as $device_attribute)
+                @foreach ($deviceAttributes as $device_attribute)
 
                     <option class="bg-black text-white"
                             value="{{ $device_attribute->id }}" {{ old('device_attribute_id') == $device_attribute->id ? 'selected' : '' }} >
@@ -40,6 +40,10 @@
                  <div class="text-red-500 text-sm mt-1">{{ $message}}</div>
             @enderror
         </div>
+
+
+
+        <div id="options-list" class="mt-4 flex flex-wrap gap-2 text-white bg-white m-2 p-3"></div>
 
 
 
@@ -62,15 +66,6 @@
 
 
 
-        <div class="text-white">
-            <h3>List Options : <span id="attribute_selected_span"></span> </h3>
-            <ul>
-                <li>16GB.    X | 0 </li>
-                <li>64GB     X | 0 </li>
-                <li>128GB    X | 0 </li>
-
-            </ul>
-        </div>
 
 
 
@@ -104,15 +99,37 @@
 @section('script')
 
 <script>
+    const attributes = @json($deviceAttributes);
 
     const select = document.getElementById('device_attribute_id');
+    const optionsList = document.getElementById('options-list');
+
     select.addEventListener('change', function () {
-        const text = this.options[this.selectedIndex].text;
-        document.getElementById('attribute_selected_span').innerHTML = text;
+        const selectedId = Number(this.value);
+
+        optionsList.innerHTML = '';
+
+        const attribute = attributes.find(item => item.id === selectedId);
+
+        if (!attribute) {
+            optionsList.innerHTML = '<span class="text-gray-400">No attribute selected</span>';
+            return;
+        }
+
+        if (!attribute.options || attribute.options.length === 0) {
+            optionsList.innerHTML = '<span class="text-gray-400">No options yet</span>';
+            return;
+        }
+
+        attribute.options.forEach(option => {
+            const badge = document.createElement('span');
+
+            badge.className = 'rounded-md bg-gray-800 border border-gray-700 px-3 py-1 text-sm text-white';
+            badge.textContent = option.value;
+
+            optionsList.appendChild(badge);
+        });
     });
-
-
-
 </script>
 
 @endsection
