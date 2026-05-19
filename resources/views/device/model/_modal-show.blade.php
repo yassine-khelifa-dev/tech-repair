@@ -9,6 +9,8 @@
             <li>Brand: <span x-text="model_selected?.brand?.name"></span></li>
             <li>Type: <span x-text="model_selected?.type?.name"></span></li>
             <li>Model name: <span x-text="model_selected?.name"></span></li>
+            <hr>
+            <li>Created at: <span class="text-blue-500" x-text="new Date(model_selected?.created_at).toLocaleDateString()"></span></li>
         </ul>
     </div>
 
