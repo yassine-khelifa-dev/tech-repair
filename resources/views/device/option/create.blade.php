@@ -41,12 +41,7 @@
             @enderror
         </div>
 
-
-
         <div id="options-list" class="mt-4 flex flex-wrap gap-2 text-white bg-white m-2 p-3"></div>
-
-
-
 
 
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-3">
@@ -62,11 +57,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
 
 
          <div class="sm:col-span-3">
@@ -91,6 +81,124 @@
          <button type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
     </div>
 </form>
+
+
+<div x-data="{ open:  true,
+               title: 10
+            }"
+    x-init="title = 1000"
+    x-effect="console.log(title)"
+>
+
+    <button @click="open = !open; title++ " class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        Toggle
+    </button>
+
+    <input type="text" x-model='title' :class="open ? 'bg-red-500' : 'bg-blue-500'" class="text-white">
+
+    <template x-if="open">
+    <p class="text-white "  x-text="title">
+    </p>
+
+    </template>
+
+</div>
+
+<hr />
+
+
+<div x-data="{ open: false }" class="relative">
+
+    <button @click="open = !open" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        Menu
+    </button>
+
+    <div
+        x-show="open"
+        @click.outside="open = false"
+        class="absolute bg-white border p-2"
+    >
+        Content
+    </div>
+
+</div>
+
+
+<hr >
+
+
+<div x-data
+     >
+
+    <h1 class="text-white"> Ref :</h1>
+
+    <input x-ref="search">
+
+    <button @click="$refs.search.focus()" class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        Focus Input
+    </button>
+
+</div>
+
+
+
+
+<hr>
+
+
+<h2 class="text-white">transition</h2>
+
+<div x-data="{ open: false }">
+
+    <button @click="open = !open" class="rounded-md bg-yellow-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+        Toggle
+    </button>
+
+    <div class="text-white"
+        x-show="open"
+        x-transition
+    >
+        Hello
+    </div>
+
+</div>
+
+
+
+<hr>
+
+
+
+<hr>
+
+
+<div x-data="{ open: false }">
+
+    <button @click="open = true">
+        Open Modal
+    </button>
+
+    <div
+        x-show="open"
+        x-transition
+        @click.outside="open = false"
+        class="fixed inset-0 flex items-center justify-center"
+    >
+
+        <div class="bg-white p-6 rounded">
+
+            <h2>Modal</h2>
+
+            <button @click="open = false">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 @endsection
 
 

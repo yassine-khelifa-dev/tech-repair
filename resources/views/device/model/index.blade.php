@@ -1,7 +1,23 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1 class="text-white my-2">Page Device Model :</h1>
+<div x-data='{modal:  false,
+              model_selected: null}'>
+
+    <div
+        x-cloak
+        x-show="modal"
+        x-transition
+        @click.self="modal = false"
+        @keydown.escape.window="modal = false"
+        class="fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 backdrop-blur-sm"
+    >
+        @include('device.model._modal-show')
+    </div>
+
+    
+
+   <h1 class="text-white my-2">Page Device Model :</h1>
 
     @if (session('success'))
         <div class="bg-green-100 text-green-700 p-3 mx-2 my-5 rounded">
@@ -9,10 +25,8 @@
         </div>
     @endif
 
-
-
  <a href="{{  route('devicemodel.create') }}" class="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-    Create New Device Model </a>
+    Create New Device Model  </a>
 
 
 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
@@ -65,6 +79,18 @@
                          {{  $devicemodel->created_at->diffForHumans() }}
                     </td>
                      <td class="px-6 py-4">
+
+                        <button
+                                @click="modal = true; model_selected = {{ Js::from($devicemodel) }}"
+                                type="button" class="rounded-md bg-blue-500 px-3 py-2 text-sm mt-2 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                        >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+
+                        </button>
+
                       <a href="{{ route('devicemodel.edit', $devicemodel->id) }}"
                             class="inline-flex items-center justify-center rounded-md bg-red-500 p-2 text-white hover:bg-red-600 transition">
 
@@ -73,7 +99,7 @@
                                     viewBox="0 0 24 24"
                                     stroke-width="1.5"
                                     stroke="currentColor"
-                                    class="h-5 w-5">
+                                    class="size-6">
 
                                     <path stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -160,4 +186,23 @@
     </div>
 @endif
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
 @endsection
