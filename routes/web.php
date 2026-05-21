@@ -7,6 +7,8 @@ use App\Http\Controllers\Web\Device\DeviceTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\Device\BrandController;
 use App\Http\Controllers\Web\Device\DeviceAttributeOptionController;
+use App\Http\Controllers\Web\Device\SpecAttributeController;
+use App\Models\SpecAttributeOption;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,8 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('brand', BrandController::class);
     Route::resource('devicetype', DeviceTypeController::class);
     Route::resource('devicemodel', DeviceModelController::class);
-    Route::resource('device-attribute', DeviceAttributeController::class);
-    Route::resource('device-attribute-option', DeviceAttributeOptionController::class);
+
+    Route::resource('spec-attribute', SpecAttributeController::class);
 
 
 });

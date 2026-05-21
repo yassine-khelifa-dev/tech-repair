@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('device_attribute_options', function (Blueprint $table) {
-            $table->id();
+        Schema::create('spec_attribute_options', function (Blueprint $table) {
+           $table->id();
+            $table->foreignId('spec_attribute_id')->constrained()->cascadeOnDelete();
+
             $table->string('value', 255);
-            $table->foreignId('device_attribute_id')->constrained()->cascadeOnDelete();
+            $table->string('label', 255)->nullable();
             $table->integer('sort_order')->default(0);
+            $table->boolean('is_active')->default(true);
 
-            $table->unique(['device_attribute_id', 'value'], 'dao_unique');
-
+            $table->unique(['spec_attribute_id', 'value'], 'spec_attr_option_unique');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('device_attribute_options');
+        Schema::dropIfExists('spec_attribute_options');
     }
 };

@@ -846,7 +846,7 @@
 
                 <ul
                     id="dropdown-pages"
-                    class="{{ request()->routeIs('brand.*', 'devicetype.*', 'devicemodel.*', 'device-attribute.*', 'device-attribute-value.*' ) ? 'block' : 'hidden' }} py-2 space-y-2"
+                    class="{{ request()->routeIs('brand.*', 'devicetype.*', 'devicemodel.*', 'spec-attribute.*', 'spec-attribute-option.*' ) ? 'block' : 'hidden' }} py-2 space-y-2"
                 >
 
                     <li>
@@ -888,28 +888,16 @@
 
                       <li>
                         <a
-                            href="{{ route('device-attribute.index') }}"
+                            href="{{ route('spec-attribute.index') }}"
                             class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75
-                            {{ request()->routeIs('device-attribute.*')
+                            {{ request()->routeIs('spec-attribute.*')
                                 ? 'bg-red-500 text-white'
                                 : 'text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700' }}"
                         >
-                            Attribute
+                            Spec Attribute & Options
                         </a>
                     </li>
 
-
-                      <li>
-                        <a
-                            href="{{ route('device-attribute-option.index') }}"
-                            class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75
-                            {{ request()->routeIs('device-attribute-option.*')
-                                ? 'bg-red-500 text-white'
-                                : 'text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700' }}"
-                        >
-                            Attribute Option
-                        </a>
-                    </li>
 
                 </ul>
             </li>

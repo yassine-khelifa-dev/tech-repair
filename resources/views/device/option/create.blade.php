@@ -1,243 +1,158 @@
-
-
 @extends('layouts.admin')
 
 @section('content')
+    <div x-data="{
+        input_type: 'text',
+        list_size: 1,
+        arr: [],
+        decrement(index) {
+            console.log(index);
+            this.arr.splice(index, 1);
+            this.list_size--;
+        }
+    }">
+        <form action="{{ route('device-attribute-option.store') }}" method="POST">
+            @csrf
+            <div class="space-y-12">
+                <div class="border-b border-white/10 pb-12">
+                    <h2 class="text-base/7 font-semibold text-white">Create Device Attribute Options </h2>
+                    <p class="mt-1 text-sm/6 text-gray-400">Define a dynamic attribute for a device type.</p>
+                    <div class="mt-5 text-white">
+                        <label for="device_attribute_id" class="mb-2.5 block text-sm font-medium text-white">
+                            Select a Device Attribute
+                        </label>
+                        <select id="device_attribute_id" name="device_attribute_id"
+                            class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
 
-<form action="{{  route('device-attribute-option.store') }}" method="POST">
-    @csrf
-  <div class="space-y-12">
-    <div class="border-b border-white/10 pb-12">
-        <h2 class="text-base/7 font-semibold text-white">Create Device Attribute Options</h2>
-        <p class="mt-1 text-sm/6 text-gray-400">Define a dynamic attribute for a device type.</p>
+                            <option class="bg-black text-white" value="{{ null }}" selected>
+                                Choose an attribute
+                            </option>
+                            @foreach ($deviceAttributes as $device_attribute)
+                                <option class="bg-black text-white" @click=' input_type = @json($device_attribute->input_type) '
+                                    value="{{ $device_attribute->id }}"
+                                    {{ old('device_attribute_id') == $device_attribute->id ? 'selected' : '' }}>
 
-         <div class="mt-5 text-white">
+                                    {{ $device_attribute->type->name . ' - ' . $device_attribute->name }}
 
-            <label for="device_attribute_id"
-                class="mb-2.5 block text-sm font-medium text-white">
-                Select a Device Attribute
-            </label>
-            <select id="device_attribute_id"
-                    name="device_attribute_id"
-                    class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
-
-                <option class="bg-black text-white" value="{{  null }}" selected>
-                    Choose an attribute
-                </option>
-                @foreach ($deviceAttributes as $device_attribute)
-
-                    <option class="bg-black text-white"
-                            value="{{ $device_attribute->id }}" {{ old('device_attribute_id') == $device_attribute->id ? 'selected' : '' }} >
-
-                        {{  $device_attribute->type->name . " - ".$device_attribute->name  }}
-
-                    </option>
-                @endforeach
-
-
-            </select>
-            @error('device_attribute_id')
-                 <div class="text-red-500 text-sm mt-1">{{ $message}}</div>
-            @enderror
-        </div>
-
-        <div id="options-list" class="mt-4 flex flex-wrap gap-2 text-white bg-white m-2 p-3"></div>
+                                </option>
+                            @endforeach
 
 
-        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-3">
-            <div class="sm:col-span-3">
-            <label for="value" class="block text-sm/6 font-medium text-white">Value</label>
-                <div class="mt-2">
-                    <input id="value"
-                        value="{{ old('value', '') }}"
-                    type="text" name="value" autocomplete="given-value" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-                    @error('value')
-                        <div class="text-red-500 text-sm mt-1">{{ $message}}</div>
-                    @enderror
+                        </select>
+                        @error('device_attribute_id')
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div id="options-list" class="mt-4 flex flex-wrap gap-2 text-white bg-white m-2 p-3"></div>
+
+
+                    <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-3">
+                        <div class="sm:col-span-3">
+                            <label for="value" class="block text-sm/6 font-medium text-white">Value type: ( <span
+                                    x-text="input_type"></span> )</label>
+                            <div class="mt-2">
+                                <input id="value" value="{{ old('value', '') }}" type="text" name="value"
+                                    autocomplete="given-value"
+                                    class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                @error('value')
+                                    <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="m-5 p-5">
+
+                    <button type="button" @click="list_size < 6 ? list_size++ : list_size"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        +</button>
+
+
+                    <template x-for="item in list_size" x-model>
+
+                        <div class="mt-2">
+                            <input :id="'attribute_' + item" x-model="arr[item]" x-effect=" console.log(arr) "
+                                value="{{ old('value', '') }}" type="text" :name="'attributes[' + item + ']'"
+                                autocomplete="given-value"
+                                class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                            <button type="button" @click=" decrement(item) "
+                                class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                -
+                            </button>
+                            @error('value')
+                                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                    </template>
+
+
+                    <div class="sm:col-span-3">
+                        <label for="sort_order" class="block text-sm/6 font-medium text-white">Sort Order (Controls the
+                            display position in forms..)</label>
+                        <div class="mt-2">
+                            <input id="sort_order" value="{{ old('sort_order') }}" placeholder="1" type="text"
+                                name="sort_order" autocomplete="given-name"
+                                class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                            @error('sort_order')
+                                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
+
+
+
             </div>
-        </div>
 
-
-         <div class="sm:col-span-3">
-            <label for="sort_order" class="block text-sm/6 font-medium text-white">Sort Order (Controls the display position in forms..)</label>
-            <div class="mt-2">
-                <input id="sort_order"
-                    value="{{ old('sort_order') }}" placeholder="1"
-                type="text" name="sort_order" autocomplete="given-name" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-                @error('sort_order')
-                    <div class="text-red-500 text-sm mt-1">{{ $message}}</div>
-                @enderror
-             </div>
-        </div>
-    </div>
-
-
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+                <a href="{{ route('device-attribute-option.index') }}" type="button"
+                    class="text-sm/6 font-semibold text-white">Cancel</a>
+                <button type="submit"
+                    class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
+            </div>
+        </form>
 
     </div>
-
-    <div class="mt-6 flex items-center justify-end gap-x-6">
-         <a  href="{{  route('device-attribute-option.index') }}" type="button" class="text-sm/6 font-semibold text-white">Cancel</a>
-         <button type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
-    </div>
-</form>
-
-
-<div x-data="{ open:  true,
-               title: 10
-            }"
-    x-init="title = 1000"
-    x-effect="console.log(title)"
->
-
-    <button @click="open = !open; title++ " class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        Toggle
-    </button>
-
-    <input type="text" x-model='title' :class="open ? 'bg-red-500' : 'bg-blue-500'" class="text-white">
-
-    <template x-if="open">
-    <p class="text-white "  x-text="title">
-    </p>
-
-    </template>
-
-</div>
-
-<hr />
-
-
-<div x-data="{ open: false }" class="relative">
-
-    <button @click="open = !open" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        Menu
-    </button>
-
-    <div
-        x-show="open"
-        @click.outside="open = false"
-        class="absolute bg-white border p-2"
-    >
-        Content
-    </div>
-
-</div>
-
-
-<hr >
-
-
-<div x-data
-     >
-
-    <h1 class="text-white"> Ref :</h1>
-
-    <input x-ref="search">
-
-    <button @click="$refs.search.focus()" class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        Focus Input
-    </button>
-
-</div>
-
-
-
-
-<hr>
-
-
-<h2 class="text-white">transition</h2>
-
-<div x-data="{ open: false }">
-
-    <button @click="open = !open" class="rounded-md bg-yellow-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        Toggle
-    </button>
-
-    <div class="text-white"
-        x-show="open"
-        x-transition
-    >
-        Hello
-    </div>
-
-</div>
-
-
-
-<hr>
-
-
-
-<hr>
-
-
-<div x-data="{ open: false }">
-
-    <button @click="open = true">
-        Open Modal
-    </button>
-
-    <div
-        x-show="open"
-        x-transition
-        @click.outside="open = false"
-        class="fixed inset-0 flex items-center justify-center"
-    >
-
-        <div class="bg-white p-6 rounded">
-
-            <h2>Modal</h2>
-
-            <button @click="open = false">
-                Close
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
 @endsection
 
 
 
 
 @section('script')
+    <script>
+        const attributes = @json($deviceAttributes);
 
-<script>
-    const attributes = @json($deviceAttributes);
+        const select = document.getElementById('device_attribute_id');
+        const optionsList = document.getElementById('options-list');
 
-    const select = document.getElementById('device_attribute_id');
-    const optionsList = document.getElementById('options-list');
+        select.addEventListener('change', function() {
+            const selectedId = Number(this.value);
 
-    select.addEventListener('change', function () {
-        const selectedId = Number(this.value);
+            optionsList.innerHTML = '';
 
-        optionsList.innerHTML = '';
+            const attribute = attributes.find(item => item.id === selectedId);
 
-        const attribute = attributes.find(item => item.id === selectedId);
+            if (!attribute) {
+                optionsList.innerHTML = '<span class="text-gray-400">No attribute selected</span>';
+                return;
+            }
 
-        if (!attribute) {
-            optionsList.innerHTML = '<span class="text-gray-400">No attribute selected</span>';
-            return;
-        }
+            if (!attribute.options || attribute.options.length === 0) {
+                optionsList.innerHTML = '<span class="text-gray-400">No options yet</span>';
+                return;
+            }
 
-        if (!attribute.options || attribute.options.length === 0) {
-            optionsList.innerHTML = '<span class="text-gray-400">No options yet</span>';
-            return;
-        }
+            attribute.options.forEach(option => {
+                const badge = document.createElement('span');
 
-        attribute.options.forEach(option => {
-            const badge = document.createElement('span');
+                badge.className =
+                    'rounded-md bg-gray-800 border border-gray-700 px-3 py-1 text-sm text-white';
+                badge.textContent = option.value;
 
-            badge.className = 'rounded-md bg-gray-800 border border-gray-700 px-3 py-1 text-sm text-white';
-            badge.textContent = option.value;
-
-            optionsList.appendChild(badge);
+                optionsList.appendChild(badge);
+            });
         });
-    });
-</script>
-
+    </script>
 @endsection

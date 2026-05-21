@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DeviceAttributeOption extends Model
+class DeviceSpec extends Model
 {
-    
+    //
 }
