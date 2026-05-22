@@ -12,4 +12,8 @@ class DeviceType extends Model
         return $this->hasMany(DeviceModel::class);
     }
 
+    public function specAttributes(){
+        return $this->belongsToMany( SpecAttribute::class, 'spec_attribute_device_type');
+    }
+
 }

@@ -3,17 +3,24 @@
 @section('content')
     <div class="mx-auto max-w-5xl px-4 py-8" x-data="{
         'input_type': 'text',
-        'label': '',
+        'attribute_name': '',
         'list_size': 1,
-        'list_options': [],
-        remove(index){
+        'code': '',
+        'unit': '',
+        'spec_options': [],
+        remove(index) {
             if (this.list_size > 1) {
-                this.list_options.splice(index, 1);
+                this.spec_options.splice(index, 1);
                 this.list_size--;
             }
+        },
+        init() {
+            this.$watch('attribute_name', value => {
+                this.code = value.toLowerCase().replaceAll(' ', '_')
+            })
         }
     }">
-        <form action="{{ route('spec-attribute.store') }}" method="POST" class="space-y-8">
+        <form action="{{ route('spec-attribute.store') }}" method="POST" class="space-y-8" x-init="init()">
             @csrf
 
             <div class="rounded-2xl border border-white/10 bg-gray-900/70 shadow-xl">
@@ -37,8 +44,8 @@
                                 <label for="name" class="block text-sm font-medium text-white">
                                     Attribute Name
                                 </label>
-                                <input id="name" x-model="label" value="{{ old('name', '') }}" placeholder="Storage"
-                                    type="text" name="name" autocomplete="given-name"
+                                <input id="name" x-model="attribute_name" value="{{ old('name', '') }}"
+                                    placeholder="Storage" type="text" name="name" autocomplete="given-name"
                                     class="mt-2 block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                                 @error('name')
                                     <div class="mt-1 text-sm text-red-400">{{ $message }}</div>
@@ -49,7 +56,7 @@
                                 <label for="code" class="block text-sm font-medium text-white">
                                     Technical Code
                                 </label>
-                                <input id="code" value="{{ old('code') }}" placeholder="storage" type="text"
+                                <input id="code" x-model="code" value="{{ old('code') }}" placeholder="storage" type="text"
                                     name="code" autocomplete="given-name"
                                     class="mt-2 block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                                 <p class="mt-1 text-xs text-gray-500">
@@ -88,6 +95,30 @@
                                     @endforeach
                                 </select>
                                 @error('input_type')
+                                    <div class="mt-1 text-sm text-red-400">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+
+                              <div>
+                                <label for="unit" class="block text-sm font-medium text-white">
+                                    Unit
+                                </label>
+                                <select id="unit" name="unit"
+                                    class="mt-2 block w-full rounded-lg border border-white/10 bg-gray-950 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option class="bg-gray-950 text-white" value="{{ null }}" selected>
+                                        Select unit (GB, TB, W)...
+                                    </option>
+
+                                    @foreach (\App\Enums\SpecUnit::cases() as $unit)
+                                        <option value="{{ $unit->value }}"
+                                            @click='unit =  @json($unit->value) '
+                                            {{ old('input_type') === $unit->value ? 'selected' : '' }}>
+                                            {{ $unit->value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('unit')
                                     <div class="mt-1 text-sm text-red-400">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -177,15 +208,12 @@
 
                     <template x-for="row in list_size ">
                         <div class="mt-2 flex items-center gap-2">
-                            <input :id="'attribute_' + row"
-                                x-model="list_options[row]"
-                                x-bind:placeholder="label" type="text"
-                                :name="'list_options[' + row + ']'"
-                                value="{{ old('name', '') }}"
+                            <input :id="'attribute_' + row" x-model="spec_options[row]" x-bind:placeholder="attribute_name"
+                                type="text" :name="'spec_options[' + row + ']'" value="{{ old('name', '') }}"
                                 class="block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
 
 
-                            <div x-show=" input_type == 'select' || input_type == 'multiselect' ">
+                            <div x-show="['select','multiselect'].includes(input_type)">
                                 {{-- Add --}}
                                 <button type="button" @click="list_size++"
                                     class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500 text-white transition hover:bg-indigo-400">
@@ -193,7 +221,7 @@
                                 </button>
 
                                 {{-- Remove --}}
-                                <button type="button" @click="remove()"
+                                <button type="button" @click="remove(row)"
                                     class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500 text-white transition hover:bg-red-400">
                                     -
                                 </button>

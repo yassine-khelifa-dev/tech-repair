@@ -6,15 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class SpecAttribute extends Model
 {
-    protected $fillable = ['name', 'code', 'input_type', 'is_filterable',
-                           'sort_order', 'is_required', 'device_type_id'];
+    protected $fillable = ['name',
+                            'code',
+                            'input_type',
+                            'unit',
+                            'is_filterable',
+                            'sort_order',
+                            'is_required'
+                        ];
 
 
-   public function type(){
-        return $this->belongsTo(DeviceType::class, 'device_type_id');
+    public function specOptions(){
+        return $this->hasMany(SpecAttributeOption::class);
     }
 
-    public function options(){
-        return $this->hasMany(SpecAttributeOption::class);
+
+    public function deviceTypes(){
+        return $this->belongsToMany( DeviceType::class, 'spec_attribute_device_type');
     }
 }

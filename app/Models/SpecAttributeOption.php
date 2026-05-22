@@ -6,10 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class SpecAttributeOption extends Model
 {
-    protected $fillable = ['value', 'device_attribute_id', 'sort_order'];
+    protected $fillable = [
+                        'value',
+                        'label',
+                        'sort_order',
+                        'is_active',
+                        'spec_attribute_id'
+                    ];
 
 
-    public function deviceAttribute(){
+    public function specAttribute(){
         return $this->belongsTo(SpecAttribute::class);
     }
+
+
+    
 }
