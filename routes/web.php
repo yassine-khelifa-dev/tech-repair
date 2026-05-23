@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('brand', BrandController::class);
     Route::resource('devicetype', DeviceTypeController::class);
     Route::resource('devicemodel', DeviceModelController::class);
-
     Route::resource('spec-attribute', SpecAttributeController::class);
 
 
