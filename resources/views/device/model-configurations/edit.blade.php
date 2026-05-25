@@ -13,8 +13,7 @@
         @endif
 
         <div class="mx-auto max-w-5xl px-4 py-8" x-data="{
-            selectedOptions: [],
-
+            selectedOptions: {{  old('allowed_options', $devicemodel->allowed_options()->pluck('spec_attribute_option_id')?? [])  }},
             toggleAttribute(optionIds) {
                 const allSelected = optionIds.every(id => this.selectedOptions.includes(id))
 

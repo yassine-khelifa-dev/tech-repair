@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Web\Device;
 
-use App\Models\DeviceModelConfiguration;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\StoreDeviceModelConfigurationRequest;
 use App\Models\DeviceModel;
-
 class DeviceModelConfigurationController extends Controller
 {
 
@@ -17,7 +14,7 @@ class DeviceModelConfigurationController extends Controller
     public function edit(DeviceModel $devicemodel)
     {
 
-        $devicemodel->load(['brand', 'type.specAttributes.specOptions']);
+        $devicemodel->load(['brand', 'type.specAttributes.specOptions', 'allowed_options']);
 
         return view('device.model-configurations.edit', compact('devicemodel'));
     }
@@ -28,19 +25,7 @@ class DeviceModelConfigurationController extends Controller
     {
         $options_selected =  $request->validated();
 
-
-        $data = collect($options_selected)
-            ->filter(fn($v) => filled($v))
-            ->map(function ($value) use ($devicemodel) {
-                 return [
-                    'spec_attribute_option_id' => $value,
-                 ];
-            })
-            ->values()
-            ->toArray();
-
-        dd( $data);
-
+        $devicemodel->allowed_options()->sync( $options_selected['allowed_options'] );
 
         return redirect()->route('device-model-configuration.edit', $devicemodel->id)->with('success', 'Config has bene Updated');
 
