@@ -15,7 +15,7 @@
         @include('device.model._modal-show')
     </div>
 
-    
+
 
    <h1 class="text-white my-2">Page Device Model :</h1>
 
@@ -27,6 +27,8 @@
 
  <a href="{{  route('devicemodel.create') }}" class="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
     Create New Device Model  </a>
+
+
 
 
 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
@@ -79,6 +81,10 @@
                          {{  $devicemodel->created_at->diffForHumans() }}
                     </td>
                      <td class="px-6 py-4">
+
+
+    <a href="{{  route('device-model-configuration.edit', $devicemodel->id) }}" class="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+    device model configuration.  </a>
 
                         <button
                                 @click="modal = true; model_selected = {{ Js::from($devicemodel) }}"

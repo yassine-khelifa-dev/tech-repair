@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DeviceModel extends Model
 {
-    protected $fillable = ['name', 'slug', 'brand_id', 'device_type_id'];
+    protected $fillable = ['name', 'slug', 'brand_id', 'device_type_id', 'is_active'];
 
     public function brand(){
         return $this->belongsTo(Brand::class);

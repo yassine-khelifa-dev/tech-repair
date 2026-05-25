@@ -75,13 +75,13 @@
                     name="device_type_id"
                     class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
 
-                <option class="bg-black text-white" value="{{  null }}" selected>
+                <option class="bg-black text-white" value="" selected>
                     Choose a type
                 </option>
                 @foreach ($devicetypes as $devicetype)
 
                     <option class="bg-black text-white"
-                            value="{{ $devicetype->id }}" {{ old('type_id', $devicemodel->type_id) == $devicetype->id ? 'selected' : '' }} >
+                            value="{{ $devicetype->id }}" {{ old('device_type_id', $devicemodel->type->id) == $devicetype->id ? 'selected' : '' }} >
 
                         {{ $devicetype->name }}
 

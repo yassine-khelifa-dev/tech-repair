@@ -77,6 +77,7 @@ class DeviceModelController extends Controller
     public function update(UpdateDeviceModelRequest $request, DeviceModel $devicemodel)
     {
         $data = $request->validated();
+        $data['slug'] = Str::slug($data['name']);
 
         $devicemodel->update( $data );
 

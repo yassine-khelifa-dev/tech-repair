@@ -1,14 +1,10 @@
 <?php
-
-use App\Http\Controllers\Web\Device\DeviceAttributeController;
 use App\Http\Controllers\Web\Device\DeviceModelController;
 use App\Http\Controllers\Web\Device\DeviceTypeController;
-
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\Device\BrandController;
-use App\Http\Controllers\Web\Device\DeviceAttributeOptionController;
+use App\Http\Controllers\Web\Device\DeviceModelConfigurationController;
 use App\Http\Controllers\Web\Device\SpecAttributeController;
-use App\Models\SpecAttributeOption;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,7 +27,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('devicemodel', DeviceModelController::class);
     Route::resource('spec-attribute', SpecAttributeController::class);
 
+    Route::get(
+        'device-models/{devicemodel}/configuration',
+        [DeviceModelConfigurationController::class, 'edit']
+    )->name('device-model-configuration.edit');
 
+    Route::put(
+        'device-models/{devicemodel}/configuration',
+        [DeviceModelConfigurationController::class, 'update']
+    )->name('device-model-configuration.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Device;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDeviceModelRequest extends FormRequest
 {
@@ -22,12 +23,17 @@ class StoreDeviceModelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:5|max:255|unique:device_models,name',
             'brand_id' => 'required|integer|exists:brands,id',
-            'device_type_id' => 'required|integer|exists:device_types,id'
+            'device_type_id' => 'required|integer|exists:device_types,id',
+            'name' => [
+                'required',
+                'min:5',
+                'max:255',
+                Rule::unique('device_models')
+                    ->where(function ($query) {
+                        return $query->where('brand_id', $this->brand_id);
+                    }),
+            ],
         ];
     }
 }
-
-
-
