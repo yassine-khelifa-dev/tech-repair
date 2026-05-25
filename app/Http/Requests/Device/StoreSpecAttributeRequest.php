@@ -34,6 +34,7 @@ class StoreSpecAttributeRequest extends FormRequest
             'devicetypes' => 'required|array|min:1',
             'devicetypes.*' => 'exists:device_types,id',
             'spec_options' => 'required|array|min:1',
+            'spec_options.*' => 'required|string|min:1',
         ];
     }
 }

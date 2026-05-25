@@ -2,7 +2,7 @@
     'name',
     'label',
     'multiple' => false,
-    'model'= null
+    'model'=> null
 ])
 
 <label for="{{ $name }}" class="block text-sm font-medium text-white">
