@@ -20,8 +20,14 @@
         @endif
 
         <a href="{{ route('devicemodel.create') }}"
-            class="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-            Create New Device Model </a>
+                class="inline-flex items-center justify-center rounded-md bg-green-700 p-2 text-white hover:bg-red-500 transition">
+           Create  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24  24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+
+        </a>
 
 
 
