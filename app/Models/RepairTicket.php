@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Override;
+use Carbon\Carbon;
 
 class RepairTicket extends Model
 {
@@ -23,6 +25,22 @@ class RepairTicket extends Model
         'device_model_id'
     ];
 
+    protected $casts = [
+        'received_at'  => 'datetime',
+        'completed_at' => 'datetime',
+        'delivered_at' => 'datetime',
+    ];
+
+    #[Override]
+    protected static function booted()
+    {
+        static::creating(function ($repair_ticket) {
+            $repair_ticket->ticket_number =
+                'RT-' . Carbon::now()->format('YmdHis') . '-' . random_int(100, 999);
+            $repair_ticket->received_at = now();
+        });
+    }
+
 
     public function customer()
     {
@@ -36,7 +54,7 @@ class RepairTicket extends Model
 
     public function photos()
     {
-        return $this->hasMany(RepairTicketImage::class );
+        return $this->hasMany(RepairTicketImage::class);
     }
 
     public function selectedOptions()
