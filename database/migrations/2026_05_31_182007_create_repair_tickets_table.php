@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('repair_tickets', function (Blueprint $table) {
             $table->id();
 
-            $table->integer('ticket_number')->unique();
+            $table->string('ticket_number', 50)->unique();
             $table->string('device_access_info', 100)->nullable();
 
             $table->foreignId('customer_id')->constrained()->restrictOnDelete();
