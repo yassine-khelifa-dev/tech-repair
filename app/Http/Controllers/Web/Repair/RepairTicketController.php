@@ -19,7 +19,8 @@ class RepairTicketController extends Controller
      */
     public function index()
     {
-        return view('repair.tickets.index');
+        $tickets = RepairTicket::with(['customer', 'deviceModel.brand', 'selectedOptions'])->latest()->paginate(3);
+        return view('repair.tickets.index', compact('tickets'));
     }
 
     /**
@@ -36,6 +37,17 @@ class RepairTicketController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(RepairTicket $repair_ticket)
+    {
+        $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
+        $brands = Brand::all();
+        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions']);
+        return view('repair.tickets.show', compact('repair_ticket', 'brands', 'devicetypes'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreRepairTicketRequest $request)
@@ -44,46 +56,48 @@ class RepairTicketController extends Controller
         $data = $request->validated();
 
         $customerData = Arr::only($data, [
-            'fullname','email','phone'
+            'fullname',
+            'email',
+            'phone'
         ]);
 
-        $ticketData = Arr::except($data,[
-            'fullname','email','phone', 'attributes'
+        $ticketData = Arr::except($data, [
+            'fullname',
+            'email',
+            'phone',
+            'attributes'
         ]);
 
-        $optionsIds = collect($data['attributes'] ?? [] )->values()->unique()->toArray();
+        $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
 
         $customer = Customer::create($customerData);
 
-        $ticket = $customer->tickets()->create( $ticketData );
+        $ticket = $customer->tickets()->create($ticketData);
 
-        $ticket->selectedOptions()->sync( $optionsIds );
+        $ticket->selectedOptions()->sync($optionsIds);
 
         return redirect()->route('repair-tickets.index')->with('success', 'Ticket has bene created');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(RepairTicket $repair_ticket)
     {
-        //
+        $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
+        $brands = Brand::all();
+        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions']);
+        return view('repair.tickets.edit', compact('repair_ticket', 'brands', 'devicetypes'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, RepairTicket $repair_ticket)
     {
-        //
+        dd($request->all());
     }
 
     /**

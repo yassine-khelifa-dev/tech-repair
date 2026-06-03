@@ -27,6 +27,7 @@ class StoreRepairTicketRequest extends FormRequest
         return [
             'fullname'          => 'required|min:3|max:255|regex:/^[\pL\s]+$/u',
             'phone'             => 'required|integer',
+            'device_access_info' => 'nullable|max:255',
             'technician_note'   => 'required|min:5',
             'imei'              => 'nullable|regex:/^[a-zA-Z0-9]+$/',
             'sn'                => 'nullable|regex:/^[a-zA-Z0-9]+$/',
