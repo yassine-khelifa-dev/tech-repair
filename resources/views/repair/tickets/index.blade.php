@@ -3,22 +3,20 @@
 @section('content')
     <h1 class="text-white my-2">Page Repair Ticket :</h1>
 
-    @if (session('success'))
-        <div class="bg-green-100 text-green-700 p-3 mx-2 my-5 rounded">
-            {{ session('success') }}
+   @if (session('success') || session('updated') || session('deleted'))
+        <div @class([
+            'p-3 mx-2 my-5 rounded',
+            'bg-green-100 text-green-700' => session('success'),
+            'bg-yellow-100 text-yellow-700' => session('updated'),
+            'bg-red-100 text-red-700' => session('deleted'),
+        ])>
+            {{ session('success') ?? (session('updated') ?? session('deleted')) }}
         </div>
     @endif
-
-
 
     <a href="{{ route('repair-tickets.create') }}"
         class="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         Create New Ticket </a>
-
-
-
-
-
 
     <div
         class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
@@ -101,7 +99,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    onclick="return confirm('Are you sure to delete this device model? ') "
+                                    onclick="return confirm('Are you sure to delete this ticket {{ $ticket->ticket_number }}? ') "
                                     class="rounded-md bg-red-500 px-3 py-2 text-sm mt-2 font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -124,28 +122,28 @@
             class="mt-5 flex items-center text-white justify-between rounded-lg border border-default bg-neutral-primary-soft px-4 py-3 text-sm text-body">
             <div>
                 Showing
-                <span class="font-semibold text-heading">{{ $brands->firstItem() }}</span>
+                <span class="font-semibold text-heading">{{ $tickets->firstItem() }}</span>
                 to
-                <span class="font-semibold text-heading">{{ $brands->lastItem() }}</span>
+                <span class="font-semibold text-heading">{{ $tickets->lastItem() }}</span>
                 of
-                <span class="font-semibold text-heading">{{ $brands->total() }}</span>
+                <span class="font-semibold text-heading">{{ $tickets->total() }}</span>
                 results
             </div>
 
             <div class="flex items-center gap-2">
-                @if ($brands->onFirstPage())
+                @if ($tickets->onFirstPage())
                     <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
                         Previous
                     </span>
                 @else
-                    <a href="{{ $brands->previousPageUrl() }}"
+                    <a href="{{ $tickets->previousPageUrl() }}"
                         class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Previous
                     </a>
                 @endif
 
-                @foreach ($brands->getUrlRange(1, $brands->lastPage()) as $page => $url)
-                    @if ($page == $brands->currentPage())
+                @foreach ($tickets->getUrlRange(1, $tickets->lastPage()) as $page => $url)
+                    @if ($page == $tickets->currentPage())
                         <span class="rounded-md bg-red-500 px-3 py-2 text-white">
                             {{ $page }}
                         </span>
@@ -157,8 +155,8 @@
                     @endif
                 @endforeach
 
-                @if ($brands->hasMorePages())
-                    <a href="{{ $brands->nextPageUrl() }}"
+                @if ($tickets->hasMorePages())
+                    <a href="{{ $tickets->nextPageUrl() }}"
                         class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Next
                     </a>

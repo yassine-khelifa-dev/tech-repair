@@ -3,9 +3,15 @@
 @section('content')
     <h1 class="text-white my-2">Page Attribute & Options :</h1>
 
+
     @if (session('success'))
-        <div class="bg-green-100 text-green-700 p-3 mx-2 my-5 rounded">
-            {{ session('success') }}
+        <div @class([
+            'p-3 mx-2 my-5 rounded',
+            'bg-green-100 text-green-700' => session('success'),
+            'bg-yellow-100 text-yellow-700' => session('updated'),
+            'bg-red-100 text-red-700' => session('deleted'),
+        ])>
+            {{ session('success') ?? (session('updated') ?? session('deleted')) }}
         </div>
     @endif
 

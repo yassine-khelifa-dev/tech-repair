@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Web\Repair;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
+use App\Http\Requests\Repair\UpdateRepairTicketRequest;
 use App\Models\Brand;
 use App\Models\Customer;
-use App\Models\DeviceModel;
 use App\Models\DeviceType;
 use App\Models\RepairTicket;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class RepairTicketController extends Controller
@@ -52,7 +51,6 @@ class RepairTicketController extends Controller
      */
     public function store(StoreRepairTicketRequest $request)
     {
-
         $data = $request->validated();
 
         $customerData = Arr::only($data, [
@@ -65,7 +63,8 @@ class RepairTicketController extends Controller
             'fullname',
             'email',
             'phone',
-            'attributes'
+            'attributes',
+            'brand_id'
         ]);
 
         $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
@@ -88,23 +87,55 @@ class RepairTicketController extends Controller
     {
         $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
         $brands = Brand::all();
-        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions']);
-        return view('repair.tickets.edit', compact('repair_ticket', 'brands', 'devicetypes'));
+        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions.specAttribute']);
+        $attributes =  collect($repair_ticket->selectedOptions)->mapWithKeys(function ($option) {
+            $key   = $option->specAttribute->name;
+            $value = $option->id;
+            return [$key  => $value];
+        })->toArray() ?? [];
+        return view('repair.tickets.edit', compact('repair_ticket', 'brands', 'devicetypes', 'attributes'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, RepairTicket $repair_ticket)
+    public function update(UpdateRepairTicketRequest $request, RepairTicket $repair_ticket)
     {
-        dd($request->all());
+        $data = $request->validated();
+
+        $customerData = Arr::only($data, [
+            'fullname',
+            'email',
+            'phone'
+        ]);
+
+        $ticketData = Arr::except($data, [
+            'fullname',
+            'email',
+            'phone',
+            'attributes',
+            'brand_id'
+        ]);
+
+        $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
+
+        $repair_ticket->customer->update($customerData);
+
+        $repair_ticket->customer->tickets()->update($ticketData);
+
+        $repair_ticket->selectedOptions()->sync($optionsIds);
+
+        return redirect()->route('repair-tickets.index')->with('updated', 'Ticket has bene updated');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(RepairTicket $repair_ticket)
     {
-        //
+
+        $repair_ticket->delete();
+
+        return redirect()->route('repair-tickets.index')->with('deleted', 'Ticket has bene deleted');
     }
 }
