@@ -18,6 +18,7 @@ class SpecAttributesService
     {
         return  SpecAttribute::with(['specOptions', 'deviceTypes'])
             ->orderBy('sort_order')
+            ->latest()
             ->get();
     }
 
@@ -87,17 +88,21 @@ class SpecAttributesService
             $spec_attribute->specOptions()
                 ->whereIn('id', $options_ids_deleted)
                 ->delete();
+                //Todo: ->update(['is_active' => false])
 
-            // insert new options :
+            //update  options :
+            foreach ($spec_options as $option) {
+                if ($option['id'] !== null) {
+                    $id =  $option['id'];
+                    unset($option['id']);
+                    $spec_attribute->specOptions()->where('id', $id)->update($option);
+                }
+            };
+
+             // insert new options :
             $options_new_value = $spec_options->filter(function ($option) {
                 return $option['id'] === null;
             })->values()->toArray();
-
-
-            //TODO: update  options :
-
-
-
 
             if (! empty($options_new_value)) {
                 $spec_attribute->specOptions()->createMany($options_new_value);
@@ -106,7 +111,6 @@ class SpecAttributesService
             $spec_attribute->deviceTypes()->sync($data['devicetypes']  ?? []);
         });
     }
-
 
     public function delete(SpecAttribute $spec_attribute)
     {
