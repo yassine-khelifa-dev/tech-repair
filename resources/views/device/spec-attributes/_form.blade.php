@@ -5,7 +5,18 @@
         form_attribute_name: {{ Js::from(old('name', $spec_attribute?->name ?? '')) }},
         form_code: {{ Js::from(old('code', $spec_attribute?->code ?? '')) }},
         form_sort_order: {{ Js::from(old('sort_order', $spec_attribute?->sort_order ?? '')) }},
-        form_spec_options: {{ Js::from(old('spec_options', $spec_attribute?->specOptions?->pluck('value')->values()->toArray() ?: [''])) }},
+        form_spec_options: {{ Js::from(
+            old(
+                'spec_options',
+                $spec_attribute?->specOptions
+                    ?->map(
+                        fn($option) => [
+                            'id' => $option->id,
+                            'value' => $option->value,
+                        ],
+                    )->values()->toArray() ?: [['id' => null, 'value' => '']],
+            ),
+        ) }},
 
         init() {
             this.$watch('form_attribute_name', value => {
@@ -20,7 +31,10 @@
         },
 
         addOption() {
-            this.form_spec_options.push('')
+            this.form_spec_options.push({
+                id: null,
+                value: ''
+            })
         }
     }">
 
@@ -181,11 +195,13 @@
                     @endforeach
 
 
-                    <template x-for="(value, row) in form_spec_options" :key="row">
+                    <template x-for="(option, row) in form_spec_options" :key="row">
                         <div class="mt-2 flex items-center gap-2">
-                            <input :id="'attribute_' + row" x-model="form_spec_options[row]"
-                                x-bind:placeholder="form_attribute_name" type="text"
-                                :name="'spec_options[' + row + ']'"
+
+                            <span x-text="option.id"></span>
+                            <input type="hidden" :name="'spec_options[' + row + '][id]'" :value="option.id">
+                            <input :id="'attribute_' + row" type="text" x-bind:placeholder="form_attribute_name"
+                                :name="'spec_options[' + row + '][value]'" x-model="option.value"
                                 class="block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
 
                             <div x-show="['select','multiselect'].includes(form_input_type)">

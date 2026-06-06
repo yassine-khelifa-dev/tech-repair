@@ -33,8 +33,10 @@ class StoreSpecAttributeRequest extends FormRequest
             'sort_order' => 'required|integer',
             'devicetypes' => 'required|array|min:1',
             'devicetypes.*' => 'exists:device_types,id',
-            'spec_options' => 'required|array|min:1',
-            'spec_options.*' => 'required|string|min:1',
+
+            'spec_options'         => 'required|array|min:1',
+            'spec_options.*.id'    => 'nullable|integer|exists:spec_attribute_options,id',
+            'spec_options.*.value' => 'required|string|min:1|max:255',
         ];
     }
 }

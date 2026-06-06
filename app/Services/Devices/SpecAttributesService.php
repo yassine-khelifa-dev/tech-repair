@@ -9,7 +9,6 @@ class SpecAttributesService
 {
     public function to(string $route, string $key, string $message)
     {
-
         return redirect()
             ->route($route)
             ->with($key, $message);
@@ -35,12 +34,13 @@ class SpecAttributesService
             $row_attr =  SpecAttribute::create($attributeData);
 
             $spec_options =  collect($data['spec_options'] ?? [])
-                ->filter(fn($v) => filled($v))
+                ->filter(fn($v) => filled($v['value']))
                 ->map(
-                    fn($v, $i)  =>
+                    fn($option, $i)  =>
                     [
-                        'value' => str($v)->slug('_'),
-                        'label' => $v,
+                        //'id' ignore for creation id=null
+                        'value' => str($option['value'])->slug('_'),
+                        'label' => $option['value'],
                         'sort_order' => $i,
                         'is_active' => true,
                     ]
@@ -66,22 +66,41 @@ class SpecAttributesService
             $spec_attribute->update($attributeData);
 
             $spec_options =  collect($data['spec_options'] ?? [])
-                ->filter(fn($v) => filled($v))
+                ->filter(fn($v) => filled($v['value']))
                 ->map(
-                    fn($v, $i)  =>
+                    fn($option, $i)  =>
                     [
-                        'value' => str($v)->slug('_'),
-                        'label' => $v,
+                        'id'   => $option['id'] ?? null,
+                        'value' => str($option['value'])->slug('_'),
+                        'label' => $option['value'],
                         'sort_order' => $i,
                         'is_active' => true,
                     ]
-                )->values()
-                ->toArray();
+                );
 
-            $spec_attribute->specOptions()->delete();
+            // delete  options :
+            $options_ids_old = $spec_attribute->specOptions()->pluck('id')->toArray();
+            $options_ids_new = $spec_options->pluck('id')->toArray();
 
-            if (! empty($spec_options)) {
-                $spec_attribute->specOptions()->createMany($spec_options);
+            $options_ids_deleted = array_diff($options_ids_old, $options_ids_new);
+
+            $spec_attribute->specOptions()
+                ->whereIn('id', $options_ids_deleted)
+                ->delete();
+
+            // insert new options :
+            $options_new_value = $spec_options->filter(function ($option) {
+                return $option['id'] === null;
+            })->values()->toArray();
+
+
+            //TODO: update  options :
+
+
+
+
+            if (! empty($options_new_value)) {
+                $spec_attribute->specOptions()->createMany($options_new_value);
             }
 
             $spec_attribute->deviceTypes()->sync($data['devicetypes']  ?? []);
