@@ -1,25 +1,33 @@
 <?php
-
 namespace App\Http\Controllers\Web\Repair;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Http\Requests\Repair\UpdateRepairTicketRequest;
-use App\Models\Brand;
-use App\Models\Customer;
-use App\Models\DeviceType;
 use App\Models\RepairTicket;
-use Illuminate\Support\Arr;
+use App\Services\Repair\RepairTicketService;
 
 class RepairTicketController extends Controller
 {
+
+    /**
+     * @var RepairTicketService
+     */
+    protected $_service = null;
+    public function __construct(RepairTicketService $_service)
+    {
+        $this->_service = $_service;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tickets = RepairTicket::with(['customer', 'deviceModel.brand', 'selectedOptions'])->latest()->paginate(3);
-        return view('repair.tickets.index', compact('tickets'));
+        return view(
+            'repair.tickets.index',
+            $this->_service->getList()
+        );
     }
 
     /**
@@ -27,11 +35,9 @@ class RepairTicketController extends Controller
      */
     public function create()
     {
-        $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
-        $brands = Brand::all();
         return view(
             'repair.tickets.create',
-            compact('devicetypes', 'brands')
+            $this->_service->getFormData()
         );
     }
 
@@ -40,10 +46,17 @@ class RepairTicketController extends Controller
      */
     public function show(RepairTicket $repair_ticket)
     {
-        $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
-        $brands = Brand::all();
-        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions']);
-        return view('repair.tickets.show', compact('repair_ticket', 'brands', 'devicetypes'));
+        $repair_ticket->load([
+            'customer',
+            'deviceModel.brand',
+            'deviceModel.type',
+            'selectedOptions.specAttribute',
+            'photos',
+        ]);
+        return view(
+            'repair.tickets.show',
+            compact('repair_ticket')
+        );
     }
 
     /**
@@ -53,31 +66,14 @@ class RepairTicketController extends Controller
     {
         $data = $request->validated();
 
-        $customerData = Arr::only($data, [
-            'fullname',
-            'email',
-            'phone'
-        ]);
+        $this->_service->insert($data);
 
-        $ticketData = Arr::except($data, [
-            'fullname',
-            'email',
-            'phone',
-            'attributes',
-            'brand_id'
-        ]);
-
-        $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
-
-        $customer = Customer::create($customerData);
-
-        $ticket = $customer->tickets()->create($ticketData);
-
-        $ticket->selectedOptions()->sync($optionsIds);
-
-        return redirect()->route('repair-tickets.index')->with('success', 'Ticket has bene created');
+        return $this->to(
+            'repair-tickets.index',
+            'success',
+            'Ticket has bene created'
+        );
     }
-
 
 
     /**
@@ -85,15 +81,22 @@ class RepairTicketController extends Controller
      */
     public function edit(RepairTicket $repair_ticket)
     {
-        $devicetypes = DeviceType::with('deviceModels.brand', 'deviceModels.allowed_options.specAttribute')->get();
-        $brands = Brand::all();
-        $repair_ticket->load(['customer', 'deviceModel.brand', 'selectedOptions.specAttribute']);
-        $attributes =  collect($repair_ticket->selectedOptions)->mapWithKeys(function ($option) {
-            $key   = $option->specAttribute->name;
-            $value = $option->id;
-            return [$key  => $value];
-        })->toArray() ?? [];
-        return view('repair.tickets.edit', compact('repair_ticket', 'brands', 'devicetypes', 'attributes'));
+        $repair_ticket->load([
+            'customer',
+            'deviceModel.brand',
+            'selectedOptions.specAttribute'
+        ]);
+
+        return view(
+            'repair.tickets.edit',
+            array_merge(
+                [
+                    'repair_ticket' => $repair_ticket,
+                    'attributes' => $this->_service->getSelectedAttributesForForm($repair_ticket)
+                ],
+                $this->_service->getFormData()
+            )
+        );
     }
 
     /**
@@ -103,29 +106,13 @@ class RepairTicketController extends Controller
     {
         $data = $request->validated();
 
-        $customerData = Arr::only($data, [
-            'fullname',
-            'email',
-            'phone'
-        ]);
+        $this->_service->update($data, $repair_ticket);
 
-        $ticketData = Arr::except($data, [
-            'fullname',
-            'email',
-            'phone',
-            'attributes',
-            'brand_id'
-        ]);
-
-        $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
-
-        $repair_ticket->customer->update($customerData);
-
-        $repair_ticket->customer->tickets()->update($ticketData);
-
-        $repair_ticket->selectedOptions()->sync($optionsIds);
-
-        return redirect()->route('repair-tickets.index')->with('updated', 'Ticket has bene updated');
+        return $this->to(
+            'repair-tickets.index',
+            'updated',
+            'Ticket has bene updated'
+        );
     }
 
     /**
@@ -133,9 +120,19 @@ class RepairTicketController extends Controller
      */
     public function destroy(RepairTicket $repair_ticket)
     {
-
         $repair_ticket->delete();
 
-        return redirect()->route('repair-tickets.index')->with('deleted', 'Ticket has bene deleted');
+        return $this->to(
+            'repair-tickets.index',
+            'deleted',
+            'Ticket has bene deleted'
+        );
+    }
+
+    public function to(string $route, string $key, string $message)
+    {
+        return redirect()
+            ->route($route)
+            ->with($key, $message);
     }
 }
