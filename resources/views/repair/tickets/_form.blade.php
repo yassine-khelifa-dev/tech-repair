@@ -5,18 +5,14 @@
         devicetypes: {{ Js::from($devicetypes) }},
         brands: {{ Js::from($brands) }},
         device_type_selected_id: '{{ old('device_type_id', $repair_ticket->deviceModel->type->id ?? -1) }}',
-        brand_selected_id: '{{ old('brand_id',   $repair_ticket->deviceModel->brand->id ?? -1) }}',
+        brand_selected_id: '{{ old('brand_id', $repair_ticket->deviceModel->brand->id ?? -1) }}',
         device_model_selected_id: '{{ old('device_model_id', $repair_ticket->deviceModel->id ?? -1) }}',
         status: '{{ old('status', $repair_ticket->status ?? -1) }}',
-        attributes: {{   Js::from( old('attributes', $attributes  ?? [] ) )}},
-
+        attributes: {{ Js::from(old('attributes', $attributes ?? [])) }},
         changeSelect() {
             this.device_model_selected_id = -1;
         },
-
-
         get getDeviceModel() {
-
             const type = this.devicetypes.find(
                 t => t.id == this.device_type_selected_id
             );
@@ -25,13 +21,11 @@
             );
             return d_models ?? [];
         },
-
         get device_model_selected() {
             return this.getDeviceModel.find(
                 m => String(m.id) === String(this.device_model_selected_id)
             ) ?? null
         },
-
         get getOptions() {
             //allowed_options
             const options = {}
@@ -47,20 +41,17 @@
 
                 options[key].push({ id, value })
             });
-
-            //  console.log(options)
-
             return options ?? [];
         }
     }">
+        {{-- Form  --}}
         <form action="{{ $action }}" method="POST">
             @csrf
             @if ($method == 'PUT')
                 @method('PUT')
             @endif
             <div class="space-y-12">
-
-
+                {{--  Errors Form --}}
                 @if ($errors->any())
                     <div class="text-red-500">
                         @foreach ($errors->all() as $error)
@@ -68,7 +59,6 @@
                         @endforeach
                     </div>
                 @endif
-
 
                 <div class="border-b border-white/10 pb-12">
                     <h2 class="text-base/7 font-semibold text-white">
@@ -99,55 +89,30 @@
                     </div>
                     <div>
 
-                        {{--  Type --}}
+                        {{-- Device Types --}}
                         <div class="mt-5 text-white">
-                            <label for="device_type_id" class="mb-2.5 block text-sm font-medium text-white">
-                                Select a Device Type
-                            </label>
-                            <select id="device_type_id" name="device_type_id" x-model="device_type_selected_id"
-                                @change="changeSelect()"
-                                class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
-
-                                <option class="bg-black text-white" value="-1">
-                                    Choose a type
-                                </option>
-
+                            <x-forms.select name="device_type_id" label="Select Types" model="device_type_selected_id">
+                                <option class="bg-black text-white" value="-1">Select value ...</option>
                                 <template x-for="devicetype in devicetypes" :key="devicetype.id">
                                     <option class="bg-black text-white" :value="devicetype.id" x-text="devicetype.name"
                                         :selected="devicetype.id == device_type_selected_id">
                                     </option>
                                 </template>
-                            </select>
-
-                            @error('device_type_id')
-                                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                            @enderror
+                            </x-forms.select>
+                            <x-forms.error-message name="device_type_id" />
                         </div>
-
-
-
 
                         {{--  Brand  --}}
                         <div class="mt-5 text-white">
-                            <label for="brand_id" class="mb-2.5 block text-sm font-medium text-white">
-                                Select a Brand
-                            </label>
-                            <select id="brand_id" name="brand_id" x-model="brand_selected_id" @change="changeSelect()"
-                                class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
-                                <option class="bg-black text-white" value="-1">
-                                    Choose a brand
-                                </option>
-
+                            <x-forms.select name="brand_id" label="Select a Brand" model="brand_selected_id">
+                                <option class="bg-black text-white" value="-1">Select value ...</option>
                                 <template x-for="brand in brands" :key="brand.id">
                                     <option class="bg-black text-white" :value="brand.id" x-text="brand.name"
                                         :selected="brand.id == brand_selected_id">
                                     </option>
                                 </template>
-                            </select>
-
-                            @error('brand_id')
-                                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                            @enderror
+                            </x-forms.select>
+                            <x-forms.error-message name="brand_id" />
                         </div>
                     </div>
 
@@ -156,24 +121,17 @@
                     {{--  Models --}}
                     <template x-if="brand_selected_id != -1 && device_type_selected_id != -1">
                         <div class="mt-5 text-white">
-                            <label for="device_model_id" class="mb-2.5 block text-sm font-medium text-white">
-                                Select a Device Model
-                            </label>
-                            <select id="device_model_id" name="device_model_id" x-model="device_model_selected_id"
-                                class="block w-full rounded-base border border-gray-700 bg-black px-3 py-2.5 text-sm text-white shadow-xs focus:border-blue-500 focus:ring-blue-500">
-                                <option class="bg-black text-white" value="-1">
-                                    Select a Device Model ...
-                                </option>
+                            <x-forms.select name="device_model_id" label="Select a Device Model"
+                                model="device_model_selected_id">
+                                <option class="bg-black text-white" value="-1">Select value ...</option>
                                 <template x-for="device_model in getDeviceModel" :key="device_model.id">
                                     <option class="bg-black text-white" :value="device_model.id" x-text="device_model.name"
                                         :selected="device_model.id == device_model_selected_id">
                                     </option>
                                 </template>
-                            </select>
-
-                            @error('device_model_id')
-                                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                            @enderror
+                            </x-forms.select>
+                            <x-forms.error-message name="device_model_id" />
+                        </div>
                     </template>
 
 
@@ -208,10 +166,6 @@
                         <div>
                             {{--  Status --}}
                             <x-forms.select name="status" model="status" label="Status">
-                                <option class="bg-gray-950 text-white" value="">
-                                    Select Status ...
-                                </option>
-
                                 @foreach (\App\Enums\RepairStatus::cases() as $type)
                                     <option value="{{ $type->value }}">
                                         {{ $type->value }}
@@ -220,7 +174,6 @@
                             </x-forms.select>
                             <x-forms.error-message name="status" />
                         </div>
-
                         <div>
                             {{-- imei  --}}
                             <x-forms.input name="imei" :value="old('imei', $repair_ticket->imei ?? '')" label="Imei" />
@@ -231,12 +184,7 @@
                             <x-forms.input name="sn" :value="old('sn', $repair_ticket->sn ?? '')" label="Serial Number" />
                             <x-forms.error-message name="sn" />
                         </div>
-
                     </div>
-
-
-
-
 
                     {{-- technician_note --}}
                     <div class="mt-5 text-white">
@@ -246,9 +194,7 @@
                             class="bg-neutral-secondary-medium text-black border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body"
                             placeholder="Write technician note  here...">{{ old('technician_note', $repair_ticket->technician_note ?? '') }}</textarea>
                         <x-forms.error-message name="technician_note" />
-
                     </div>
-
 
                     {{-- issue_description  --}}
                     <div class="mt-5 text-white">
@@ -258,10 +204,7 @@
                             class="bg-neutral-secondary-medium text-black border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body"
                             placeholder="Write issue description here...">{{ old('issue_description', $repair_ticket->issue_description ?? '') }}</textarea>
                         <x-forms.error-message name="issue_description" />
-
                     </div>
-
-
 
                     <div class="mt-3 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2">
                         <div>
@@ -280,7 +223,6 @@
                         </div>
                     </div>
 
-
                     {{-- received_at  --}}
                     <div class="mt-2">
                         <label for="received_at" class="block mb-2.5 text-white text-sm font-medium text-heading">
@@ -295,7 +237,6 @@
                                         d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" />
                                 </svg>
                             </div>
-
                             <input type="datetime-local" id="received_at" name="received_at"
                                 value="{{ old('received_at', $repair_ticket->received_at ?? now()->format('Y-m-d\TH:i')) }}"
                                 class="block w-full ps-10 pe-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
@@ -303,7 +244,6 @@
                         <x-forms.error-message name="received_at" />
                     </div>
                 </div>
-
 
                 {{-- Actions  --}}
                 <div>
@@ -323,7 +263,6 @@
                         </button>
                     </div>
                 </div>
-
         </form>
     </div>
 @endsection
