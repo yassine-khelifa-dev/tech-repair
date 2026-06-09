@@ -13,6 +13,10 @@ class RepairLog extends Model
     public function ticket(){
         return $this->belongsTo(RepairTicket::class,'repair_ticket_id');
     }
+
+    public function images(){
+        return $this->hasMany(RepairLogImage::class, 'repair_log_id');
+    }
 }
 
 
