@@ -52,6 +52,7 @@ class RepairTicketController extends Controller
             'deviceModel.type',
             'selectedOptions.specAttribute',
             'photos',
+            'logs',
         ]);
         return view(
             'repair.tickets.show',

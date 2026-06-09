@@ -12,10 +12,11 @@
                     Ticket #{{ $repair_ticket->ticket_number }}
                 </p>
             </div>
-
-            <a href="{{ route('repair-tickets.index') }}"
-                class="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 text-white">
-                Back
+            <a href="{{ route('repair-tickets.index') }}" class="px-4 py-2 rounded bg-blue-500 hover:bg-red-600 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                </svg>
             </a>
         </div>
 
@@ -99,8 +100,7 @@
 
                         <div class="flex flex-wrap gap-2">
                             @foreach ($repair_ticket->selectedOptions as $option)
-                                <span
-                                    class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 border border-blue-500/30">
+                                <span class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 border border-blue-500/30">
                                     {{ $option->specAttribute->name }} :
                                     {{ $option->value }}
                                 </span>
@@ -108,6 +108,20 @@
                         </div>
                     </div>
 
+                </div>
+
+                <hr class="mt-5 mb-2">
+
+                <div>
+                    @include('repair.logs.index', [
+                        'logs' => $repair_ticket->logs,
+                    ])
+                </div>
+
+                <hr class="mt-5 mb-2">
+
+                <div>
+                    @include('repair.logs._form')
                 </div>
             </div>
 

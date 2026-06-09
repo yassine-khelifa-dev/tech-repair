@@ -66,4 +66,8 @@ class RepairTicket extends Model
             'spec_attribute_option_id'
         )->withTimestamps();
     }
+
+    public function logs(){
+        return $this->hasMany(RepairLog::class, 'repair_ticket_id', 'id');
+    }
 }

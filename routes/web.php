@@ -6,7 +6,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\Device\BrandController;
 use App\Http\Controllers\Web\Device\DeviceModelConfigurationController;
 use App\Http\Controllers\Web\Device\SpecAttributeController;
+use App\Http\Controllers\Web\Repair\RepairLogController;
 use App\Http\Controllers\Web\Repair\RepairTicketController;
+use App\Models\RepairLog;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,7 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('spec-attribute', SpecAttributeController::class);
     Route::resource('repair-tickets', RepairTicketController::class);
 
+    // create a repair-ticket log
+    Route::post('repair-ticket-logs/{repair_ticket}/create', [RepairLogController::class, 'store'])
+        ->name('repair-ticket-logs');
 
+    // config  device model
     Route::get(
         'device-models/{devicemodel}/configuration',
         [DeviceModelConfigurationController::class, 'edit']
