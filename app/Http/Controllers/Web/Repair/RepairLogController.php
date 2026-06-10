@@ -4,17 +4,22 @@ namespace App\Http\Controllers\Web\Repair;
 
 use App\Enums\RepairStatus;
 use App\Http\Controllers\Controller;
+use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairTicket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class RepairLogController extends Controller
 {
-    public function store(Request $request, RepairTicket $repair_ticket)
+    public function __invoke(Request $request, RepairTicket $repair_ticket)
     {
-        DB::transaction(function () use ($request, $repair_ticket) {
+
+        $log = null;
+        $imagesForMail = [];
+        DB::transaction(function () use ($request, $repair_ticket, &$log,  &$imagesForMail) {
 
             $data = $request->validate([
                 'message' => 'required|min:2',
@@ -32,14 +37,16 @@ class RepairLogController extends Controller
             $log = $repair_ticket->logs()->create($logData);
 
             // create log images
-            $imagesPath = [];
+            $imagesForDatabase = [];
             foreach ($request->file('images_log', []) as $image) {
-                $imagesPath[] = [
-                    'path' => $image->store('repair-logs', 'public'),
-                ];
+                $path = $image->store('repair-logs', 'public');
+
+                $imagesForDatabase[] = ['path' => $path];
+
+                $imagesForMail[]     = storage_path('app/public/' . $path);
             }
-            if (! empty($imagesPath)) {
-                $log->images()->createMany($imagesPath);
+            if (! empty($imagesForDatabase)) {
+                $log->images()->createMany($imagesForDatabase);
             }
 
             // update stauts repair-ticket
@@ -52,7 +59,33 @@ class RepairLogController extends Controller
 
         Log::info("Create Log for ticket ID: " . $repair_ticket->id);
 
+        // TODO: queue notification mail
+        // send Mail:
+        if (
+            $log  &&
+            $log->is_visible_to_customer &&
+            filled($repair_ticket->customer?->email)
+        ) {
+            try {
+                Mail::to($repair_ticket->customer->email)
+                    ->send(
+                        new RepairLogMail(
+                            $log,
+                            "New Log for ticket : " . $repair_ticket->ticket_number,
+                            $imagesForMail
+                        )
+                    );
+                Log::info("Email has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
+            } catch (\Throwable $th) {
+                Log::error("Email failed", [
+                    'repair_ticket_id' => $repair_ticket->id,
+                    'message' => $th->getMessage(),
+                ]);
+            }
+        }
+
+
         return  redirect()->route('repair-tickets.show', $repair_ticket->id)
-            ->with('success', 'Log has bene Updated');
+            ->with('success', 'Log has been added successfully.');
     }
 }
