@@ -155,6 +155,12 @@
 
         </div>
 
+
+        <p>   {{  $log->ticket->ticket_number }}</p>
+
+         <a href="{{ route('repair-track', $log->ticket->ticket_number) }}">link ticket repair</a>
+
+
     @endif
 
 </article>

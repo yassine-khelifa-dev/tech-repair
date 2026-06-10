@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     )->name('device-model-configuration.update');
 });
 
+require __DIR__ . '/customer.php';
 
 
 require __DIR__ . '/auth.php';

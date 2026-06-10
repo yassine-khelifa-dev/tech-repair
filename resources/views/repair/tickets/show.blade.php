@@ -29,101 +29,13 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {{-- Customer Information --}}
-            <div class="bg-gray-900 rounded-xl p-6 shadow">
-                <h2 class="text-lg font-semibold text-white mb-4">
-                    Customer Information
-                </h2>
-
-                <div class="space-y-3 text-gray-300">
-                    <p>
-                        <span class="font-medium text-white">Full Name:</span>
-                        {{ $repair_ticket->customer->fullname }}
-                    </p>
-
-                    <p>
-                        <span class="font-medium text-white">Phone:</span>
-                        {{ $repair_ticket->customer->phone }}
-                    </p>
-
-                    <p>
-                        <span class="font-medium text-white">Email:</span>
-                        {{ $repair_ticket->customer->email ?: '-' }}
-                    </p>
-                </div>
-            </div>
+            @include('repair.partials._customer-info')
 
             {{-- Device Information --}}
-            <div class="bg-gray-900 rounded-xl p-6 shadow">
-                <h2 class="text-lg font-semibold text-white mb-4">
-                    Device Information
-                </h2>
-
-                <div class="space-y-3 text-gray-300">
-                    <p>
-                        <span class="font-medium text-white">Brand:</span>
-                        {{ $repair_ticket->deviceModel->brand->name }}
-                    </p>
-
-                    <p>
-                        <span class="font-medium text-white">Model:</span>
-                        {{ $repair_ticket->deviceModel->name }}
-                    </p>
-
-                    <p>
-                        <span class="font-medium text-white">Serial Number:</span>
-                        {{ $repair_ticket->sn ?: '-' }}
-                    </p>
-                </div>
-            </div>
+            @include('repair.partials._device-info')
 
             {{-- Repair Details --}}
-            <div class="bg-gray-900 rounded-xl p-6 shadow lg:col-span-2">
-                <h2 class="text-lg font-semibold text-white mb-4">
-                    Repair Details
-                </h2>
-
-                <div class="space-y-4 text-gray-300">
-
-                    <div>
-                        <p class="font-medium text-white mb-1">
-                            Reported Issue
-                        </p>
-                        <p>
-                            {{ $repair_ticket->issue_description ?? '-' }}
-                        </p>
-                    </div>
-
-                    <div>
-                        <p class="font-medium text-white mb-2">
-                            Selected Options
-                        </p>
-
-                        <div class="flex flex-wrap gap-2">
-                            @foreach ($repair_ticket->selectedOptions as $option)
-                                <span class="px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 border border-blue-500/30">
-                                    {{ $option->specAttribute->name }} :
-                                    {{ $option->value }}
-                                </span>
-                            @endforeach
-                        </div>
-                    </div>
-
-                </div>
-
-                <hr class="mt-5 mb-2">
-
-                <div>
-                    @include('repair.logs.index', [
-                        'logs' => $repair_ticket->logs,
-                    ])
-                </div>
-
-                <hr class="mt-5 mb-2">
-
-                <div>
-                    @include('repair.logs._form')
-                </div>
-            </div>
+            @include('repair.partials._repair-details')
 
         </div>
     </div>

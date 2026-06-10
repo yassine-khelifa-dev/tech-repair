@@ -16,7 +16,6 @@ class RepairLogController extends Controller
 {
     public function __invoke(Request $request, RepairTicket $repair_ticket)
     {
-
         $log = null;
         $imagesForMail = [];
         DB::transaction(function () use ($request, $repair_ticket, &$log,  &$imagesForMail) {

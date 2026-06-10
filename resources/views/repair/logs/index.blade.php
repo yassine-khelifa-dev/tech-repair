@@ -15,6 +15,7 @@
     </div>
 
     @forelse ($logs as $log)
+    
         <article class="border-b border-gray-700 py-5 last:border-b-0">
             <div class="mb-3 flex items-start justify-between gap-4">
                 <div>
@@ -35,12 +36,14 @@
                     </div>
                 </div>
 
+
+
                 @if ($log->is_visible_to_customer)
                     <span
                         class="rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-xs font-medium text-green-300">
                         Visible to customer
                     </span>
-                @else
+                @elseif(auth()->user())
                     <span
                         class="rounded-full border border-gray-500/30 bg-gray-700 px-3 py-1 text-xs font-medium text-gray-300">
                         Internal only
@@ -68,12 +71,22 @@
                 </div>
             @endif
 
-            <div>
+            @if ($log->is_visible_to_customer)
+                <div>
 
-                @include('repair.logs._images', [
-                    'images' => $log->images,
-                ])
-            </div>
+                    @include('repair.logs._images', [
+                        'images' => $log->images,
+                    ])
+                </div>
+            @elseif(auth()->user())
+                <div>
+
+                    @include('repair.logs._images', [
+                        'images' => $log->images,
+                    ])
+                </div>
+            @endif
+
 
 
         </article>
