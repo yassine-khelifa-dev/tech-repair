@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 use Carbon\Carbon;
-
+use Illuminate\Support\Str;
 class RepairTicket extends Model
 {
     protected $fillable = [
@@ -21,6 +21,7 @@ class RepairTicket extends Model
         'issue_description',
         'status',
         'sn',
+        'public_token',
         'imei',
         'device_model_id'
     ];
@@ -38,6 +39,8 @@ class RepairTicket extends Model
             $repair_ticket->ticket_number =
                 'RT-' . Carbon::now()->format('YmdHis') . '-' . random_int(100, 999);
             $repair_ticket->received_at = now();
+
+            $repair_ticket->public_token = Str::uuid();
         });
     }
 

@@ -138,7 +138,6 @@
     </p>
 
     @if ($log->old_status || $log->new_status)
-
         <div class="status-box">
 
             <span class="status-label">Status:</span>
@@ -155,12 +154,9 @@
 
         </div>
 
-
-        <p>   {{  $log->ticket->ticket_number }}</p>
-
-         <a href="{{ route('repair-track', $log->ticket->ticket_number) }}">link ticket repair</a>
-
-
+        <a href="{{ route('customer.repair.track', $log->ticket->public_token) }}">
+            Track your repair
+        </a>
     @endif
 
 </article>
