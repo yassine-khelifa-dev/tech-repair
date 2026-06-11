@@ -15,9 +15,7 @@ class RepairLogCreatedNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public RepairLog $log,
-        public array $repairImages,
-
+        public RepairLog $log
     ) {}
 
     /**
@@ -37,8 +35,7 @@ class RepairLogCreatedNotification extends Notification
     {
         $mail = new RepairLogMail(
             'New Log for ticket : ' . $this->log->ticket->ticket_number,
-            $this->log,
-            $this->repairImages
+            $this->log
         );
         $mail->to($notifiable->email);
 

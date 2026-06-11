@@ -2,7 +2,7 @@
 
 namespace App\Mail\Repair;
 
-use App\Models\RepairLog;
+use App\Models\RepairTicket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RepairLogMail extends Mailable
+class RepairTicketMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,10 +19,9 @@ class RepairLogMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public string $title,
-        public RepairLog $log,
-        public array $repairImages = []
-    ) {}
+         public RepairTicket $ticket
+    )
+    {}
 
     /**
      * Get the message envelope.
@@ -30,7 +29,7 @@ class RepairLogMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->title,
+            subject: 'Repair Ticket Mail',
         );
     }
 
@@ -40,7 +39,7 @@ class RepairLogMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.repairs.log',
+            view: 'emails.repairs.ticket',
         );
     }
 
@@ -52,6 +51,5 @@ class RepairLogMail extends Mailable
     public function attachments(): array
     {
         return [];
-       // return collect($this->repairImages)->map(fn($path) => Attachment::fromPath($path))->toArray();
     }
 }

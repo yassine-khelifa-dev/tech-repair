@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Services\Repair;
 
+use App\Jobs\SendRepairTicketNotificationJob;
 use App\Models\Brand;
 use App\Models\Customer;
 use App\Models\DeviceType;
@@ -22,7 +24,7 @@ class RepairTicketService
     {
 
 
-        
+
         return [
             'tickets' => RepairTicket::with([
                 'customer',
@@ -45,7 +47,9 @@ class RepairTicketService
 
     public function insert(array $data)
     {
-        DB::transaction(function () use ($data) {
+        /** @var RepairTicket::class */
+        $ticket = null;
+        DB::transaction(function () use ($data, &$ticket) {
             $customerData = Arr::only($data, [
                 'fullname',
                 'email',
@@ -60,11 +64,25 @@ class RepairTicketService
                 'attributes',
                 'brand_id'
             ]);
+
             $ticket = $customer->tickets()->create($ticketData);
 
             $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
             $ticket->selectedOptions()->sync($optionsIds);
         });
+
+        // Job: send notif:
+        try {
+            SendRepairTicketNotificationJob::dispatch($ticket);
+
+            Log::info("Notif has been sent (notif:new Ticket) : repair-id: " . $ticket->id);
+        } catch (\Throwable $th) {
+            Log::error("Notif failed", [
+                'repair_ticket_id' => $ticket->id,
+                'message' => $th->getMessage(),
+            ]);
+        }
+
     }
 
     // FORM EDIT :
@@ -106,7 +124,4 @@ class RepairTicketService
             $ticket->selectedOptions()->sync($optionsIds);
         });
     }
-
-
-
 }

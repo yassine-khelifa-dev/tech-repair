@@ -72,10 +72,7 @@ class RepairLogController extends Controller
             try {
 
                 // Job Send Notif:
-                SendRepairLogNotificationJob::dispatch(
-                    $log,
-                    $imagesForMail
-                );
+                SendRepairLogNotificationJob::dispatch($log);
                 Log::info("Notif has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
 
             } catch (\Throwable $th) {

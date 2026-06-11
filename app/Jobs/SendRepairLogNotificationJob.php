@@ -17,7 +17,6 @@ class SendRepairLogNotificationJob implements ShouldQueue
      */
     public function __construct(
         public RepairLog $log,
-        public array $repairImages,
     ) {}
 
     /**
@@ -28,8 +27,7 @@ class SendRepairLogNotificationJob implements ShouldQueue
         $customer = $this->log->ticket->customer;
         $customer->notify(
             new RepairLogCreatedNotification(
-                 $this->log,
-                 $this->repairImages ?? []
+                 $this->log
             )
         );
     }
