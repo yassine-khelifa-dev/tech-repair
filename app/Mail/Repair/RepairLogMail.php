@@ -19,8 +19,8 @@ class RepairLogMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public RepairLog $log,
         public string $title,
+        public RepairLog $log,
         public array $repairImages = []
     ) {}
 

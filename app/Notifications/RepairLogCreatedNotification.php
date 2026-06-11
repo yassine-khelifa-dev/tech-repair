@@ -16,8 +16,8 @@ class RepairLogCreatedNotification extends Notification
      */
     public function __construct(
         public RepairLog $log,
-        public string $title,
-        public array $repairImages = []
+        public array $repairImages,
+
     ) {}
 
     /**
@@ -36,8 +36,8 @@ class RepairLogCreatedNotification extends Notification
     public function toMail(object $notifiable): RepairLogMail
     {
         $mail = new RepairLogMail(
+            'New Log for ticket : ' . $this->log->ticket->ticket_number,
             $this->log,
-            $this->title,
             $this->repairImages
         );
         $mail->to($notifiable->email);
@@ -53,7 +53,7 @@ class RepairLogCreatedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => $this->title,
+            'title' => 'New Log for ticket : ' . $this->log->ticket->ticket_number,
             'message' => $this->log->message,
             'repair_log_id' => $this->log->id,
             'repair_ticket_id' => $this->log->repair_ticket_id,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Repair;
 
 use App\Enums\RepairStatus;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendRepairLogNotificationJob;
 use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairTicket;
 use App\Notifications\RepairLogCreatedNotification;
@@ -17,8 +18,9 @@ class RepairLogController extends Controller
 {
     public function __invoke(Request $request, RepairTicket $repair_ticket)
     {
+        /** @var RepairLog::class */
         $log = null;
-        $imagesForMail = [];
+
         DB::transaction(function () use ($request, $repair_ticket, &$log,  &$imagesForMail) {
 
             $data = $request->validate([
@@ -38,6 +40,7 @@ class RepairLogController extends Controller
 
             // create log images
             $imagesForDatabase = [];
+             $imagesForMail = [];
             foreach ($request->file('images_log', []) as $image) {
                 $path = $image->store('repair-logs', 'public');
 
@@ -67,15 +70,14 @@ class RepairLogController extends Controller
             filled($repair_ticket->customer?->email)
         ) {
             try {
-                // Notification
-                $repair_ticket->customer->notify(
-                    new RepairLogCreatedNotification(
-                        $log,
-                        "New Log for ticket : " . $repair_ticket->ticket_number,
-                        $imagesForMail
-                    )
+
+                // Job Send Notif:
+                SendRepairLogNotificationJob::dispatch(
+                    $log,
+                    $imagesForMail
                 );
                 Log::info("Notif has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
+
             } catch (\Throwable $th) {
                 Log::error("Notif failed", [
                     'repair_ticket_id' => $repair_ticket->id,
