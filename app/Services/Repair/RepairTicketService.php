@@ -21,6 +21,8 @@ class RepairTicketService
     public function getList()
     {
 
+
+        
         return [
             'tickets' => RepairTicket::with([
                 'customer',

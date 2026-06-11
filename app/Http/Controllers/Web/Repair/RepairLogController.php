@@ -6,6 +6,7 @@ use App\Enums\RepairStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairTicket;
+use App\Notifications\RepairLogCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -66,17 +67,17 @@ class RepairLogController extends Controller
             filled($repair_ticket->customer?->email)
         ) {
             try {
-                Mail::to($repair_ticket->customer->email)
-                    ->send(
-                        new RepairLogMail(
-                            $log,
-                            "New Log for ticket : " . $repair_ticket->ticket_number,
-                            $imagesForMail
-                        )
-                    );
-                Log::info("Email has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
+                // Notification
+                $repair_ticket->customer->notify(
+                    new RepairLogCreatedNotification(
+                        $log,
+                        "New Log for ticket : " . $repair_ticket->ticket_number,
+                        $imagesForMail
+                    )
+                );
+                Log::info("Notif has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
             } catch (\Throwable $th) {
-                Log::error("Email failed", [
+                Log::error("Notif failed", [
                     'repair_ticket_id' => $repair_ticket->id,
                     'message' => $th->getMessage(),
                 ]);
