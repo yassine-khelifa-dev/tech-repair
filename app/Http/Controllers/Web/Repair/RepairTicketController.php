@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Web\Repair;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Http\Requests\Repair\UpdateRepairTicketRequest;
 use App\Models\RepairTicket;
+use App\Services\Repair\RepairPdfService;
 use App\Services\Repair\RepairTicketService;
 
 class RepairTicketController extends Controller
@@ -14,9 +16,11 @@ class RepairTicketController extends Controller
      * @var RepairTicketService
      */
     protected $_service = null;
-    public function __construct(RepairTicketService $_service)
+    protected $_service_pdf = null;
+    public function __construct(RepairTicketService $_service, RepairPdfService $repair_pdf_service)
     {
-        $this->_service = $_service;
+        $this->_service     = $_service;
+        $this->_service_pdf = $repair_pdf_service;
     }
 
     /**
@@ -74,6 +78,21 @@ class RepairTicketController extends Controller
             'success',
             'Ticket has bene created'
         );
+    }
+
+    /**
+     * Download a Repair Ticket recipe
+     */
+    public function download(RepairTicket $repair_ticket)
+    {
+        $repair_ticket->load([
+            'customer',
+            'deviceModel.brand',
+            'deviceModel.type',
+            'selectedOptions.specAttribute',
+            'logs' => fn ($q) => $q->where('is_visible_to_customer', true),
+        ]);
+        return $this->_service_pdf->downloadDepositReceipt($repair_ticket);
     }
 
 

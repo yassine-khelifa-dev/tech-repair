@@ -124,4 +124,7 @@ class RepairTicketService
             $ticket->selectedOptions()->sync($optionsIds);
         });
     }
+
+
+    
 }

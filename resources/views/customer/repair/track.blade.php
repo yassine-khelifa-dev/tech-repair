@@ -33,6 +33,16 @@
                     </svg>
                 </a>
             @endauth
+
+
+            <a href="{{ route('repair-tickets.download', $repair_ticket->id) }}"
+                class="px-4 py-2 rounded bg-green-700 hover:bg-red-600 text-white">
+                Download Ticket recipe
+
+            </a>
+
+
+
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">

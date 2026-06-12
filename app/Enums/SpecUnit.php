@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum SpecUnit:string
+enum SpecUnit: string
 {
     case NOP = 'None';
     case GB = 'GB';
@@ -12,4 +12,5 @@ enum SpecUnit:string
     case MAH = 'mAh';
     case PERCENT = '%';
     case INCH = 'inch';
+    case MONTH = 'Month';
 }
