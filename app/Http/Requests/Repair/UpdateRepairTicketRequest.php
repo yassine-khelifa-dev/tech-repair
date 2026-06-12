@@ -43,6 +43,8 @@ class UpdateRepairTicketRequest extends FormRequest
                 'numeric',
                 'min:0',
             ],
+            'images_device' => ['nullable', 'array'],
+            'images_device.*' => ['image', 'max:5120'],
         ];
     }
 }

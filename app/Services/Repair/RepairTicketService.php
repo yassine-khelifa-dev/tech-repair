@@ -62,13 +62,27 @@ class RepairTicketService
                 'email',
                 'phone',
                 'attributes',
-                'brand_id'
+                'brand_id',
+                'images_device'
             ]);
 
             $ticket = $customer->tickets()->create($ticketData);
 
+            // sync options' device customer
             $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
             $ticket->selectedOptions()->sync($optionsIds);
+
+            // Store device photos
+            if (! empty($data['images_device'])) {
+                $imagesForDB = [];
+                foreach ($data['images_device'] as $img_device) {
+                    $path = $img_device->store('repair-devices', 'public');
+                    $imagesForDB[] = ['path' => $path];
+                }
+                if (! empty($imagesForDB)) {
+                    $ticket->photos()->createMany($imagesForDB);
+                }
+            }
         });
 
         // Job: send notif:
@@ -82,7 +96,6 @@ class RepairTicketService
                 'message' => $th->getMessage(),
             ]);
         }
-
     }
 
     // FORM EDIT :
@@ -124,7 +137,4 @@ class RepairTicketService
             $ticket->selectedOptions()->sync($optionsIds);
         });
     }
-
-
-    
 }

@@ -49,6 +49,10 @@
             {{-- Repair Details --}}
             @include('repair.partials._repair-details')
 
+
+
+    
+
         </div>
     </div>
 @endsection

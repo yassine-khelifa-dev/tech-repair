@@ -45,7 +45,7 @@
         }
     }">
         {{-- Form  --}}
-        <form action="{{ $action }}" method="POST">
+        <form action="{{ $action }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if ($method == 'PUT')
                 @method('PUT')
@@ -244,6 +244,10 @@
                         <x-forms.error-message name="received_at" />
                     </div>
                 </div>
+
+
+                {{-- images  --}}
+                 <x-forms.upload_images name="images_device" />
 
                 {{-- Actions  --}}
                 <div>

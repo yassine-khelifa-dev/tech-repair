@@ -20,4 +20,6 @@
              {{ $repair_ticket->sn ?: '-' }}
          </p>
      </div>
+
+     <x-forms.image-gallery :images="$repair_ticket->photos" title="Device Photos" />
  </div>
