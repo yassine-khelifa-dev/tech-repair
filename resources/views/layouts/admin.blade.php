@@ -137,6 +137,10 @@
                             </div>
                         </a>
                     </div>
+
+
+
+
                     <!-- Apps -->
                     <button type="button" data-dropdown-toggle="apps-dropdown"
                         class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
@@ -149,6 +153,10 @@
                             </path>
                         </svg>
                     </button>
+
+
+
+
                     <!-- Dropdown menu -->
                     <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
                         id="apps-dropdown">
@@ -480,7 +488,7 @@
 
 
                     {{-- =========================
-        Repairs Menu
+        Repairs Menu.
     ========================== --}}
                     @php
                         $isRepairsActive = request()->routeIs('repair-tickets.*');
@@ -519,6 +527,19 @@
                         ? 'bg-blue-500 text-white'
                         : 'text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700' }}">
                                     Tickets
+                                </a>
+                            </li>
+
+
+
+                            {{-- Repair Request --}}
+                            <li>
+                                <a href="{{ route('repair-requests.index') }}"
+                                    class="flex items-center p-2 pl-11 w-full text-base font-medium rounded-lg transition duration-75
+                    {{ request()->routeIs('repair-requests.*')
+                        ? 'bg-blue-500 text-white'
+                        : 'text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700' }}">
+                                    Requests
                                 </a>
                             </li>
 
