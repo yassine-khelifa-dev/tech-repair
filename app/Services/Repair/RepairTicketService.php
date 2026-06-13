@@ -44,7 +44,6 @@ class RepairTicketService
     }
 
 
-
     public function insert(array $data)
     {
         /** @var RepairTicket::class */

@@ -40,7 +40,7 @@ class RepairLogController extends Controller
 
             // create log images
             $imagesForDatabase = [];
-             $imagesForMail = [];
+            $imagesForMail = [];
             foreach ($request->file('images_log', []) as $image) {
                 $path = $image->store('repair-logs', 'public');
 
