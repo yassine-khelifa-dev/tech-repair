@@ -22,7 +22,6 @@ class RepairRequestController extends Controller
      * @var RepairTicketService
      */
     protected $_service = null;
-    protected $_service_pdf = null;
     public function __construct(RepairTicketService $_service)
     {
         $this->_service     = $_service;

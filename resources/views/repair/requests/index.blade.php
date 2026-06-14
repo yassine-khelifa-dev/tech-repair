@@ -74,6 +74,7 @@
                 @foreach ($repair_requests as $repair_request)
                     @php
                         $repair_request_id = $repair_request->id;
+                        $converted_ticket_id = $repair_request->converted_ticket_id;
                         $status = $repair_request->status;
                         $repair_request_created_at = $repair_request->created_at->diffForHumans();
                         $repair_request = json_decode($repair_request['data']);
@@ -110,7 +111,7 @@
                         <td class="px-6 py-4">
 
                             @if ($status == 'pending')
-                                <a href="{{ route('repair-requests.show', $repair_request_id) }}"
+                                <a href="{{ route('repair-requests.show', $repair_request_id) }}" title="review"
                                     class="inline-flex items-center justify-center rounded-md bg-green-500 p-2 text-white hover:bg-red-600 transition">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -118,6 +119,21 @@
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" />
                                     </svg>
+                                </a>
+                            @endif
+
+
+
+                            @if ($converted_ticket_id !== null && $status == 'approved')
+                                <a href="{{ route('repair-tickets.show', $converted_ticket_id) }}" title="details"
+                                    class="inline-flex items-center justify-center rounded-md bg-blue-500 p-2 text-white hover:bg-red-600 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                                    </svg>
+
                                 </a>
                             @endif
 

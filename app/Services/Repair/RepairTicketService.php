@@ -78,19 +78,6 @@ class RepairTicketService
                 }
             }
         });
-
-        // Job: send notif:
-        try {
-            SendRepairTicketNotificationJob::dispatch($ticket);
-
-            Log::info("Notif has been sent (notif:new Ticket) : repair-id: " . $ticket->id);
-        } catch (\Throwable $th) {
-            Log::error("Notif failed", [
-                'repair_ticket_id' => $ticket->id,
-                'message' => $th->getMessage(),
-            ]);
-        }
-
         return $ticket;
     }
 
