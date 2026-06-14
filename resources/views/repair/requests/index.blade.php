@@ -1,8 +1,29 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1 class="text-white my-2">Page Repair Requests :</h1>
 
+
+    <div class="flex items-center gap-3 mb-6">
+        <div class="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                class="w-7 h-7 text-blue-400">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2Z" />
+            </svg>
+        </div>
+
+        <div>
+            <h1 class="text-3xl font-bold text-white tracking-tight">
+                Repair Requests
+            </h1>
+
+            <p class="text-sm text-gray-400">
+                Manage and review incoming repair requests
+            </p>
+        </div>
+    </div>
+
+    
     @if (session('success') || session('updated') || session('deleted'))
         <div @class([
             'p-3 mx-2 my-5 rounded',
@@ -53,6 +74,7 @@
                 @foreach ($repair_requests as $repair_request)
                     @php
                         $repair_request_id = $repair_request->id;
+                        $status = $repair_request->status;
                         $repair_request_created_at = $repair_request->created_at->diffForHumans();
                         $repair_request = json_decode($repair_request['data']);
                     @endphp
@@ -76,9 +98,48 @@
 
 
                         <td class="px-6 py-4">
-                            <span title="   {{ $repair_request->status }} ">
-                                {{ $repair_request->status }}
-                            </span>
+                            @switch($status)
+                                @case('pending')
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium text-sm">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+
+                                        Pending
+                                    </span>
+                                @break
+
+                                @case('approved')
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium text-sm">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                        </svg>
+
+                                        Approved
+                                    </span>
+                                @break
+
+                                @case('rejected')
+                                    <span
+                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-medium text-sm">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+
+                                        Rejected
+                                    </span>
+                                @break
+                            @endswitch
                         </td>
 
                         <td class="px-6 py-4">
@@ -87,20 +148,21 @@
                             </span>
                         </td>
 
-
-
                         <td class="px-6 py-4">
 
-                            <a href="{{ route('repair-requests.show', $repair_request_id) }}"
-                                class="inline-flex items-center justify-center rounded-md bg-green-500 p-2 text-white hover:bg-red-600 transition">
+                            @if ($status == 'pending')
+                                <a href="{{ route('repair-requests.show', $repair_request_id) }}"
+                                    class="inline-flex items-center justify-center rounded-md bg-green-500 p-2 text-white hover:bg-red-600 transition">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" />
-                                </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" />
+                                    </svg>
+                                </a>
+                            @endif
 
-                            </a>
+
 
                         </td>
                     </tr>
@@ -108,4 +170,59 @@
             </tbody>
         </table>
     </div>
+
+
+    {{--  Pagaination : --}}
+
+    @if ($repair_requests->hasPages())
+        <div
+            class="mt-5 flex items-center text-white justify-between rounded-lg border border-default bg-neutral-primary-soft px-4 py-3 text-sm text-body">
+            <div>
+                Showing
+                <span class="font-semibold text-heading">{{ $repair_requests->firstItem() }}</span>
+                to
+                <span class="font-semibold text-heading">{{ $repair_requests->lastItem() }}</span>
+                of
+                <span class="font-semibold text-heading">{{ $repair_requests->total() }}</span>
+                results
+            </div>
+
+            <div class="flex items-center gap-2">
+                @if ($repair_requests->onFirstPage())
+                    <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                        Previous
+                    </span>
+                @else
+                    <a href="{{ $repair_requests->previousPageUrl() }}"
+                        class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Previous
+                    </a>
+                @endif
+
+                @foreach ($repair_requests->getUrlRange(1, $repair_requests->lastPage()) as $page => $url)
+                    @if ($page == $repair_requests->currentPage())
+                        <span class="rounded-md bg-red-500 px-3 py-2 text-white">
+                            {{ $page }}
+                        </span>
+                    @else
+                        <a href="{{ $url }}"
+                            class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                            {{ $page }}
+                        </a>
+                    @endif
+                @endforeach
+
+                @if ($repair_requests->hasMorePages())
+                    <a href="{{ $repair_requests->nextPageUrl() }}"
+                        class="rounded-md border border-default px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        Next
+                    </a>
+                @else
+                    <span class="rounded-md border border-default px-3 py-2 text-gray-400 cursor-not-allowed">
+                        Next
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endif
 @endsection

@@ -9,7 +9,7 @@
                     Repair Request Details
                 </h1>
                 <p class="text-gray-400 mt-1">
-                    Request #{{ $repair_request_id }}
+                    Request #{{ $repair_request->id }}
                 </p>
             </div>
 
@@ -19,7 +19,7 @@
             </a>
         </div>
 
-        <form action="{{ route('repair-requests.review', $repair_request_id) }}" method="POST"
+        <form action="{{ route('repair-requests.review', $repair_request->id) }}" method="POST"
             class="mb-8 rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl overflow-hidden">
             @csrf
 
@@ -83,6 +83,7 @@
                         <p class="text-lg font-medium">{{ $data['phone'] }}</p>
                     </div>
                 </div>
+
             </div>
 
             <div class="rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl p-6">
@@ -106,6 +107,9 @@
                         <p class="text-lg font-medium">{{ $device_model->name }}</p>
                     </div>
                 </div>
+
+                <x-forms.image-gallery :images="$images" title="Device Photos" />
+
             </div>
 
             <div class="rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl p-6">
@@ -128,7 +132,7 @@
                         <p class="text-sm text-gray-400">Current Status</p>
                         <span
                             class="inline-flex mt-1 px-3 py-1 rounded-full text-sm font-semibold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">
-                            {{ ucfirst($data['status']) }}
+                            {{ ucfirst($repair_request->status) }}
                         </span>
                     </div>
                 </div>

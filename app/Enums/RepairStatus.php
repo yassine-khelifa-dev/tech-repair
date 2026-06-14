@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum RepairStatus:string
 {
+    case APPROVED = 'approved';
     case RECEIVED = 'received';
     case DIAGNOSIS = 'diagnosis';
     case WAITING_PARTS = 'waiting_parts';

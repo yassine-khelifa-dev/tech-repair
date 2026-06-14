@@ -17,7 +17,7 @@
     </p>
 
     <p>
-        <a href="{{ url('/repair-tickets') }}"
+        <a href="{{ route('repair-requests.show', $repair_request->id) }}"
            style="
                 background:#2563eb;
                 color:white;

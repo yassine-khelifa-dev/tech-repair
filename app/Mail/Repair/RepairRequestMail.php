@@ -19,7 +19,7 @@ class RepairRequestMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-       public  RepairRequest $repair_request
+       public  RepairRequest $repair_request 
     ) {}
 
     /**

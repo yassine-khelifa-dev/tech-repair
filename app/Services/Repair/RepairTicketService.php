@@ -44,7 +44,7 @@ class RepairTicketService
     }
 
 
-    public function insert(array $data)
+    public function insert(array $data) : RepairTicket
     {
         /** @var RepairTicket::class */
         $ticket = null;
@@ -95,6 +95,8 @@ class RepairTicketService
                 'message' => $th->getMessage(),
             ]);
         }
+
+        return $ticket;
     }
 
     // FORM EDIT :

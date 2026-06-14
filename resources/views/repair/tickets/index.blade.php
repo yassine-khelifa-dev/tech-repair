@@ -1,9 +1,27 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1 class="text-white my-2">Page Repair Ticket :</h1>
+    <div class="flex items-center gap-3 mb-6">
+        <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                class="w-7 h-7 text-indigo-400">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M11.42 2.25a1.875 1.875 0 0 1 1.16 0l1.558.52a1.875 1.875 0 0 0 1.802-.354l1.36-.98a1.875 1.875 0 0 1 2.54.18l1.01 1.01a1.875 1.875 0 0 1 .18 2.54l-.98 1.36a1.875 1.875 0 0 0-.354 1.802l.52 1.558a1.875 1.875 0 0 1 0 1.16l-.52 1.558a1.875 1.875 0 0 0 .354 1.802l.98 1.36a1.875 1.875 0 0 1-.18 2.54l-1.01 1.01a1.875 1.875 0 0 1-2.54.18l-1.36-.98a1.875 1.875 0 0 0-1.802-.354l-1.558.52a1.875 1.875 0 0 1-1.16 0l-1.558-.52a1.875 1.875 0 0 0-1.802.354l-1.36.98a1.875 1.875 0 0 1-2.54-.18l-1.01-1.01a1.875 1.875 0 0 1-.18-2.54l.98-1.36a1.875 1.875 0 0 0 .354-1.802l-.52-1.558a1.875 1.875 0 0 1 0-1.16l.52-1.558a1.875 1.875 0 0 0-.354-1.802l-.98-1.36a1.875 1.875 0 0 1 .18-2.54l1.01-1.01a1.875 1.875 0 0 1 2.54-.18l1.36.98a1.875 1.875 0 0 0 1.802.354l1.558-.52Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+        </div>
 
-   @if (session('success') || session('updated') || session('deleted'))
+        <div>
+            <h1 class="text-3xl font-bold text-white">
+                Repair Tickets
+            </h1>
+
+            <p class="text-sm text-gray-400">
+                Track and manage repair operations
+            </p>
+        </div>
+    </div>
+    @if (session('success') || session('updated') || session('deleted'))
         <div @class([
             'p-3 mx-2 my-5 rounded',
             'bg-green-100 text-green-700' => session('success'),
@@ -21,7 +39,7 @@
     <div
         class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
 
-       {{--  Table --}}
+        {{--  Table --}}
         <table class="w-full text-sm text-left rtl:text-right text-body">
             <thead class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default">
                 <tr>

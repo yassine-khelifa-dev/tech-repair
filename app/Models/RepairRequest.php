@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class RepairRequest extends Model
 {
-   protected $fillable = ['data','converted_ticket_id', 'response' ];
+   protected $fillable = ['data','converted_ticket_id', 'response' , 'status'];
 }
