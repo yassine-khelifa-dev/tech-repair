@@ -8,8 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Models\DeviceModel;
 use App\Models\RepairRequest;
+use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\Repair\RepairTicketService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,9 +80,12 @@ class RepairRequestController extends Controller
             'status' =>  Rule::enum(RepairRequestStatus::class),
         ]);
 
+
+        $data = json_decode($repair_request->data, true);
+
         if ($_response['status'] === RepairRequestStatus::approved->value) {
 
-            $data = json_decode($repair_request->data, true);
+
             $device_model = DeviceModel::with(['type', 'brand'])
                 ->findOrFail($data['device_model_id']);
 
@@ -123,10 +129,29 @@ class RepairRequestController extends Controller
             $repair_request->response =  $_response['response'];
             $repair_request->status = RepairRequestStatus::rejected->value;
         }
+
+
+
         $repair_request->save();
 
 
-        //TODO: send a notif to customer
+        // send a notif to customer
+        try {
+            $email = $data['email'];
+
+            Notification::route('mail', $email)
+                ->notify(
+                    new RepairRequestReviewedNotification($repair_request)
+                );
+
+            Log::info("Notif has been sent (notif: send review) : repair-req-id: " . $repair_request->id);
+        } catch (\Throwable $th) {
+            Log::error("Notif failed(Reviewed)", [
+                'repair_ticket_id' => $repair_request->id,
+                'message' => $th->getMessage(),
+            ]);
+        }
+
 
         return $this->to(
             'repair-tickets.index',
