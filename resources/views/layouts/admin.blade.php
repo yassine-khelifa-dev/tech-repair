@@ -491,7 +491,7 @@
         Repairs Menu.
     ========================== --}}
                     @php
-                        $isRepairsActive = request()->routeIs('repair-tickets.*');
+                        $isRepairsActive = request()->routeIs('repair-tickets.*', 'repair-requests.index');
                     @endphp
 
                     <li>

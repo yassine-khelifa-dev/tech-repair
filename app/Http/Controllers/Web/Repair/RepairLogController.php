@@ -5,13 +5,10 @@ namespace App\Http\Controllers\Web\Repair;
 use App\Enums\RepairStatus;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendRepairLogNotificationJob;
-use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairTicket;
-use App\Notifications\RepairLogCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class RepairLogController extends Controller

@@ -15,13 +15,10 @@ class RepairTicketController extends Controller
     /**
      * @var RepairTicketService
      */
-    protected $_service = null;
-    protected $_service_pdf = null;
-    public function __construct(RepairTicketService $_service, RepairPdfService $repair_pdf_service)
-    {
-        $this->_service     = $_service;
-        $this->_service_pdf = $repair_pdf_service;
-    }
+    public function __construct(
+        public  RepairTicketService $_service,
+        public  RepairPdfService $_service_pdf
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -90,7 +87,7 @@ class RepairTicketController extends Controller
             'deviceModel.brand',
             'deviceModel.type',
             'selectedOptions.specAttribute',
-            'logs' => fn ($q) => $q->where('is_visible_to_customer', true),
+            'logs' => fn($q) => $q->where('is_visible_to_customer', true),
         ]);
         return $this->_service_pdf->downloadDepositReceipt($repair_ticket);
     }

@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class RepairTicketService
 {
-
-
     public function __construct()
     {
         Log::info("Start : RepairTicketService");
@@ -22,9 +20,6 @@ class RepairTicketService
 
     public function getList()
     {
-
-
-
         return [
             'tickets' => RepairTicket::with([
                 'customer',
@@ -32,7 +27,7 @@ class RepairTicketService
                 'selectedOptions'
             ])
                 ->latest()
-                ->paginate(3)
+                ->paginate(10)
         ];
     }
 

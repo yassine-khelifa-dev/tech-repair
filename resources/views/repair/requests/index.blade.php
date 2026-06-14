@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    
+
     @if (session('success') || session('updated') || session('deleted'))
         <div @class([
             'p-3 mx-2 my-5 rounded',
@@ -98,48 +98,7 @@
 
 
                         <td class="px-6 py-4">
-                            @switch($status)
-                                @case('pending')
-                                    <span
-                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium text-sm">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" class="w-4 h-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-
-                                        Pending
-                                    </span>
-                                @break
-
-                                @case('approved')
-                                    <span
-                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium text-sm">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" class="w-4 h-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                        </svg>
-
-                                        Approved
-                                    </span>
-                                @break
-
-                                @case('rejected')
-                                    <span
-                                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-medium text-sm">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                            stroke="currentColor" class="w-4 h-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-
-                                        Rejected
-                                    </span>
-                                @break
-                            @endswitch
+                            <x-status-badge :status="$status" />
                         </td>
 
                         <td class="px-6 py-4">

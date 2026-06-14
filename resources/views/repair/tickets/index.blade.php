@@ -87,7 +87,7 @@
                         </td>
 
                         <td class="px-6 py-4">
-                            {{ $ticket->status }}
+                             <x-status-badge :status="$ticket->status" />
                         </td>
 
 
