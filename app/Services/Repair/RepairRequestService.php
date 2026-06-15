@@ -56,6 +56,10 @@ class RepairRequestService
 
     public function reviewRequest(RepairRequest $repair_request, array $_response)
     {
+        if ($repair_request->status !== RepairRequestStatus::pending->value) {
+            return;
+        }
+        
         $request_status  = $_response['status'];
         $feedback_admin  = $_response['response'];
 

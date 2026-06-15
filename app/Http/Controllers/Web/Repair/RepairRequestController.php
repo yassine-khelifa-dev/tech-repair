@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Repair;
 
 use App\Enums\RepairRequestStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Repair\ReviewRepairRequestRequest;
 use App\Models\RepairRequest;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Http\Request;
@@ -42,14 +43,12 @@ class RepairRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function review(Request $request, RepairRequest $repair_request)
+    public function review(ReviewRepairRequestRequest $request, RepairRequest $repair_request)
     {
-        $_response = $request->validate([
-            'response' => 'required',
-            'status'   =>  Rule::enum(RepairRequestStatus::class),
-        ]);
-
-        $this->repair_request_service->reviewRequest($repair_request, $_response);
+        $this->repair_request_service->reviewRequest(
+            $repair_request,
+            $request->validated()
+        );
 
         return redirect()->route('repair-tickets.index')
             ->with('success', 'Ticket has bene approved');
