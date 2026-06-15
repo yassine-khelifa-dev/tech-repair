@@ -11,14 +11,9 @@ use App\Services\Devices\SpecAttributesService;
 
 class SpecAttributeController extends Controller
 {
-
-    /** @var SpecAttributesService::class  */
-    protected $_service  = null;
-
-    public function __construct(SpecAttributesService $_service)
-    {
-        $this->_service = $_service;
-    }
+    public function __construct(
+        public SpecAttributesService $spec_attributes_service)
+    {}
 
     /**
      * Display a listing of the resource.
@@ -26,7 +21,7 @@ class SpecAttributeController extends Controller
     public function index()
     {
         return view("device.spec-attributes.index", [
-            'spc_attributes' => $this->_service->getList()
+            'spc_attributes' => $this->spec_attributes_service->getList()
         ]);
     }
 
@@ -49,9 +44,9 @@ class SpecAttributeController extends Controller
         $data['is_filterable']   = $request->boolean('is_filterable');
         $data['is_required']     = $request->boolean('is_required');
 
-        $this->_service->insert($data);
+        $this->spec_attributes_service->insert($data);
 
-        return $this->_service->to(
+        return $this->spec_attributes_service->to(
             'spec-attribute.index',
             'success',
             'A Attribute has been created successfully.'
@@ -80,9 +75,9 @@ class SpecAttributeController extends Controller
         $data['is_filterable'] = $request->boolean('is_filterable');
         $data['is_required']     = $request->boolean('is_required');
 
-        $this->_service->update($data, $spec_attribute);
+        $this->spec_attributes_service->update($data, $spec_attribute);
 
-        return $this->_service->to(
+        return $this->spec_attributes_service->to(
             'spec-attribute.index',
             'success',
             'Attribute has been updated successfully.'
@@ -94,9 +89,9 @@ class SpecAttributeController extends Controller
      */
     public function destroy(SpecAttribute $spec_attribute)
     {
-        $this->_service->delete($spec_attribute);
+        $this->spec_attributes_service->delete($spec_attribute);
 
-        return $this->_service->to(
+        return $this->spec_attributes_service->to(
             'spec-attribute.index',
             'success',
             'Attribute deleted successfully.'

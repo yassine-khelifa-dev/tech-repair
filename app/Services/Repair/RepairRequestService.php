@@ -2,21 +2,155 @@
 
 namespace App\Services\Repair;
 
+use App\Enums\RepairRequestStatus;
+use App\Enums\RepairStatus;
+use App\Http\Requests\Repair\StoreRepairTicketRequest;
+use App\Models\DeviceModel;
 use App\Models\RepairRequest;
+use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class RepairRequestService
 {
 
     public function __construct(
-        public FileUploadService $file_upload_service
-    ) {
+        public RepairTicketService $repair_ticket_service,
+        public FileUploadService $file_upload_service,
+
+    ) {}
+
+    public function getList()
+    {
+        return  RepairRequest::orderByRaw("
+            CASE
+                WHEN status = 'pending'  THEN 1
+                WHEN status = 'approved' THEN 2
+                WHEN status = 'rejected' THEN 3
+            END
+            ")->latest()
+            ->paginate(10);
     }
 
-    public function insert(array $data): RepairRequest
+    public function showDetailsRequest(RepairRequest $repair_request): array
+    {
+        $data = json_decode($repair_request->data, true);
+
+        $images = collect($data['images_device_path'] ?? [])
+            ->map(fn($item) => (object) $item);
+
+        $device_model = DeviceModel::with(['type', 'brand'])
+            ->findOrFail($data['device_model_id']);
+
+        return [
+            'repair_request' => $repair_request,
+            'data' => $data,
+            'device_model' => $device_model,
+            'images' => $images
+        ];
+    }
+
+
+    public function reviewRequest(RepairRequest $repair_request, array $_response)
+    {
+        $request_status  = $_response['status'];
+        $feedback_admin  = $_response['response'];
+
+        $data = json_decode($repair_request->data, true);
+
+        switch ($request_status) {
+            case RepairRequestStatus::approved->value:
+                $this->approveRequest($data, $repair_request, $feedback_admin);
+                break;
+
+            case RepairRequestStatus::rejected->value:
+                $this->rejectRequest($repair_request, $feedback_admin);
+                break;
+
+            default:
+                throw new \InvalidArgumentException(
+                    "Invalid repair request status: {$request_status}"
+                );
+        }
+
+        // send a notif to customer
+        try {
+            $email = $data['email'];
+            Notification::route('mail', $email)
+                ->notify(
+                    new RepairRequestReviewedNotification($repair_request)
+                );
+            Log::info("Notif has been sent (notif: send review) : repair-req-id: " . $repair_request->id);
+        } catch (\Throwable $th) {
+            Log::error("Notif failed(Reviewed)", [
+                'repair_ticket_id' => $repair_request->id,
+                'message' => $th->getMessage(),
+            ]);
+        }
+    }
+
+
+    public function approveRequest(array $data, RepairRequest $repair_request, string $feedback_admin)
+    {
+
+        DB::transaction(function () use ($data, $repair_request, $feedback_admin) {
+
+            $ticketData = $this->mapRequestToTicketData($data, $feedback_admin);
+
+            Validator::make($ticketData, (new StoreRepairTicketRequest())->rules())->validate();
+
+            $ticket = $this->repair_ticket_service->create($ticketData);
+
+            // save images device :
+            if (! empty($data['images_device_path'])) {
+                $ticket->photos()->createMany($data['images_device_path']);
+            }
+
+            $repair_request->update([
+                'converted_ticket_id' =>  $ticket->id,
+                'response' =>  $feedback_admin,
+                'status' => RepairRequestStatus::approved->value,
+            ]);
+        });
+    }
+
+
+    public function rejectRequest(RepairRequest $repair_request, string $feedback_admin)
+    {
+        $repair_request->update([
+            'converted_ticket_id' =>  null,
+            'response' =>  $feedback_admin,
+            'status' => RepairRequestStatus::rejected->value,
+        ]);
+    }
+
+
+    public function mapRequestToTicketData(array $data, string $feedback_admin)
+    {
+        $device_model = DeviceModel::with(['type', 'brand'])
+            ->findOrFail($data['device_model_id']);
+
+        return [
+            'fullname'          => $data['fullname'],
+            'email'             => $data['email'],
+            'phone'             => $data['phone'],
+            'status'            => RepairStatus::WAITING_DEVICE->value,
+            'device_model_id'   => $device_model->id,
+            'brand_id'          => $device_model->brand->id,
+            'selected_option_ids'        => $data['option_ids'],
+            'technician_note'   => $feedback_admin,
+            'issue_description' => $data['issue_description'],
+        ];
+    }
+
+    // call by API
+    public function create(array $data): RepairRequest
     {
         $data['images_device_path'] =
-            $this->file_upload_service->storegeImages($data['images_device'], 'repair-devices');
+            $this->file_upload_service->storeImages($data['images_device'] ?? [], 'repair-devices');
 
         return  RepairRequest::create(
             [

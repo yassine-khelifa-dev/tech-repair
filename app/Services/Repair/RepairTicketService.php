@@ -2,21 +2,21 @@
 
 namespace App\Services\Repair;
 
-use App\Jobs\SendRepairTicketNotificationJob;
 use App\Models\Brand;
 use App\Models\Customer;
 use App\Models\DeviceType;
 use App\Models\RepairTicket;
+use App\Services\FileUploadService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RepairTicketService
 {
-    public function __construct()
-    {
-        Log::info("Start : RepairTicketService");
-    }
+
+    public function __construct(
+        public FileUploadService $file_upload_service,
+    ) {}
+
 
     public function getList()
     {
@@ -39,7 +39,7 @@ class RepairTicketService
     }
 
 
-    public function insert(array $data) : RepairTicket
+    public function create(array $data): RepairTicket
     {
         /** @var RepairTicket::class */
         $ticket = null;
@@ -55,7 +55,7 @@ class RepairTicketService
                 'fullname',
                 'email',
                 'phone',
-                'attributes',
+                'selected_option_ids',
                 'brand_id',
                 'images_device'
             ]);
@@ -63,23 +63,26 @@ class RepairTicketService
             $ticket = $customer->tickets()->create($ticketData);
 
             // sync options' device customer
-            $optionsIds = collect($data['attributes'] ?? [])->values()->unique()->toArray();
+            $optionsIds = collect($data['selected_option_ids'] ?? [])->values()->unique()->toArray();
             $ticket->selectedOptions()->sync($optionsIds);
 
             // Store device photos
             if (! empty($data['images_device'])) {
-                $imagesForDB = [];
-                foreach ($data['images_device'] as $img_device) {
-                    $path = $img_device->store('repair-devices', 'public');
-                    $imagesForDB[] = ['path' => $path];
-                }
+                $imagesForDB =  $this->file_upload_service->storeImages(
+                    images: $data['images_device'],
+                    folder: 'repair-devices'
+                );
                 if (! empty($imagesForDB)) {
                     $ticket->photos()->createMany($imagesForDB);
                 }
             }
         });
+
+        //Todo: send to customer first email ( new ticket )
+
         return $ticket;
     }
+
 
     // FORM EDIT :
     public function getSelectedAttributesForForm(RepairTicket $ticket)
@@ -107,13 +110,13 @@ class RepairTicketService
                 'fullname',
                 'email',
                 'phone',
-                'attributes',
+                'selected_option_ids',
                 'brand_id'
             ]);
             $ticket->update($ticketData);
 
 
-            $optionsIds = collect($data['attributes'] ?? [])
+            $optionsIds = collect($data['selected_option_ids'] ?? [])
                 ->values()
                 ->unique()
                 ->toArray();

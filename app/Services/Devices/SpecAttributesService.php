@@ -112,6 +112,8 @@ class SpecAttributesService
         });
     }
 
+
+    
     public function delete(SpecAttribute $spec_attribute)
     {
         $spec_attribute->delete();

@@ -16,8 +16,8 @@ class RepairTicketController extends Controller
      * @var RepairTicketService
      */
     public function __construct(
-        public  RepairTicketService $_service,
-        public  RepairPdfService $_service_pdf
+        public  RepairTicketService $repair_ticket_service,
+        public  RepairPdfService $repair_pdf_service
     ) {}
 
     /**
@@ -27,7 +27,7 @@ class RepairTicketController extends Controller
     {
         return view(
             'repair.tickets.index',
-            $this->_service->getList()
+            $this->repair_ticket_service->getList()
         );
     }
 
@@ -38,7 +38,7 @@ class RepairTicketController extends Controller
     {
         return view(
             'repair.tickets.create',
-            $this->_service->getFormData()
+            $this->repair_ticket_service->getFormData()
         );
     }
 
@@ -68,7 +68,7 @@ class RepairTicketController extends Controller
     {
         $data = $request->validated();
 
-        $this->_service->insert($data);
+        $this->repair_ticket_service->create($data);
 
         return $this->to(
             'repair-tickets.index',
@@ -89,7 +89,7 @@ class RepairTicketController extends Controller
             'selectedOptions.specAttribute',
             'logs' => fn($q) => $q->where('is_visible_to_customer', true),
         ]);
-        return $this->_service_pdf->downloadDepositReceipt($repair_ticket);
+        return $this->repair_pdf_service->downloadDepositReceipt($repair_ticket);
     }
 
 
@@ -109,9 +109,9 @@ class RepairTicketController extends Controller
             array_merge(
                 [
                     'repair_ticket' => $repair_ticket,
-                    'attributes' => $this->_service->getSelectedAttributesForForm($repair_ticket)
+                    'selected_option_ids' => $this->repair_ticket_service->getSelectedAttributesForForm($repair_ticket)
                 ],
-                $this->_service->getFormData()
+                $this->repair_ticket_service->getFormData()
             )
         );
     }
@@ -123,7 +123,7 @@ class RepairTicketController extends Controller
     {
         $data = $request->validated();
 
-        $this->_service->update($data, $repair_ticket);
+        $this->repair_ticket_service->update($data, $repair_ticket);
 
         return $this->to(
             'repair-tickets.index',

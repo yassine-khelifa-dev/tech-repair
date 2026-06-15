@@ -8,7 +8,7 @@
         brand_selected_id: '{{ old('brand_id', $repair_ticket->deviceModel->brand->id ?? -1) }}',
         device_model_selected_id: '{{ old('device_model_id', $repair_ticket->deviceModel->id ?? -1) }}',
         status: '{{ old('status', $repair_ticket->status ?? -1) }}',
-        attributes: {{ Js::from(old('attributes', $attributes ?? [])) }},
+        selected_option_ids: {{ Js::from(old('selected_option_ids', $selected_option_ids ?? [])) }},
         changeSelect() {
             this.device_model_selected_id = -1;
         },
@@ -145,7 +145,7 @@
                                     <template x-for="item in options" :key="item.id">
                                         <div class="flex items-center mb-4">
                                             <input :id="'option_' + item.id" type="radio" :value="item.id"
-                                                :name="'attributes[' + key + ']'" x-model="attributes[key]"
+                                                :name="'selected_option_ids[' + key + ']'" x-model="selected_option_ids[key]"
                                                 class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none">
                                             <label :for="'option_' + item.id"
                                                 class="select-none ms-2 text-sm font-medium text-heading">

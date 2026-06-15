@@ -16,7 +16,7 @@ class RepairRequestController extends Controller
      * @var RepairTicketService
      */
     public function __construct(
-        public RepairRequestService $_service)
+        public RepairRequestService $repair_request_service)
     {
     }
 
@@ -28,7 +28,7 @@ class RepairRequestController extends Controller
         $data = $request->validated();
 
         // save the repair request :
-        $repair_request =  $this->_service->insert($data);
+        $repair_request =  $this->repair_request_service->create($data);
 
         // get first admin:
         $admin = User::where('role', 'admin')->first();

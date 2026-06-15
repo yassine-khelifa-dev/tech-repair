@@ -35,8 +35,8 @@ class UpdateRepairTicketRequest extends FormRequest
             'email'             => 'required|email|max:255',
             'device_model_id'   => 'required|exists:device_models,id',
             'brand_id'          => 'required|exists:brands,id',
-            'attributes'        => "required|array|min:1",
-            'attributes.*'      => 'integer|exists:spec_attribute_options,id',
+            'selected_option_ids'        => "required|array|min:1",
+            'selected_option_ids.*'      => 'integer|exists:spec_attribute_options,id',
             'status'            => Rule::enum(RepairStatus::class),
             'estimated_price' => [
                 'nullable',

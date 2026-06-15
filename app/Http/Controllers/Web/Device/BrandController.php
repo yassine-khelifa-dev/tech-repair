@@ -37,21 +37,7 @@ class BrandController extends Controller
         $brand['slug'] = Str::slug($brand['name']);
 
         Brand::create( $brand );
-
-
-
         return redirect()->route('brand.index')->with('success', 'Brand has bene craeted');
-
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Brand $brand)
-    {
-        //
     }
 
     /**

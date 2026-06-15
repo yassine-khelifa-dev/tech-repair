@@ -6,7 +6,7 @@ namespace App\Services;
 
 class FileUploadService
 {
-    public function storegeImages($images, $folder, $disk='public'){
+    public function storeImages($images, string $folder, $disk='public'){
         $paths = [];
         foreach ($images as $image) {
             $path = $image->store( $folder, $disk);
@@ -15,7 +15,5 @@ class FileUploadService
        return $paths;
     }
 
-    public function getImages(array $path){
-
-    }
+  
 }
