@@ -97,7 +97,7 @@ class RepairTicketService
 
     public function update(array $data, RepairTicket $ticket)
     {
-        DB::transaction(function () use ($data, $ticket) {
+        DB::transaction(function () use ($data, &$ticket) {
             $customerData = Arr::only($data, [
                 'fullname',
                 'email',
@@ -122,5 +122,6 @@ class RepairTicketService
                 ->toArray();
             $ticket->selectedOptions()->sync($optionsIds);
         });
+        return $ticket;
     }
 }

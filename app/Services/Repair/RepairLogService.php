@@ -69,6 +69,6 @@ class RepairLogService
         }
         Log::info("Create Log for ticket ID: " . $repair_ticket->id);
 
-        // return $log;
+        //return $log;
     }
 }
