@@ -3,11 +3,16 @@
 namespace Tests\Feature\Repair;
 
 use App\Enums\RepairStatus;
+use App\Jobs\SendRepairLogNotificationJob;
+use App\Notifications\RepairLogCreatedNotification;
 use App\Services\Repair\RepairLogService;
 use App\Services\Repair\RepairTicketService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Util\PHP\Job;
 use Tests\CreatesRepairTestData;
 use Tests\TestCase;
 
@@ -19,6 +24,17 @@ class RepairLogTest extends TestCase
      * A basic feature test example.
      *  'repair_ticket_id',
      */
+    private function ticketRepairData()
+    {
+        $deviceModel = $this->createDeviceModel();
+        $options = $this->createOptions();
+
+        return app(RepairTicketService::class)->create(
+            $this->validTicketData($deviceModel, $options)
+        );
+    }
+
+
     public function test_can_add_log(): void
     {
         $user = $this->createUser();
@@ -86,5 +102,51 @@ class RepairLogTest extends TestCase
         $path = $log->images()->first()->path;
 
         Storage::disk('public')->assertExists($path);
+    }
+
+    public function test_notification_job_is_dispatched_when_log_is_visible_to_customer()
+    {
+        Queue::fake();
+        $user = $this->createUser();
+        $this->actingAs($user);
+
+        $repair_ticket = $this->ticketRepairData();
+
+        $response = $this->post(route('repair-ticket-logs', $repair_ticket), [
+            'user_id' => $user->id,
+            'old_status' => $repair_ticket->status,
+            'new_status' => RepairStatus::WAITING_PARTS->value,
+            'is_visible_to_customer' => 1,
+            'message' => 'Velit et dolore cillum amet.',
+            'images_log' => []
+        ]);
+
+        $response->assertRedirect();
+
+        Queue::assertPushed(SendRepairLogNotificationJob::class);
+    }
+
+
+
+    public function test_notification_job_is_not_dispatched_when_log_is_not_visible_to_customer()
+    {
+        Queue::fake();
+        $user = $this->createUser();
+        $this->actingAs($user);
+
+        $repair_ticket = $this->ticketRepairData();
+
+        $response = $this->post(route('repair-ticket-logs', $repair_ticket), [
+            'user_id' => $user->id,
+            'old_status' => $repair_ticket->status,
+            'new_status' => RepairStatus::WAITING_PARTS->value,
+            'is_visible_to_customer' => 0,
+            'message' => 'Velit et dolore cillum amet.',
+            'images_log' => []
+        ]);
+
+        $response->assertRedirect();
+
+        Queue::assertNothingPushed();
     }
 }

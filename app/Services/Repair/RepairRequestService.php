@@ -57,9 +57,10 @@ class RepairRequestService
     public function reviewRequest(RepairRequest $repair_request, array $_response)
     {
         if ($repair_request->status !== RepairRequestStatus::pending->value) {
+
             return;
         }
-        
+
         $request_status  = $_response['status'];
         $feedback_admin  = $_response['response'];
 
@@ -147,6 +148,7 @@ class RepairRequestService
             'selected_option_ids'        => $data['option_ids'],
             'technician_note'   => $feedback_admin,
             'issue_description' => $data['issue_description'],
+            'images_device_path' => []
         ];
     }
 
@@ -160,6 +162,7 @@ class RepairRequestService
             [
                 'data' =>  json_encode($data),
                 // status: default:pending
+                'status' => RepairRequestStatus::pending->value,
             ]
         );
     }

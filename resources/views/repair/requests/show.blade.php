@@ -23,6 +23,17 @@
             class="mb-8 rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl overflow-hidden">
             @csrf
 
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="p-6 border-b border-slate-700">
                 <h2 class="text-xl font-semibold text-white">
                     Admin Review
@@ -41,7 +52,7 @@
                     <textarea name="response" rows="5" placeholder="Write your note for this repair request..."
                         class="w-full rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-gray-500 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                     <x-forms.error-message name="response" />
-
+                    
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
