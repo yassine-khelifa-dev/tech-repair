@@ -7,15 +7,18 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
+use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
 
-class AuthenticatedSessionController extends Controller{
+class AuthenticatedSessionController extends Controller
+{
 
-
-    public function store(LoginRequest $request){
+    #[ExcludeRouteFromDocs]
+    public function store(LoginRequest $request)
+    {
 
         $credentials = $request->all();
 
-        if( ! Auth::attempt( $credentials ) ) {
+        if (! Auth::attempt($credentials)) {
             return response([
                 'message' => 'Invalid credentials'
             ], 401);
@@ -25,15 +28,16 @@ class AuthenticatedSessionController extends Controller{
         $user = Auth::user();
 
         return response([
-                'user' => $user,
-                'token' => $user->createToken('api-token')->plainTextToken,
+            'user' => $user,
+            'token' => $user->createToken('api-token')->plainTextToken,
         ]);
     }
 
+    #[ExcludeRouteFromDocs]
+    public function me(Request $request)
+    {
 
-    public function me(Request $request){
-
-        $token =   $request->bearerToken() ;
+        $token =   $request->bearerToken();
         $accessToken = PersonalAccessToken::findToken($token);
 
         if (!$accessToken) {
@@ -49,16 +53,14 @@ class AuthenticatedSessionController extends Controller{
         ]);
     }
 
-
-    public function destroy(Request $request){
+    #[ExcludeRouteFromDocs]
+    public function destroy(Request $request)
+    {
 
         $request->user()->tokens()->delete();
 
         return response()->json([
             "message" => "Logged out successfully !"
-        ],200);
-
+        ], 200);
     }
-
-
 }

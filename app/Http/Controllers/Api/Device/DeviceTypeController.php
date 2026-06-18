@@ -9,7 +9,16 @@ use App\Models\DeviceType;
 class DeviceTypeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get all device types.
+     *
+     * A Device Type represents a category of devices.
+     *
+     * Examples:
+     * - Smartphone
+     * - Tablet
+     * - Laptop
+     *
+     * Device Types are used to filter available device models.
      */
     public function index()
     {

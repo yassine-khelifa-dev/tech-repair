@@ -16,12 +16,32 @@ class RepairRequestController extends Controller
      * @var RepairTicketService
      */
     public function __construct(
-        public RepairRequestService $repair_request_service)
-    {
-    }
+        public RepairRequestService $repair_request_service
+    ) {}
+
 
     /**
-     * Store a newly created resource in storage.
+     * Submit a repair request.
+     *
+     * Creates a new repair request for a customer device.
+     *
+     * The request contains customer information,
+     * device information and a description of the issue.
+     *
+     * After submission, the request is stored with
+     * a Pending status and awaits technician review.
+     *
+     * Example:
+     *
+     * Customer:
+     * - John Smith
+     *
+     * Device:
+     * - Apple iPhone 15 Pro Max
+     *
+     * Issue:
+     * - Cracked screen
+     * - Touch not working
      */
     public function store(RepairRequest $request)
     {

@@ -20,6 +20,7 @@ class SpecAttributeResource extends JsonResource
             'unit' => $this->when($this->unit != 'None', $this->unit),
             'options' => SpecAttributeOptionResource::collection( $this->whenLoaded('specOptions'))
         ];
+        
     }
 }
 

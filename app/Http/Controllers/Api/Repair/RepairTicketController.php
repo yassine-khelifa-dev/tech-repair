@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api\Repair;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Repair\RepairTicketResource;
 use App\Models\RepairTicket;
-
+use Dedoc\Scramble\Attributes\ExcludeRouteFromDocs;
 class RepairTicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    #[ExcludeRouteFromDocs]
+
     public function index()
     {
         $tickets = RepairTicket::all();
