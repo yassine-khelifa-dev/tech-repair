@@ -50,6 +50,10 @@
             Track Repair
         </a>
 
+
+        <p>You will receive updates as the repair progresses.</p>
+        <p>Thank you.</p>
+
     </div>
 
 </body>
