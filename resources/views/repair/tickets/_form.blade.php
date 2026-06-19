@@ -30,7 +30,7 @@
             //allowed_options
             const options = {}
             if (!this.device_model_selected) return {}
-
+    
             this.device_model_selected.allowed_options.forEach(el => {
                 const id = el.id
                 const key = el.spec_attribute.name;
@@ -38,7 +38,7 @@
                 if (!options[key]) {
                     options[key] = []
                 }
-
+    
                 options[key].push({ id, value })
             });
             return options ?? [];
@@ -134,27 +134,61 @@
                         </div>
                     </template>
 
-
                     {{-- Options --}}
                     <template x-if="device_model_selected_id != -1">
-                        <div class="text-white">
-                            <h1>Options Allow :</h1>
-                            <template x-for="(options, key) in getOptions" :key="key">
+                        <div class="mt-6" x-data="{ showOptions: true }">
+
+                            <button type="button" @click="showOptions = !showOptions"
+                                class="w-full flex items-center justify-between mb-4 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-white hover:bg-neutral-800 transition">
+
                                 <div>
-                                    <h1 class="text-blue-400" x-text="key"></h1>
-                                    <template x-for="item in options" :key="item.id">
-                                        <div class="flex items-center mb-4">
-                                            <input :id="'option_' + item.id" type="radio" :value="item.id"
-                                                :name="'selected_option_ids[' + key + ']'" x-model="selected_option_ids[key]"
-                                                class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none">
-                                            <label :for="'option_' + item.id"
-                                                class="select-none ms-2 text-sm font-medium text-heading">
-                                                <span x-text="item.value"> </span> </label>
-                                        </div>
-                                    </template>
-                                    <hr />
+                                    <h2 class="text-lg font-semibold text-left">
+                                        Available Specifications
+                                    </h2>
+                                    <p class="text-sm text-gray-400">
+                                        Select the desired configuration for this device.
+                                    </p>
                                 </div>
-                            </template>
+
+                                <span class="text-blue-400 text-sm font-medium" x-text="showOptions ? 'Hide' : 'Show'">
+                                </span>
+                            </button>
+
+                            <div x-show="showOptions" x-transition class="space-y-6">
+                                <template x-for="(options, key) in getOptions" :key="key">
+                                    <div class="bg-neutral-900 border border-neutral-800 rounded-xl p-4 shadow-sm">
+
+                                        <h3 class="text-sm font-semibold uppercase tracking-wider text-blue-400 mb-4"
+                                            x-text="key">
+                                        </h3>
+
+                                        <div class="grid gap-3">
+                                            <template x-for="item in options" :key="item.id">
+                                                <label :for="'option_' + item.id"
+                                                    class="flex items-center justify-between p-3 rounded-lg border border-neutral-700 hover:border-blue-500 hover:bg-neutral-800 cursor-pointer transition-all duration-200">
+
+                                                    <div class="flex items-center">
+                                                        <input :id="'option_' + item.id" type="radio"
+                                                            :value="item.id"
+                                                            :name="'selected_option_ids[' + key + ']'"
+                                                            x-model="selected_option_ids[key]"
+                                                            class="w-4 h-4 text-blue-500 border-neutral-600 bg-neutral-900 focus:ring-blue-500">
+
+                                                        <span class="ml-3 text-sm font-medium text-gray-200"
+                                                            x-text="item.value">
+                                                        </span>
+                                                    </div>
+
+                                                    <div class="text-xs text-gray-500">
+                                                        Option
+                                                    </div>
+                                                </label>
+                                            </template>
+                                        </div>
+
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </template>
                     {{-- end Options --}}
@@ -247,7 +281,7 @@
 
 
                 {{-- images  --}}
-                 <x-forms.upload_images name="images_device" />
+                <x-forms.upload_images name="images_device" />
 
                 {{-- Actions  --}}
                 <div>
