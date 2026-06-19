@@ -8,6 +8,7 @@ use App\Http\Requests\Repair\ReviewRepairRequestRequest;
 use App\Models\RepairRequest;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Validation\Rule;
 
 class RepairRequestController extends Controller
@@ -34,6 +35,13 @@ class RepairRequestController extends Controller
      */
     public function show(RepairRequest $repair_request)
     {
+        // mark notification as read
+        DatabaseNotification::where('data->id_repair_request', $repair_request->id)
+            ->whereNull('read_at')
+            ->update([
+                'read_at' => now(),
+            ]);
+
         return view(
             'repair.requests.show',
             $this->repair_request_service->showDetailsRequest($repair_request)

@@ -71,58 +71,76 @@
                             </path>
                         </svg>
                     </button>
+
+
                     <!-- Notifications -->
                     <button type="button" data-dropdown-toggle="notification-dropdown"
-                        class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
-                        <span class="sr-only">View notifications</span>
-                        <!-- Bell icon -->
-                        <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
+                        class="relative p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
+
+                        @if ($notifs->whereNull('read_at')->count())
+                            <span
+                                class="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-xs font-bold text-white bg-red-500 rounded-full">
+                                {{ $notifs->whereNull('read_at')->count() }}
+                            </span>
+                        @endif
+
+                        <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                             <path
                                 d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z">
                             </path>
                         </svg>
                     </button>
+
+
                     <!-- Dropdown menu -->
+
+
                     <div class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700 rounded-xl"
                         id="notification-dropdown">
                         <div
                             class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
-                            Notifications -
+                            Notifications
                         </div>
-                        <div>
-                            <a href="{{ route('repair-tickets.index') }}"
-                                class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
-                                <div class="flex-shrink-0">
+
+                        @foreach ($notifs as $notif)
+                            <a href="{{ route('repair-requests.show', $notif->data['id_repair_request']) }}"
+                                class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+
+                                <div class="flex-shrink-0 relative">
                                     <img class="w-11 h-11 rounded-full"
-                                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                                        alt="Bonnie Green avatar" />
-                                    <div
-                                        class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 dark:border-gray-700">
-                                        <svg aria-hidden="true" class="w-3 h-3 text-white" fill="currentColor"
-                                            viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z">
-                                            </path>
-                                            <path
-                                                d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z">
-                                            </path>
-                                        </svg>
+                                        src="https://ui-avatars.com/api/?name=Repair&background=2563eb&color=fff"
+                                        alt="Notification">
+
+                                    @if (is_null($notif->read_at))
+                                        <span
+                                            class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white">
+                                        </span>
+                                    @endif
+                                </div>
+
+                                <div class="pl-3 flex-1">
+                                    <div class="text-sm text-gray-700 dark:text-gray-300">
+
+                                        <span class="font-semibold text-gray-900 dark:text-white">
+                                            New Repair Request
+                                        </span>
+
+                                        <div class="mt-1">
+                                            Ticket Request #{{ $notif->data['id_repair_request'] }}
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-1 text-xs text-blue-600">
+                                        {{ $notif->created_at->diffForHumans() }}
                                     </div>
                                 </div>
-                                <div class="pl-3 w-full">
-                                    <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                                        New message from
-                                        <span class="font-semibold text-gray-900 dark:text-white">Bonnie
-                                            Green</span>:
-                                        "Hey, what's up? All set for the presentation?"
-                                    </div>
-                                    <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
-                                        a few moments ago
-                                    </div>
-                                </div>
+
                             </a>
-                        </div>
+                        @endforeach
+
+
+
                         <a href="#"
                             class="block py-2 text-md font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 dark:bg-gray-600 dark:text-white dark:hover:underline">
                             <div class="inline-flex items-center">
