@@ -26,13 +26,18 @@ class UpdateRepairTicketRequest extends FormRequest
     {
         return [
             'fullname'          => 'required|min:3|max:255|regex:/^[\pL\s]+$/u',
-            'phone'             => 'required|integer',
+            'phone' => [
+                'required',
+                'regex:/^[0-9]+$/',
+                'min:8',
+                'max:20',
+            ],
+            'email'             => 'required|email|max:255',
             'device_access_info' => 'nullable|max:255',
             'technician_note'   => 'required|min:5',
             'imei'              => 'nullable|regex:/^[a-zA-Z0-9]+$/',
             'sn'                => 'nullable|regex:/^[a-zA-Z0-9]+$/',
             'issue_description' => 'required|min:10',
-            'email'             => 'required|email|max:255',
             'device_model_id'   => 'required|exists:device_models,id',
             'brand_id'          => 'required|exists:brands,id',
             'selected_option_ids'        => "required|array|min:1",

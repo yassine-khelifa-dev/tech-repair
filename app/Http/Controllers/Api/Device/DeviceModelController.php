@@ -5,27 +5,61 @@ namespace App\Http\Controllers\Api\Device;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\SearchDeviceModelRequest;
 use App\Http\Resources\Device\DeviceModelResource;
+use App\Http\Resources\Device\DeviceModelSpecificationResource;
 use App\Http\Resources\Device\SpecAttributeOptionResource;
 use App\Http\Resources\Device\SpecAttributeResource;
 use App\Models\DeviceModel;
+use App\Services\Devices\DeviceModelAttributeService;
 
 class DeviceModelController extends Controller
 {
+
+    public function __construct(
+        public DeviceModelAttributeService $service
+    ) {}
+
+
+
     /**
-     * Get device models by brand and device type.
+     * Get available device models.
      *
-     * A Device Model represents a specific device produced by a Brand.
+     * Returns all device models matching the selected
+     * Brand and Device Type.
+     *
+     * This endpoint is used during the repair request process
+     * after the customer selects a device type and a brand.
      *
      * Examples:
+     *
+     * Brand: Apple
+     * Device Type: Smartphone
+     *
+     * Results:
+     * - iPhone 15
+     * - iPhone 15 Pro
      * - iPhone 15 Pro Max
+     *
+     * Brand: Samsung
+     * Device Type: Smartphone
+     *
+     * Results:
+     * - Galaxy S24
      * - Galaxy S24 Ultra
-     * - Redmi Note 14
      *
-     * Each Device Model belongs to one Brand and one Device Type.
+     * Required parameters:
      *
-     * This endpoint is used after selecting a Brand and Device Type.
+     * - brand_id
+     * - device_type_id
+     *
+     * Example response:
+     *
+     * [{ <br />
+     *     "id": 1, <br />
+     *     "name": "iPhone 15 Pro Max", <br />
+     *     "slug": "iphone-15-pro-max" <br />
+     *    }
+     * ] <br />
      */
-
     public function index(SearchDeviceModelRequest $request)
     {
         $data = $request->validated();
@@ -37,51 +71,52 @@ class DeviceModelController extends Controller
         return DeviceModelResource::collection($_models);
     }
 
-
-
     /**
      * Get specifications for a device model.
      *
-     * Returns the available attributes and allowed options for a selected device model.
+     * Returns all available attributes and their allowed options
+     * for the selected device model.
      *
-     * This endpoint is used after the customer selects a device model.
-     * The frontend can use this response to build the repair request form dynamically.
+     * This endpoint is used after a customer selects a device model.
+     * The frontend can use the response to dynamically build
+     * the repair request form.
+     *
+     * Available specifications may include:
+     *
+     * - Color
+     * - Storage
+     * - RAM
+     * - Network
+     * - Condition
      *
      * Example response:
      *
-     * [
-     *   {
-     *     "id": 1,
-     *     "name": "Color",
-     *     "unit": null,
-     *     "options": [
-     *       {
-     *         "id": 10,
-     *         "label": "Black",
-     *         "value": "black"
-     *       }
-     *     ]
-     *   }
-     * ]
+     * Color
+     * - Black
+     * - White
+     *
+     * Storage
+     * - 128 GB
+     * - 256 GB
+     *
+     * RAM
+     * - 8 GB
+     * - 12 GB
+     *
+     * Each attribute contains:
+     *
+     * - id
+     * - name
+     * - unit
+     * - available options
      */
     public function getAttributesWithOptions(DeviceModel $device_model)
     {
         $device_model->load('allowed_options.specAttribute');
 
-        $attributes = $device_model->allowed_options
-            ->groupBy('specAttribute.id')
-            ->map(function ($options) {
-                $attribute = $options->first()->specAttribute;
+        $attributes = $this->service
+            ->getSpecificationsWithOptions($device_model);
 
-                return [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name,
-                    'unit' => strtolower($attribute->unit) !== 'none' ? $attribute->unit : null,
-                    'options' => SpecAttributeOptionResource::collection($options),
-                ];
-            })
-            ->values();
-
-        return $attributes;
+        return DeviceModelSpecificationResource::collection($attributes);
     }
 }

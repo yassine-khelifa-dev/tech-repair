@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Enums\RepairRequestStatus;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class RepairRequest extends FormRequest
 {
@@ -26,7 +23,12 @@ class RepairRequest extends FormRequest
     {
         return [
             'fullname'          => 'required|min:3|max:255|regex:/^[\pL\s]+$/u',
-            'phone'             => 'required|integer',
+            'phone' => [
+                'required',
+                'regex:/^[0-9]+$/',
+                'min:8',
+                'max:20',
+            ],
             'email'             => 'required|email|max:255',
             'imei'              => 'nullable|regex:/^[a-zA-Z0-9]+$/',
             'sn'                => 'nullable|regex:/^[a-zA-Z0-9]+$/',
@@ -34,7 +36,6 @@ class RepairRequest extends FormRequest
             'device_model_id'   => 'required|exists:device_models,id',
             'option_ids'        => "required|array|min:1",
             'option_ids.*'      => 'integer|exists:spec_attribute_options,id',
-            'status'            => Rule::enum(RepairRequestStatus::class),
             'images_device' => ['nullable', 'array'],
             'images_device.*' => ['image', 'max:5120'],
         ];

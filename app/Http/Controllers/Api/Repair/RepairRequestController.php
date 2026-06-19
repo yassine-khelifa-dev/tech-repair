@@ -21,28 +21,52 @@ class RepairRequestController extends Controller
 
 
     /**
+
      * Submit a repair request.
      *
-     * Creates a new repair request for a customer device.
+     * Creates a new repair request for a customer's device.
      *
-     * The request contains customer information,
-     * device information and a description of the issue.
+     * This endpoint is intended for customers who want to request
+     * a repair before visiting the repair shop. The request contains
+     * customer details, device information, selected specifications,
+     * a description of the issue, and optional device images.
      *
-     * After submission, the request is stored with
-     * a Pending status and awaits technician review.
+     * Once submitted, the repair request is created with a
+     * **Pending** status and awaits technician review.
      *
-     * Example:
+     * Required fields:
+     * * fullname
+     * * email
+     * * phone
+     * * device_model_id
+     * * option_ids
+     * * issue_description
      *
-     * Customer:
-     * - John Smith
+     * Optional fields:
+     * * imei
+     * * sn
+     * * images_device
      *
-     * Device:
-     * - Apple iPhone 15 Pro Max
+     * Notes:
+     * * The request must be sent as **multipart/form-data** when uploading images.
+     * * Array values must be submitted using repeated keys:
+     * * option_ids[] = 10
+     * * option_ids[] = 92
+     * * option_ids[] = 113
      *
-     * Issue:
-     * - Cracked screen
-     * - Touch not working
+     * Success Response (201 Created):
+     *
+     * {
+     * "message": "Repair request submitted successfully.",
+     * "data": {
+     * ```
+     *"id": 18,
+    * "status": "pending"
+     *```
+     * }
+     * }
      */
+
     public function store(RepairRequest $request)
     {
         $data = $request->validated();
@@ -65,6 +89,12 @@ class RepairRequestController extends Controller
             ]);
         }
 
-        return $repair_request;
+        return response()->json([
+            'message' => 'Repair request submitted successfully.',
+            'data' => [
+                'id' => $repair_request->id,
+                'status' => $repair_request->status,
+            ],
+        ], 201);
     }
 }
