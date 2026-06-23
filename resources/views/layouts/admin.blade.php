@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Repair:Flow </title>
+    <title>7-Tech Repair </title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -40,8 +40,8 @@
                     </button>
                     <a href="{{ route('dashboard') }}" class="flex items-center justify-between mr-4">
                         <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-3 h-8" alt="Flowbite Logo" />
-                        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Repair
-                            Flow</span>
+                        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                            7-Tech Repair</span>
                     </a>
                     <form action="#" method="GET" class="hidden md:block md:pl-2">
                         <label for="topbar-search" class="sr-only">Search</label>
