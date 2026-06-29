@@ -36,8 +36,19 @@
         class="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
         Create New Ticket </a>
 
-    <div
-        class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
+
+
+
+
+    {{-- Filter --}}
+    @include('repair.tickets._filters')
+
+    <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5"
+        x-data="{
+            tickets: Js::from($tickets)
+        }">
+
+
 
         {{--  Table --}}
         <table class="w-full text-sm text-left rtl:text-right text-body">
@@ -87,7 +98,7 @@
                         </td>
 
                         <td class="px-6 py-4">
-                             <x-status-badge :status="$ticket->status" />
+                            <x-status-badge :status="$ticket->status" />
                         </td>
 
 

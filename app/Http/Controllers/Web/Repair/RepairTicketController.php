@@ -8,6 +8,7 @@ use App\Http\Requests\Repair\UpdateRepairTicketRequest;
 use App\Models\RepairTicket;
 use App\Services\Repair\RepairPdfService;
 use App\Services\Repair\RepairTicketService;
+use Illuminate\Http\Request ;
 
 class RepairTicketController extends Controller
 {
@@ -23,11 +24,12 @@ class RepairTicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
         return view(
             'repair.tickets.index',
-            $this->repair_ticket_service->getList()
+            $this->repair_ticket_service->getList($request->query())
         );
     }
 

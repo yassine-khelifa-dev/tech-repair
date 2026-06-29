@@ -20,16 +20,37 @@ class RepairTicketService
     ) {}
 
 
-    public function getList()
+    public function getList(array $query)
     {
-        return [
-            'tickets' => RepairTicket::with([
+        $q = RepairTicket::query()
+            ->with([
                 'customer',
                 'deviceModel.brand',
                 'selectedOptions'
-            ])
+            ]);
+        if (isset($query['status']) && $query['status'] !== 'all')
+            $q->where('status', $query['status']);
+        if (isset($query['customer']))
+            $q->whereHas('customer', function ($qc) use ($query) {
+                $qc->where('fullname', 'like',  $query['customer'] . '%');
+            });
+
+        if (!empty($query['start']) && !empty($query['end'])) {
+            $q->whereBetween('received_at', [
+                $query['start'],
+                $query['end'],
+            ]);
+        } elseif (!empty($query['start'])) {
+            $q->whereDate('received_at', '>=', $query['start']);
+        } elseif (!empty($query['end'])) {
+            $q->whereDate('received_at', '<=', $query['end']);
+        }
+
+        return [
+            'tickets' => $q
                 ->latest()
-                ->paginate(10)
+                ->paginate(8)
+                ->withQueryString(),
         ];
     }
 
