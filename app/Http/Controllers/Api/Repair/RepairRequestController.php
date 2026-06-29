@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RepairRequest;
 use App\Models\User;
 use App\Notifications\RepairRequestReceivedNotification;
+use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class RepairRequestController extends Controller
 {
@@ -16,7 +18,9 @@ class RepairRequestController extends Controller
      * @var RepairTicketService
      */
     public function __construct(
-        public RepairRequestService $repair_request_service
+        public RepairRequestService $repair_request_service,
+        public AIRepairRequestService $airepair
+
     ) {}
 
 
@@ -61,7 +65,7 @@ class RepairRequestController extends Controller
      * "data": {
      * ```
      *"id": 18,
-    * "status": "pending"
+     * "status": "pending"
      *```
      * }
      * }
@@ -96,5 +100,18 @@ class RepairRequestController extends Controller
                 'status' => $repair_request->status,
             ],
         ], 201);
+    }
+
+
+    public function ask(Request $request)
+    {
+        $request->validate([
+            'issue_description' => ['required', 'string'],
+        ]);
+        $req = $this->airepair->analyzeRepairRequest($request->input('issue_description'));
+        if ($req['success']) {
+            return $req;
+        }
+        return [];
     }
 }

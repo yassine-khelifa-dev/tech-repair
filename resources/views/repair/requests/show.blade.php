@@ -48,11 +48,18 @@
                     <label class="block text-sm font-medium text-gray-300 mb-2">
                         Admin Response
                     </label>
+                    <div class="my-5">
+                        <button type="button" id="bt-gen-ai-replay"
+                            class=" rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-2 text-lg transition shadow-lg">
+                            Generate AI Reply
+                        </button>
+                    </div>
 
-                    <textarea name="response" rows="5" placeholder="Write your note for this repair request..."
+
+                    <textarea name="response" id="tx_response" rows="5" placeholder="Write your note for this repair request..."
                         class="w-full rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-gray-500 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                     <x-forms.error-message name="response" />
-                    
+
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -156,10 +163,36 @@
 
                 <div
                     class="rounded-xl bg-slate-950 border border-slate-700 p-4 text-gray-200 leading-relaxed min-h-[150px]">
-                    {{ $data['issue_description'] }}
+                    <span id="issue_description">{{ $data['issue_description'] }}</span>
                 </div>
             </div>
 
         </div>
     </div>
+@endsection
+
+
+@section('script')
+    <script>
+        document.getElementById('bt-gen-ai-replay').addEventListener('click', async  function() {
+            const issue_description = document.getElementById('issue_description').innerHTML;
+
+            console.log(issue_description)
+
+            const response = await fetch("{{ route('repair-request.ai-replay') }}", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    issue_description: issue_description
+                })
+
+            });
+            const data = await response.json();
+            document.getElementById('tx_response').value = data.response
+        })
+    </script>
 @endsection

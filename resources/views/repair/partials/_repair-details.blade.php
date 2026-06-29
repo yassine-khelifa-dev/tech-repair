@@ -8,6 +8,15 @@
 
          <div>
              <p class="font-medium text-white mb-1">
+                 Technician Note
+             </p>
+             <p>
+                 {{ $repair_ticket->technician_note ?? '-' }}
+             </p>
+         </div>
+
+         <div>
+             <p class="font-medium text-white mb-1">
                  Reported Issue
              </p>
              <p>

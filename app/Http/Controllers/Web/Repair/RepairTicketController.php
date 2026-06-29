@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Http\Requests\Repair\UpdateRepairTicketRequest;
 use App\Models\RepairTicket;
+use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairPdfService;
 use App\Services\Repair\RepairTicketService;
 use Illuminate\Http\Request ;
@@ -18,7 +19,7 @@ class RepairTicketController extends Controller
      */
     public function __construct(
         public  RepairTicketService $repair_ticket_service,
-        public  RepairPdfService $repair_pdf_service
+        public  RepairPdfService $repair_pdf_service,
     ) {}
 
     /**
@@ -154,4 +155,7 @@ class RepairTicketController extends Controller
             ->route($route)
             ->with($key, $message);
     }
+
+
+
 }

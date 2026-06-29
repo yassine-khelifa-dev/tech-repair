@@ -79,9 +79,9 @@
                 </tr>
             </thead>
             <tbody>
-
                 @foreach ($tickets as $ticket)
-                    <tr class="bg-neutral-primary border-b border-default">
+                    <tr onclick="window.location='{{ route('repair-tickets.show', $ticket->id) }}'"
+                        class="bg-neutral-primary border-b border-default cursor-pointer hover:bg-slate-800 transition-colors duration-150">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
                             {{ $ticket->ticket_number }}
                         </th>

@@ -6,6 +6,7 @@ use App\Enums\RepairRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\ReviewRepairRequestRequest;
 use App\Models\RepairRequest;
+use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
@@ -17,7 +18,8 @@ class RepairRequestController extends Controller
      * @var RepairTicketService
      */
     public function __construct(
-        public RepairRequestService $repair_request_service
+        public RepairRequestService $repair_request_service,
+
     ) {}
 
     /**
@@ -61,4 +63,6 @@ class RepairRequestController extends Controller
         return redirect()->route('repair-tickets.index')
             ->with('success', 'Ticket has bene approved');
     }
+
+   
 }

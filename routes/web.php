@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('repair-tickets', RepairTicketController::class);
 
 
+
     // create a repair-ticket log
     Route::post('repair-ticket-logs/{repair_ticket}/create', RepairLogController::class)
         ->name('repair-ticket-logs');
