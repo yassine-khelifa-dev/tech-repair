@@ -25,7 +25,7 @@ class ReviewRepairRequestRequest extends FormRequest
     {
         return [
             'response' => 'required|min:5',
-            'status'   =>  Rule::enum(RepairRequestStatus::class)
+            'status'   =>  ['required',Rule::enum(RepairRequestStatus::class)]
         ];
     }
 }

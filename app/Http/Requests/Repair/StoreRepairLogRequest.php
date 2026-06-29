@@ -25,7 +25,7 @@ class StoreRepairLogRequest extends FormRequest
     {
         return [
             'message' => 'required|min:2',
-            'new_status' => [Rule::enum(RepairStatus::class)],
+            'new_status' => ['required', Rule::enum(RepairStatus::class)],
             'is_visible_to_customer' => ['required', 'in:0,1'],
             'images_log' => ['nullable', 'array'],
             'images_log.*' => ['image', 'max:5120'],

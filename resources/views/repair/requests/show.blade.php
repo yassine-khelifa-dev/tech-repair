@@ -19,64 +19,8 @@
             </a>
         </div>
 
-        <form action="{{ route('repair-requests.review', $repair_request->id) }}" method="POST"
-            class="mb-8 rounded-2xl border border-slate-700 bg-slate-900/80 shadow-xl overflow-hidden">
-            @csrf
 
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <div class="p-6 border-b border-slate-700">
-                <h2 class="text-xl font-semibold text-white">
-                    Admin Review
-                </h2>
-                <p class="text-sm text-gray-400 mt-1">
-                    Add your note and choose whether to approve or reject this request.
-                </p>
-            </div>
-
-            <div class="p-6 space-y-5">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">
-                        Admin Response
-                    </label>
-                    <div class="my-5">
-                        <button type="button" id="bt-gen-ai-replay"
-                            class=" rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-2 text-lg transition shadow-lg">
-                            Generate AI Reply
-                        </button>
-                    </div>
-
-
-                    <textarea name="response" id="tx_response" rows="5" placeholder="Write your note for this repair request..."
-                        class="w-full rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-gray-500 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    <x-forms.error-message name="response" />
-
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button type="submit" name="status" value="approved"
-                        class="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 text-lg transition shadow-lg">
-                        Approve Request
-                    </button>
-
-                    <button type="submit" name="status" value="rejected"
-                        class="w-full rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold py-4 text-lg transition shadow-lg">
-                        Reject Request
-                    </button>
-                    <x-forms.error-message name="status" />
-
-                </div>
-            </div>
-        </form>
+        @include('repair.requests._form')
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
@@ -174,7 +118,7 @@
 
 @section('script')
     <script>
-        document.getElementById('bt-gen-ai-replay').addEventListener('click', async  function() {
+        document.getElementById('bt-gen-ai-replay').addEventListener('click', async function() {
             const issue_description = document.getElementById('issue_description').innerHTML;
 
             console.log(issue_description)
@@ -189,10 +133,10 @@
                 body: JSON.stringify({
                     issue_description: issue_description
                 })
-
             });
             const data = await response.json();
             document.getElementById('tx_response').value = data.response
+
         })
     </script>
 @endsection
