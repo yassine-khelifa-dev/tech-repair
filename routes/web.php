@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     // create a repair-ticket log
     Route::post('repair-ticket-logs/{repair_ticket}/create', RepairLogController::class)
         ->name('repair-ticket-logs');
+    Route::post('repair-ticket-logs/generate-ai-reply', [RepairLogController::class, 'ask'])->name('repair-ticket-logs.ai-replay');
+
 
     // config  device model
     Route::get(

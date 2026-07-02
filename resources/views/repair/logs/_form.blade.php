@@ -1,6 +1,6 @@
 <div class="bg-gray-800 rounded-xl border border-gray-700 p-6 mt-6">
 
-    <div class="mb-6">
+    <div class ="mb-6">
         <h2 class="text-xl font-semibold text-white">
             Add Activity
         </h2>
@@ -13,10 +13,18 @@
         @csrf
 
         {{-- Message --}}
-        <div class="mb-6">
+        <div class="mt-3">
             <label for="message" class="block text-sm font-medium text-gray-300 mb-2">
                 Activity Note
             </label>
+
+            <button type="button" id="bt-gen-ai-replay"
+                class="inline-flex  my-2 items-center justify-center gap-2 rounded-xl bg-yellow-600 px-4 py-2 text-sm font-bold text-white shadow-lg transition hover:bg-yellow-500 disabled:cursor-not-allowed disabled:bg-slate-600 disabled:opacity-60">
+                <span x-show="!loadingAiReply">
+                    Generate AI Reply
+                </span>
+
+            </button>
 
             <textarea id="message" rows="4" name="message"
                 placeholder="Describe the work performed, findings, customer communication..."
@@ -98,3 +106,51 @@
 
     </form>
 </div>
+
+
+
+@section('script')
+    <script>
+        const aiButton = document.getElementById('bt-gen-ai-replay');
+        const responseMessage = document.getElementById('message');
+        const statusSelect = document.getElementById('new_status');
+        const ticketId = @js($repair_ticket->id);
+
+        if (aiButton && responseMessage && statusSelect) {
+            aiButton.addEventListener('click', async function() {
+                aiButton.disabled = true;
+                aiButton.textContent = 'Generating...';
+
+                try {
+                    const response = await fetch("{{ route('repair-ticket-logs.ai-replay') }}", {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            ticket_id: ticketId,
+                            new_log_msg: responseMessage.value.trim(),
+                            new_status: statusSelect.value
+                        })
+                    });
+
+                    const res = await response.json();
+
+                    if (res.success === true) {
+                        responseMessage.value = res.response;
+                    } else {
+                        alert('AI reply is not available right now.');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('AI service error. Please try again later.');
+                } finally {
+                    aiButton.disabled = false;
+                    aiButton.textContent = 'Generate AI Reply';
+                }
+            });
+        }
+    </script>
+@endsection
