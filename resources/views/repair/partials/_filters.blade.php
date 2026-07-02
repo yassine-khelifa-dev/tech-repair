@@ -1,4 +1,7 @@
-<form method="GET" action="{{ route('repair-tickets.index') }}"
+@props(['action', 'status'])
+
+
+<form method="GET" action="{{ $action }}"
     class="my-5  rounded-xl border border-gray-700 bg-slate-900/70 p-4">
     <div class="flex flex-wrap items-end gap-4">
 
@@ -24,7 +27,7 @@
                     All statuses
                 </option>
 
-                @foreach (\App\Enums\RepairStatus::cases() as $item)
+                @foreach ($status as $item)
                     <option value="{{ $item->value }}" @selected(request('status') === $item->value)>
                         {{ str_replace('_', ' ', ucfirst(strtolower($item->name))) }}
                     </option>

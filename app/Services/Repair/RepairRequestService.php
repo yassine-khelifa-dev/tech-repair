@@ -23,9 +23,14 @@ class RepairRequestService
 
     ) {}
 
-    public function getList()
+    public function getList(array $query)
     {
-        return  RepairRequest::orderByRaw("
+        $q = RepairRequest::query();
+
+        if (isset($query['status']) && $query['status'] !== 'all')
+            $q->where('status', $query['status']);
+
+        return  $q->orderByRaw("
             CASE
                 WHEN status = 'pending'  THEN 1
                 WHEN status = 'approved' THEN 2

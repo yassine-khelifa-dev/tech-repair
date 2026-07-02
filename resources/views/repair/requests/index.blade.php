@@ -35,6 +35,12 @@
         </div>
     @endif
 
+
+    {{-- Filter --}}
+    @include('repair.partials._filters', [
+        'action' => route('repair-requests.index'),
+        'status' => \App\Enums\RepairRequestStatus::cases(),
+    ])
     <div
         class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5">
 
@@ -139,7 +145,7 @@
 
 
                             @if ($status === \App\Enums\RepairRequestStatus::rejected->value)
-                                <a href="{{ route('repair-requests.show', $repair_request_id) }}"  title="details"
+                                <a href="{{ route('repair-requests.show', $repair_request_id) }}" title="details"
                                     class="inline-flex items-center justify-center rounded-md bg-purple-500 p-2 text-white hover:bg-red-600 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-6">

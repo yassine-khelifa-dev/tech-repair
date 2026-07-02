@@ -41,7 +41,11 @@
 
 
     {{-- Filter --}}
-    @include('repair.tickets._filters')
+    @include('repair.partials._filters', [
+        'action' => route('repair-tickets.index'),
+        'status' => \App\Enums\RepairStatus::cases(),
+    ])
+
 
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default text-white mt-5"
         x-data="{

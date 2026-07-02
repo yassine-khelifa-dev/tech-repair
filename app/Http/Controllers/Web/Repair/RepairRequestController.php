@@ -1,16 +1,12 @@
 <?php
-
 namespace App\Http\Controllers\Web\Repair;
 
-use App\Enums\RepairRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\ReviewRepairRequestRequest;
 use App\Models\RepairRequest;
-use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Validation\Rule;
 
 class RepairRequestController extends Controller
 {
@@ -25,10 +21,11 @@ class RepairRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = $request->all();
         return view('repair.requests.index', [
-            'repair_requests' => $this->repair_request_service->getList()
+            'repair_requests' => $this->repair_request_service->getList($query)
         ]);
     }
 
@@ -64,5 +61,5 @@ class RepairRequestController extends Controller
             ->with('success', 'Ticket has bene approved');
     }
 
-   
+
 }
