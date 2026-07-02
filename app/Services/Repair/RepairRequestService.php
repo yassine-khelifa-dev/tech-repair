@@ -9,6 +9,7 @@ use App\Models\DeviceModel;
 use App\Models\RepairRequest;
 use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\FileUploadService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -39,17 +40,20 @@ class RepairRequestService
 
         $q->when(
             !empty($query['start']) && !empty($query['end']),
-            fn($q) => $q->whereBetween('created_at', [$query['start'], $query['end']])
+            fn($q) => $q->whereBetween('created_at', [
+                Carbon::parse($query['start'])->startOfDay(),
+                Carbon::parse($query['end'])->endOfDay()
+            ])
         );
 
         $q->when(
             !empty($query['start']) && empty($query['end']),
-            fn($q) => $q->whereDate('created_at', '>', $query['start'])
+            fn($q) => $q->whereDate('created_at', '>=', Carbon::parse($query['start'])->startOfDay())
         );
 
         $q->when(
             empty($query['start']) && !empty($query['end']),
-            fn($q) => $q->whereDate('created_at', '<=', $query['end'])
+            fn($q) => $q->whereDate('created_at', '<=', Carbon::parse($query['end'])->endOfDay())
         );
 
         return $q->orderByRaw("CASE

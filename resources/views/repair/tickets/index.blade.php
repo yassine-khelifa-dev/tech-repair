@@ -108,7 +108,7 @@
 
                         <td class="px-6 py-4">
                             <span title=" {{ $ticket->received_at }} ">
-                                {{ $ticket->received_at->diffForHumans() }}
+                                {{ $ticket->received_at }}
                             </span>
 
                         </td>

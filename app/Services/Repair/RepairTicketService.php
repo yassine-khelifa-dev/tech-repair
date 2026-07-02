@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\DeviceType;
 use App\Models\RepairTicket;
 use App\Services\FileUploadService;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -44,19 +45,19 @@ class RepairTicketService
         $q->when(
             !empty($query['start']) && !empty($query['end']),
             fn($q) => $q->whereBetween('received_at', [
-                $query['start'],
-                $query['end'],
+                Carbon::parse($query['start'])->startOfDay(),
+                Carbon::parse($query['end'])->endOfDay()
             ])
         );
 
         $q->when(
             !empty($query['start']) && empty($query['end']),
-            fn($q) => $q->whereDate('received_at', '>', $query['start'])
+            fn($q) => $q->whereDate('received_at', '>=', Carbon::parse($query['start'])->startOfDay())
         );
 
         $q->when(
             empty($query['start']) && !empty($query['end']),
-            fn($q) => $q->whereDate('received_at', '<=', $query['end'])
+            fn($q) => $q->whereDate('received_at', '<=', Carbon::parse($query['end'])->endOfDay())
         );
 
         return [
