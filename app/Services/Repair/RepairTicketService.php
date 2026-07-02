@@ -26,25 +26,38 @@ class RepairTicketService
             ->with([
                 'customer',
                 'deviceModel.brand',
-                'selectedOptions'
+                'selectedOptions',
             ]);
-        if (isset($query['status']) && $query['status'] !== 'all')
-            $q->where('status', $query['status']);
-        if (isset($query['customer']))
-            $q->whereHas('customer', function ($qc) use ($query) {
-                $qc->where('fullname', 'like',  $query['customer'] . '%');
-            });
 
-        if (!empty($query['start']) && !empty($query['end'])) {
-            $q->whereBetween('received_at', [
+        $q->when(
+            !empty($query['status']) && $query['status'] !== 'all',
+            fn($q) => $q->where('status', $query['status'])
+        );
+
+        $q->when(
+            !empty($query['customer']),
+            fn($q) => $q->whereHas('customer', function ($customer) use ($query) {
+                $customer->where('fullname', 'like', $query['customer'] . '%');
+            })
+        );
+
+        $q->when(
+            !empty($query['start']) && !empty($query['end']),
+            fn($q) => $q->whereBetween('received_at', [
                 $query['start'],
                 $query['end'],
-            ]);
-        } elseif (!empty($query['start'])) {
-            $q->whereDate('received_at', '>=', $query['start']);
-        } elseif (!empty($query['end'])) {
-            $q->whereDate('received_at', '<=', $query['end']);
-        }
+            ])
+        );
+
+        $q->when(
+            !empty($query['start']) && empty($query['end']),
+            fn($q) => $q->whereDate('received_at', '>=', $query['start'])
+        );
+
+        $q->when(
+            empty($query['start']) && !empty($query['end']),
+            fn($q) => $q->whereDate('received_at', '<=', $query['end'])
+        );
 
         return [
             'tickets' => $q

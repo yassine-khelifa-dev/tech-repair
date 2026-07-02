@@ -83,7 +83,6 @@
                         $converted_ticket_id = $repair_request->converted_ticket_id;
                         $status = $repair_request->status;
                         $repair_request_created_at = $repair_request->created_at->diffForHumans();
-                        $repair_request = json_decode($repair_request['data']);
                     @endphp
 
 
@@ -100,7 +99,7 @@
                         </td>
 
                         <td class="px-6 py-4">
-                            {{ substr($repair_request->issue_description, 0, 50) }}...
+                            {{ substr($repair_request->data['issue_description'], 0, 50) }}...
                         </td>
 
 

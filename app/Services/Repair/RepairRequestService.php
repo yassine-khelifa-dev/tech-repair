@@ -27,22 +27,44 @@ class RepairRequestService
     {
         $q = RepairRequest::query();
 
-        if (isset($query['status']) && $query['status'] !== 'all')
-            $q->where('status', $query['status']);
+        $q->when(
+            !empty($query['status']) && $query['status'] !== 'all',
+            fn($q) => $q->where('status', $query['status'])
+        );
 
-        return  $q->orderByRaw("
-            CASE
-                WHEN status = 'pending'  THEN 1
-                WHEN status = 'approved' THEN 2
-                WHEN status = 'rejected' THEN 3
-            END
-            ")->latest()
-            ->paginate(10);
+        $q->when(
+            !empty($query['customer']),
+            fn($q) => $q->where('data->fullname', 'like', $query['customer'] . '%')
+        );
+
+        $q->when(
+            !empty($query['start']) && !empty($query['end']),
+            fn($q) => $q->whereBetween('created_at', [$query['start'], $query['end']])
+        );
+
+        $q->when(
+            !empty($query['start']) && empty($query['end']),
+            fn($q) => $q->whereDate('created_at', '>=', $query['start'])
+        );
+
+        $q->when(
+            empty($query['start']) && !empty($query['end']),
+            fn($q) => $q->whereDate('created_at', '<=', $query['end'])
+        );
+
+        return $q->orderByRaw("CASE
+            WHEN status = 'pending' THEN 1
+            WHEN status = 'approved' THEN 2
+            WHEN status = 'rejected' THEN 3
+            END")
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
     }
 
     public function showDetailsRequest(RepairRequest $repair_request): array
     {
-        $data = json_decode($repair_request->data, true);
+        $data = $repair_request->data;
 
         $images = collect($data['images_device_path'] ?? [])
             ->map(fn($item) => (object) $item);
@@ -69,7 +91,7 @@ class RepairRequestService
         $request_status  = $_response['status'];
         $feedback_admin  = $_response['response'];
 
-        $data = json_decode($repair_request->data, true);
+        $data = $repair_request->data;
 
         switch ($request_status) {
             case RepairRequestStatus::approved->value:
@@ -165,7 +187,7 @@ class RepairRequestService
 
         return  RepairRequest::create(
             [
-                'data' =>  json_encode($data),
+                'data' =>  $data,
                 // status: default:pending
                 'status' => RepairRequestStatus::pending->value,
             ]

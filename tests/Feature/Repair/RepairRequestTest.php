@@ -63,31 +63,39 @@ class RepairRequestTest extends TestCase
 
     public function test_can_approve_repair_request(): void
     {
-        $user = $this->createUser();
-        $this->actingAs($user);
+        try {
+            $user = $this->createUser();
+            $this->actingAs($user);
 
-        $repair_request = app(RepairRequestService::class)
-            ->create($this->dataRepairRequest());
+            $repair_request = app(RepairRequestService::class)
+                ->create($this->dataRepairRequest());
 
-        $response = $this->post(
-            route('repair-requests.review', $repair_request),
-            [
-                'response' => 'Request approved.',
+            $response = $this->post(
+                route('repair-requests.review', $repair_request),
+                [
+                    'response' => 'Request approved.',
+                    'status' => RepairRequestStatus::approved->value,
+                ]
+            );
+
+            $response->assertRedirect();
+            $response->assertSessionHasNoErrors();
+
+            $this->assertDatabaseHas('repair_requests', [
+                'id' => $repair_request->id,
                 'status' => RepairRequestStatus::approved->value,
-            ]
-        );
-        $response->assertRedirect();
-        $response->assertSessionHasNoErrors();
+            ]);
 
-        $this->assertDatabaseHas('repair_requests', [
-            'id' => $repair_request->id,
-            'status' => RepairRequestStatus::approved->value,
-        ]);
+            $this->assertDatabaseHas('repair_tickets', [
+                'status' => RepairStatus::WAITING_DEVICE->value,
+                'technician_note' => 'Request approved.',
+            ]);
+        } catch (\Throwable $e) {
+            dump($e->getMessage());
+            dump($e->getTraceAsString());
 
-        $this->assertDatabaseHas('repair_tickets', [
-            'status' => RepairStatus::WAITING_DEVICE->value,
-            'technician_note' =>  'Request approved.',
-        ]);
+            throw $e; // Re-throw so the test still fails
+        }
     }
 
 
@@ -240,6 +248,4 @@ class RepairRequestTest extends TestCase
             RepairRequestReviewedNotification::class
         );
     }
-
-
 }

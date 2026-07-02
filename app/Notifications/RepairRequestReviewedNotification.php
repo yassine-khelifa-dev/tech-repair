@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Mail\Repair\RepairRequestReviewedMail;
 use App\Models\RepairRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class RepairRequestReviewedNotification extends Notification
@@ -20,10 +18,7 @@ class RepairRequestReviewedNotification extends Notification
     public function __construct(
         public RepairRequest $repair_request
     ) {
-        $this->email_customer = json_decode(
-            $this->repair_request->data,
-            true
-        )['email'];
+        $this->email_customer =  $this->repair_request->data['email'];
     }
 
     /**
