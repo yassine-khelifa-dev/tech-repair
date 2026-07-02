@@ -110,7 +110,7 @@
 
                         <td class="px-6 py-4">
 
-                            @if ($status == 'pending')
+                            @if ($status == \App\Enums\RepairRequestStatus::pending->value)
                                 <a href="{{ route('repair-requests.show', $repair_request_id) }}" title="review"
                                     class="inline-flex items-center justify-center rounded-md bg-green-500 p-2 text-white hover:bg-red-600 transition">
 
@@ -124,7 +124,7 @@
 
 
 
-                            @if ($converted_ticket_id !== null && $status == 'approved')
+                            @if ($converted_ticket_id !== null && $status === \App\Enums\RepairRequestStatus::approved->value)
                                 <a href="{{ route('repair-tickets.show', $converted_ticket_id) }}" title="details"
                                     class="inline-flex items-center justify-center rounded-md bg-blue-500 p-2 text-white hover:bg-red-600 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -134,6 +134,18 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
                                     </svg>
 
+                                </a>
+                            @endif
+
+
+                            @if ($status === \App\Enums\RepairRequestStatus::rejected->value)
+                                <a href="{{ route('repair-requests.show', $repair_request_id) }}"  title="details"
+                                    class="inline-flex items-center justify-center rounded-md bg-purple-500 p-2 text-white hover:bg-red-600 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                    </svg>
                                 </a>
                             @endif
 

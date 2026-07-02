@@ -34,7 +34,27 @@
             <div class="grid grid-cols-1 gap-6 xl:grid-cols-[1.2fr_0.8fr]">
 
                 {{-- form --}}
-                @include('repair.requests._form')
+                @if ($repair_request->status !== \App\Enums\RepairRequestStatus::rejected->value)
+                    @include('repair.requests._form')
+                @else
+                    {{-- Customer Issue --}}
+                    <div class="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+                        <div class="mb-3 flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-white">
+                                Customer Issue
+                            </h3>
+
+                            <button type="button" @click="detailsOpen = true"
+                                class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:bg-slate-700 hover:text-white">
+                                View full details
+                            </button>
+                        </div>
+
+                        <p id="issue_description" class="leading-7 text-gray-300">
+                            {{ $data['issue_description'] }}
+                        </p>
+                    </div>
+                @endif
 
                 {{-- Right: Summary --}}
                 <div class="space-y-6">
