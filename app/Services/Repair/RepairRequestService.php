@@ -44,7 +44,7 @@ class RepairRequestService
 
         $q->when(
             !empty($query['start']) && empty($query['end']),
-            fn($q) => $q->whereDate('created_at', '>=', $query['start'])
+            fn($q) => $q->whereDate('created_at', '>', $query['start'])
         );
 
         $q->when(
