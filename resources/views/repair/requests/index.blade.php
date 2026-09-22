@@ -30,6 +30,27 @@
             </div>
         @endif
 
+        <div class="mb-5 grid gap-3 rounded-xl border border-blue-400/15 bg-blue-500/10 p-4 shadow-lg shadow-blue-900/10 md:grid-cols-[1.4fr_1fr]">
+            <div>
+                <h2 class="text-base font-semibold text-white">What this page is for</h2>
+                <p class="mt-1 text-sm leading-6 text-gray-300">
+                    Repair requests are customer submissions before they become repair tickets. Review a pending request to accept or reject it. When a request is approved and converted, use Open Ticket to continue the repair workflow.
+                </p>
+            </div>
+
+            <div class="grid gap-2 text-sm text-gray-300 sm:grid-cols-3 md:grid-cols-1">
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-emerald-200">Review</span> accepts or rejects a pending request.
+                </div>
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-blue-200">Open Ticket</span> opens the created ticket.
+                </div>
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-purple-200">Details</span> opens a rejected request.
+                </div>
+            </div>
+        </div>
+
         @include('repair.partials._filters', [
             'action' => route('repair-requests.index'),
             'status' => \App\Enums\RepairRequestStatus::cases(),
@@ -57,7 +78,7 @@
                             <th scope="col" class="px-6 py-4 font-semibold">Issue</th>
                             <th scope="col" class="px-6 py-4 font-semibold">Status</th>
                             <th scope="col" class="px-6 py-4 font-semibold">Created</th>
-                            <th scope="col" class="px-6 py-4 text-right font-semibold">Action</th>
+                            <th scope="col" class="px-6 py-4 text-right font-semibold">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/10">
@@ -110,35 +131,41 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div class="flex flex-wrap items-center justify-end gap-2">
                                         @if ($status == \App\Enums\RepairRequestStatus::pending->value)
-                                            <a href="{{ route('repair-requests.show', $repair_request_id) }}" title="Review"
-                                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-400/20 bg-emerald-500/10 text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            <a href="{{ route('repair-requests.show', $repair_request_id) }}"
+                                                title="Open review page to accept or reject this request"
+                                                class="inline-flex min-w-24 items-center justify-center gap-1.5 rounded-lg border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                                                 aria-label="Review request #{{ $repair_request_id }}">
                                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM8.288 14.212A5.25 5.25 0 1117.25 10.5" />
                                                 </svg>
+                                                Review
                                             </a>
                                         @endif
 
                                         @if ($converted_ticket_id !== null && $status === \App\Enums\RepairRequestStatus::approved->value)
-                                            <a href="{{ route('repair-tickets.show', $converted_ticket_id) }}" title="Ticket details"
-                                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-400/20 bg-blue-500/10 text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            <a href="{{ route('repair-tickets.show', $converted_ticket_id) }}"
+                                                title="Open the repair ticket created from this approved request"
+                                                class="inline-flex min-w-28 items-center justify-center gap-1.5 rounded-lg border border-blue-400/20 bg-blue-500/10 px-3 py-2 text-xs font-semibold text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                                                 aria-label="Open converted ticket #{{ $converted_ticket_id }}">
                                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
                                                 </svg>
+                                                Open Ticket
                                             </a>
                                         @endif
 
                                         @if ($status === \App\Enums\RepairRequestStatus::rejected->value)
-                                            <a href="{{ route('repair-requests.show', $repair_request_id) }}" title="Details"
-                                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-purple-400/20 bg-purple-500/10 text-purple-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/50 hover:bg-purple-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            <a href="{{ route('repair-requests.show', $repair_request_id) }}"
+                                                title="Open this rejected request to see its original details"
+                                                class="inline-flex min-w-24 items-center justify-center gap-1.5 rounded-lg border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs font-semibold text-purple-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300/50 hover:bg-purple-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                                                 aria-label="Open rejected request #{{ $repair_request_id }}">
                                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632A2.25 2.25 0 0117.378 20.25H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25" />
                                                 </svg>
+                                                Details
                                             </a>
                                         @endif
                                     </div>

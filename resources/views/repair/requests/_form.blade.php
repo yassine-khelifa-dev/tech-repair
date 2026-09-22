@@ -3,8 +3,9 @@
     loading: false,
     loadingAiReply: false,
     status: '{{ old('status', 'approved') }}'
-}" @submit="loading = true" action="{{ route('repair-requests.review', $repair_request->id) }}"
-    method="POST" class="rounded-3xl border border-slate-800 bg-slate-900/80 shadow-2xl overflow-hidden">
+}" @ai-reply-finished.window="loadingAiReply = false" @submit="loading = true"
+    action="{{ route('repair-requests.review', $repair_request->id) }}" method="POST"
+    class="rounded-3xl border border-slate-800 bg-slate-900/80 shadow-2xl overflow-hidden">
     @csrf
 
     {{-- Form Header --}}
@@ -81,6 +82,7 @@
                     <span x-show="!loadingAiReply">
                         Generate AI Reply
                     </span>
+                    <span>Generate AI Reply</span>
 
                     <span x-show="loadingAiReply" class="inline-flex items-center gap-2">
                         <span

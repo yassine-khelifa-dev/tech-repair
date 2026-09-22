@@ -285,9 +285,11 @@
 
                 {{-- Actions  --}}
                 <div>
-                    <div class="mt-2  mr-5 flex items-center justify-end gap-x-6">
-                        <a href="{{ route('repair-tickets.index') }}" type="button"
-                            class="text-sm/6 font-semibold text-white">Cancel</a>
+                    <div class="mt-2 mr-5 flex items-center justify-end gap-x-3">
+                        <a href="{{ route('repair-tickets.index') }}"
+                            class="inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-gray-200 transition hover:border-blue-300/40 hover:bg-blue-500/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                            Cancel
+                        </a>
                         <button type="submit" @class([
                             'bg-indigo-500 ' => $mode == 'create',
                             'bg-red-500' => $mode == 'edit',

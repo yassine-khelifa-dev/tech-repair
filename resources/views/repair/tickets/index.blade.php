@@ -41,6 +41,27 @@
             </div>
         @endif
 
+        <div class="mb-5 grid gap-3 rounded-xl border border-blue-400/15 bg-blue-500/10 p-4 shadow-lg shadow-blue-900/10 md:grid-cols-[1.4fr_1fr]">
+            <div>
+                <h2 class="text-base font-semibold text-white">What this page is for</h2>
+                <p class="mt-1 text-sm leading-6 text-gray-300">
+                    Repair tickets are the devices already accepted for work: phones deposited by customers or approved from repair requests. Open a ticket to follow the repair, customer details, device information, status, photos, and logs.
+                </p>
+            </div>
+
+            <div class="grid gap-2 text-sm text-gray-300 sm:grid-cols-3 md:grid-cols-1">
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-emerald-200">Open</span> shows the full ticket details.
+                </div>
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-blue-200">Edit</span> updates ticket information.
+                </div>
+                <div class="rounded-lg border border-white/10 bg-gray-950/30 px-3 py-2">
+                    <span class="font-semibold text-red-200">Delete</span> removes a wrong ticket.
+                </div>
+            </div>
+        </div>
+
         @include('repair.partials._filters', [
             'action' => route('repair-tickets.index'),
             'status' => \App\Enums\RepairStatus::cases(),
@@ -74,6 +95,7 @@
                     <tbody class="divide-y divide-white/10">
                         @forelse ($tickets as $ticket)
                             <tr onclick="window.location='{{ route('repair-tickets.show', $ticket->id) }}'"
+                                title="Click this row to open ticket details"
                                 class="group cursor-pointer transition-colors duration-200 hover:bg-white/[.04]">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
@@ -108,21 +130,25 @@
                                 </td>
 
                                 <td class="px-6 py-4" onclick="event.stopPropagation()">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div class="flex flex-wrap items-center justify-end gap-2">
                                         <a href="{{ route('repair-tickets.show', $ticket->id) }}"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-emerald-400/20 bg-emerald-500/10 text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
-                                            aria-label="View {{ $ticket->ticket_number }}">
+                                            title="Open ticket details, repair status, photos, and logs"
+                                            class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            aria-label="Open {{ $ticket->ticket_number }}">
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z" />
                                             </svg>
+                                            Open
                                         </a>
 
                                         <a href="{{ route('repair-tickets.edit', $ticket->id) }}"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                            title="Edit customer, device, issue, price, or ticket status"
+                                            class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                                             aria-label="Edit {{ $ticket->ticket_number }}">
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
                                             </svg>
+                                            Edit
                                         </a>
 
                                         <form action="{{ route('repair-tickets.destroy', $ticket->id) }}" method="post">
@@ -130,11 +156,13 @@
                                             @method('DELETE')
                                             <button type="submit"
                                                 onclick="return confirm('Are you sure to delete this ticket {{ $ticket->ticket_number }}?')"
-                                                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-400/20 bg-red-500/10 text-red-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-red-300/50 hover:bg-red-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                                title="Delete this ticket permanently after confirmation"
+                                                class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-red-300/50 hover:bg-red-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-800"
                                                 aria-label="Delete {{ $ticket->ticket_number }}">
                                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                                 </svg>
+                                                Delete
                                             </button>
                                         </form>
                                     </div>

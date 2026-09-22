@@ -62,7 +62,7 @@ class AIRepairRequestService
             ";
         $response = Http::withToken(config('services.groq.key'))
             ->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.3-70b-versatile',
+                'model' => 'openai/gpt-oss-120b',
                 'messages' => [
                     [
                         'role' => 'system',
@@ -131,7 +131,8 @@ Customer repair request:
 
         $response = Http::withToken(config('services.groq.key'))
             ->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.3-70b-versatile',
+                'model' => 'openai/gpt-oss-120b',
+
                 'messages' => [
                     [
                         'role' => 'system',
