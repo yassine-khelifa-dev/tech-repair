@@ -83,7 +83,12 @@ class RepairRequestController extends Controller
 
         // send notif to admin ( email, DB)
         try {
-            $admin->notify(new RepairRequestReceivedNotification($repair_request));
+            if ($admin) {
+                $admin->notify(new RepairRequestReceivedNotification($repair_request));
+            } else {
+                Notification::route('mail', config('mail.admin_address'))
+                    ->notify(new RepairRequestReceivedNotification($repair_request));
+            }
 
             Log::info("API: Notif has been sent (notif:new Repair Request) : repair-req-id: " . $repair_request->id);
         } catch (\Throwable $th) {

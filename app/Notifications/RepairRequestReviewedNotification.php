@@ -11,15 +11,9 @@ class RepairRequestReviewedNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-    public string $email_customer;
     public function __construct(
         public RepairRequest $repair_request
-    ) {
-        $this->email_customer =  $this->repair_request->data['email'];
-    }
+    ) {}
 
     /**
      * Get the notification's delivery channels.
@@ -37,7 +31,8 @@ class RepairRequestReviewedNotification extends Notification
     public function toMail(object $notifiable): RepairRequestReviewedMail
     {
         $mail  = new RepairRequestReviewedMail($this->repair_request);
-        $mail->to($this->email_customer);
+        $mail->to($notifiable->routeNotificationFor('mail'));
+
         return $mail;
     }
 

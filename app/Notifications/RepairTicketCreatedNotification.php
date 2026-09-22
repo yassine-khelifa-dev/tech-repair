@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Mail\Repair\RepairTicketMail;
 use App\Models\RepairTicket;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class RepairTicketCreatedNotification extends Notification
@@ -18,8 +16,7 @@ class RepairTicketCreatedNotification extends Notification
      */
     public function __construct(
         public RepairTicket $ticket
-    )
-    {
+    ) {
     }
 
     /**
@@ -37,11 +34,11 @@ class RepairTicketCreatedNotification extends Notification
      */
     public function toMail(object $notifiable): RepairTicketMail
     {
-       $mail = new RepairTicketMail($this->ticket);
+        $mail = new RepairTicketMail($this->ticket);
 
-       $mail->to( $this->ticket->customer->email);
+        $mail->to($notifiable->email);
 
-       return $mail;
+        return $mail;
     }
 
     /**

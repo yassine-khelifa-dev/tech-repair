@@ -5,6 +5,7 @@ namespace Tests\Feature\Repair;
 use App\Enums\RepairRequestStatus;
 use App\Enums\RepairStatus;
 use App\Models\RepairTicket;
+use App\Notifications\RepairRequestReceivedNotification;
 use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,6 +39,12 @@ class RepairRequestTest extends TestCase
 
     public function test_can_create_repair_request_via_api(): void
     {
+        Notification::fake();
+        config(['mail.admin_address' => 'tech-repair-admin@eprostam.com']);
+
+        $admin = $this->createUser();
+        $admin->forceFill(['role' => 'admin'])->save();
+
         $response = $this->postJson('api/repair-request/create',  $this->dataRepairRequest());
         $response->assertStatus(201);
 
@@ -45,6 +52,14 @@ class RepairRequestTest extends TestCase
             'status' => RepairRequestStatus::pending->value,
             'converted_ticket_id' => null,
         ]);
+
+        Notification::assertSentTo(
+            $admin,
+            RepairRequestReceivedNotification::class,
+            function (RepairRequestReceivedNotification $notification) use ($admin) {
+                return $notification->toMail($admin)->hasTo('tech-repair-admin@eprostam.com');
+            }
+        );
     }
 
     public function test_can_create_repair_request_via_service(): void

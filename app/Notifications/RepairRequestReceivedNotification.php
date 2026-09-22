@@ -5,8 +5,7 @@ namespace App\Notifications;
 use App\Mail\Repair\RepairRequestMail;
 use App\Models\RepairRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
 
 class RepairRequestReceivedNotification extends Notification
@@ -28,6 +27,10 @@ class RepairRequestReceivedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
+        if ($notifiable instanceof AnonymousNotifiable) {
+            return ['mail'];
+        }
+
         return ['mail', 'database'];
     }
     /**
@@ -37,7 +40,7 @@ class RepairRequestReceivedNotification extends Notification
     {
         $mail = new RepairRequestMail($this->repair_request);
 
-        $mail->to('admin@seven-tech.com');
+        $mail->to(config('mail.admin_address'));
 
         return $mail;
     }
