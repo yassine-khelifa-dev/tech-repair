@@ -22,7 +22,7 @@ Route::name('api.')->group(function () {
 
     Route::post('repair-request/create', [RepairRequestController::class, 'store'])->name('repair-request.store');
 });
-    Route::post('repair-requests/generate-ai-reply', [RepairRequestController::class, 'ask'])->name('repair-request.ai-replay');;
+    Route::post('repair-requests/generate-ai-reply', [RepairRequestController::class, 'ask'])->name('repair-request.ai-replay');
 
 
 

@@ -58,7 +58,7 @@ class RepairRequestController extends Controller
         );
 
         return redirect()->route('repair-tickets.index')
-            ->with('success', 'Ticket has bene approved');
+            ->with('success', 'Repair request has been reviewed.');
     }
 
 

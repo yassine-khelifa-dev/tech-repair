@@ -54,7 +54,7 @@ return [
     ],
 
     'ui' => [
-        'title' => 'Repair Flow API',
+        'title' => 'Tech Repair API',
     ],
 
     'renderer' => 'elements',

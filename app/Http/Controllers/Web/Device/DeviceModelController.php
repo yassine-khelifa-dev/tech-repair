@@ -18,7 +18,7 @@ class DeviceModelController extends Controller
      */
     public function index()
     {
-        $devicemodels = DeviceModel::with(['brand', 'type' ])->latest()->paginate(5);
+        $devicemodels = DeviceModel::with(['brand', 'type' ])->latest()->paginate(7);
 
         return view('device.model.index', [
              "devicemodels" => $devicemodels
@@ -46,9 +46,9 @@ class DeviceModelController extends Controller
         DeviceModel::create( $devicemodel );
 
         if( $request->action == "save")
-            return redirect()->route('devicemodel.index')->with('success', 'a Device Model has bene craeted');
+            return redirect()->route('devicemodel.index')->with('success', 'Device model has been created.');
 
-        return redirect()->route('devicemodel.create')->with('success', 'a Device Model has bene craeted');
+        return redirect()->route('devicemodel.create')->with('success', 'Device model has been created.');
     }
 
     /**
@@ -82,7 +82,7 @@ class DeviceModelController extends Controller
         $devicemodel->update( $data );
 
         if($devicemodel->wasChanged())
-            return redirect()->route('devicemodel.index')->with('success', 'device model has bene updated');
+            return redirect()->route('devicemodel.index')->with('success', 'Device model has been updated.');
         else
             return redirect()->route('devicemodel.index');
     }
@@ -93,6 +93,6 @@ class DeviceModelController extends Controller
     public function destroy(DeviceModel $devicemodel)
     {
         $devicemodel->delete();
-        return redirect()->route('devicemodel.index')->with('success', 'Device Model has bene deleted');
+        return redirect()->route('devicemodel.index')->with('success', 'Device model has been deleted.');
     }
 }

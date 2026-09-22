@@ -27,7 +27,7 @@ class DeviceModelConfigurationController extends Controller
 
         $devicemodel->allowed_options()->sync( $options_selected['allowed_options'] );
 
-        return redirect()->route('device-model-configuration.edit', $devicemodel->id)->with('success', 'Config has bene Updated');
+        return redirect()->route('device-model-configuration.edit', $devicemodel->id)->with('success', 'Model configuration has been updated.');
 
     }
 }

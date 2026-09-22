@@ -16,7 +16,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::latest()->paginate(4);
+        $brands = Brand::latest()->paginate(10);
         return view('device.brand.index',compact('brands'));
     }
 
@@ -37,7 +37,7 @@ class BrandController extends Controller
         $brand['slug'] = Str::slug($brand['name']);
 
         Brand::create( $brand );
-        return redirect()->route('brand.index')->with('success', 'Brand has bene craeted');
+        return redirect()->route('brand.index')->with('success', 'Brand has been created.');
     }
 
     /**
@@ -61,7 +61,7 @@ class BrandController extends Controller
         $brand->update( $data );
 
         if($brand->wasChanged())
-            return redirect()->route('brand.index')->with('success', 'Brand has bene updated');
+            return redirect()->route('brand.index')->with('success', 'Brand has been updated.');
         else
             return redirect()->route('brand.index');
 
@@ -74,6 +74,6 @@ class BrandController extends Controller
     {
        $brand->delete();
 
-       return redirect()->route('brand.index')->with('success', 'Brand has bene deleted');
+       return redirect()->route('brand.index')->with('success', 'Brand has been deleted.');
     }
 }

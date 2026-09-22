@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-8">
-        <p class="text-sm font-bold uppercase tracking-wide text-cyan-300">Repair Flow</p>
+        <p class="text-sm font-bold uppercase tracking-wide text-cyan-300">Tech Repair</p>
         <h2 class="mt-3 text-3xl font-extrabold tracking-normal text-white">Register</h2>
         <p class="mt-2 text-sm leading-6 text-gray-400">
             Create your account to start handling smartphone repair requests.

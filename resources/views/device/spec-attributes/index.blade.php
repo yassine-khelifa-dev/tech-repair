@@ -236,5 +236,56 @@
                 </table>
             </div>
         </div>
+
+          @if ($spc_attributes->hasPages())
+            <div class="mt-5 flex flex-col gap-4 rounded-xl border border-white/10 bg-gray-800/70 px-4 py-3 text-sm text-gray-300 shadow-lg shadow-black/10 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    Showing
+                    <span class="font-semibold text-white">{{ $spc_attributes->firstItem() }}</span>
+                    to
+                    <span class="font-semibold text-white">{{ $spc_attributes->lastItem() }}</span>
+                    of
+                    <span class="font-semibold text-white">{{ $spc_attributes->total() }}</span>
+                    results
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    @if ($spc_attributes->onFirstPage())
+                        <span class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">
+                            Previous
+                        </span>
+                    @else
+                        <a href="{{ $spc_attributes->previousPageUrl() }}"
+                            class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">
+                            Previous
+                        </a>
+                    @endif
+
+                    @foreach ($spc_attributes->getUrlRange(1, $spc_attributes->lastPage()) as $page => $url)
+                        @if ($page == $spc_attributes->currentPage())
+                            <span class="rounded-lg bg-blue-600 px-3 py-2 font-semibold text-white">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $url }}"
+                                class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endforeach
+
+                    @if ($spc_attributes->hasMorePages())
+                        <a href="{{ $spc_attributes->nextPageUrl() }}"
+                            class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">
+                            Next
+                        </a>
+                    @else
+                        <span class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">
+                            Next
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

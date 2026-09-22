@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Repair Flow') }}</title>
+        <title>{{ config('app.name', 'Tech Repair') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -56,13 +56,13 @@
                                 <path d="m14.5 11.5 3.2-3.2 1.4 1.4-3.2 3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <span class="text-xl font-extrabold tracking-normal text-white">Repair Flow</span>
+                        <span class="text-xl font-extrabold tracking-normal text-white">Tech Repair</span>
                     </a>
 
                     <div class="mt-12 max-w-2xl">
                         <p class="text-sm font-bold uppercase tracking-wide text-cyan-300">Smartphone repair system</p>
                         <h1 class="mt-4 text-5xl font-extrabold leading-tight tracking-normal text-white">
-                            Track repairs from login to delivery.
+                            Track repairs from request to delivery.
                         </h1>
                         <p class="mt-5 max-w-xl text-lg leading-8 text-gray-300">
                             Manage requests, tickets, customer updates, and repair progress from one focused workspace.
@@ -134,7 +134,7 @@
                                     <path d="m14.5 11.5 3.2-3.2 1.4 1.4-3.2 3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </span>
-                            <span class="text-xl font-extrabold tracking-normal text-white">Repair Flow</span>
+                            <span class="text-xl font-extrabold tracking-normal text-white">Tech Repair</span>
                         </a>
                     </div>
 

@@ -19,7 +19,7 @@ class SpecAttributesService
         return  SpecAttribute::with(['specOptions', 'deviceTypes'])
             ->orderBy('sort_order')
             ->latest()
-            ->get();
+            ;
     }
 
 
@@ -113,7 +113,7 @@ class SpecAttributesService
     }
 
 
-    
+
     public function delete(SpecAttribute $spec_attribute)
     {
         $spec_attribute->delete();

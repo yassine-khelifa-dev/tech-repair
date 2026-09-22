@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name', 'Repair Flow') }}</title>
+        <title>{{ config('app.name', 'Tech Repair') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -74,7 +74,7 @@
                             </svg>
                         </span>
                         <span class="text-lg font-bold tracking-normal text-white">
-                            Repair Flow
+                            Tech Repair
                         </span>
                     </a>
 
@@ -103,15 +103,15 @@
             <main class="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-12 px-6 py-14 lg:grid-cols-[1fr_520px] lg:px-8">
                 <section class="max-w-3xl">
                     <p class="text-sm font-bold uppercase tracking-wide text-cyan-300">
-                        Repair Flow
+                        Tech Repair
                     </p>
 
                     <h1 class="mt-5 max-w-2xl text-4xl font-extrabold leading-tight tracking-normal text-white sm:text-5xl lg:text-6xl">
-                        Welcome to your repair login.
+                        Welcome to your repair workspace.
                     </h1>
 
                     <p class="mt-6 max-w-2xl text-lg leading-8 text-gray-300">
-                        Login or register to manage smartphone repair tickets, track requests, and keep every customer update in one clean workflow.
+                        Log in or register to manage repair tickets, review requests, and keep every customer update in one clean workflow.
                     </p>
 
                     <div class="mt-9 flex flex-wrap gap-3">
@@ -154,8 +154,8 @@
                     <div class="absolute inset-x-10 bottom-10 h-28 rounded-[50%] bg-cyan-400/10 blur-3xl"></div>
 
                     <svg class="relative h-auto w-full max-w-[520px]" viewBox="0 0 520 460" fill="none" role="img" aria-labelledby="repair-flow-title repair-flow-desc">
-                        <title id="repair-flow-title">Repair Flow smartphone repair animation</title>
-                        <desc id="repair-flow-desc">Animated smartphone with repair tools, scan line, sparks, and Repair Flow logo.</desc>
+                        <title id="repair-flow-title">Tech Repair smartphone repair animation</title>
+                        <desc id="repair-flow-desc">Animated smartphone with repair tools, scan line, sparks, and Tech Repair logo.</desc>
 
                         <g opacity=".35">
                             <path d="M93 372h334" stroke="#334155" stroke-width="2" stroke-linecap="round" />

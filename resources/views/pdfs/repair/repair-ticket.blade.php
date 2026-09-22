@@ -217,11 +217,11 @@
     <div class="header">
         <div class="row">
             <div class="col">
-                <div class="company-name">Seve Tech SRL</div>
+                <div class="company-name">Tech Repair</div>
                 <div class="company-info">
                     Professional Device Repair Service<br>
                     Milan, Italy<br>
-                    Email: support@seven-tech.test<br>
+                    Email: tech-repair-admin@eprostam.com<br>
                     Phone: +39 351 633 2693
                 </div>
             </div>
@@ -407,7 +407,7 @@
     <div class="terms">
         <strong>Terms & Conditions:</strong><br>
         The customer confirms that the device has been left for diagnosis and/or repair.
-        Seve Tech SRL is not responsible for data loss occurring during repair procedures.
+        Tech Repair is not responsible for data loss occurring during repair procedures.
         The customer is advised to back up personal data before any technical intervention.
         Repair times may vary depending on the availability of spare parts and technical complexity.
         This document is a repair receipt and does not replace a fiscal invoice where applicable.
@@ -416,7 +416,7 @@
 </div>
 
 <div class="footer">
-    Seve Tech SRL — Repair Receipt — {{ $ticket->ticket_number }}
+    Tech Repair — Repair Receipt — {{ $ticket->ticket_number }}
 </div>
 
 </body>

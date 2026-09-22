@@ -60,8 +60,8 @@
                             {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                         </span>
                         <span class="hidden min-w-0 sm:block">
-                            <span class="block truncate text-sm font-semibold text-white">{{ auth()->user()->name ?? 'User test' }}</span>
-                            <span class="block max-w-56 truncate text-xs text-gray-400">{{ auth()->user()->email ?? 'Email test' }}</span>
+                            <span class="block truncate text-sm font-semibold text-white">{{ auth()->user()->name ?? 'User' }}</span>
+                            <span class="block max-w-56 truncate text-xs text-gray-400">{{ auth()->user()->email ?? 'Email unavailable' }}</span>
                         </span>
                         <svg class="hidden h-4 w-4 text-gray-400 sm:block" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -71,8 +71,8 @@
                     <div class="hidden z-50 my-4 w-64 overflow-hidden rounded-xl border border-white/10 bg-gray-800 text-base list-none shadow-2xl shadow-black/30"
                         id="dropdown">
                         <div class="border-b border-white/10 px-4 py-3">
-                            <span class="block truncate text-sm font-semibold text-white">{{ auth()->user()->name ?? 'User test' }}</span>
-                            <span class="mt-1 block truncate text-sm text-gray-400">{{ auth()->user()->email ?? 'Email test' }}</span>
+                            <span class="block truncate text-sm font-semibold text-white">{{ auth()->user()->name ?? 'User' }}</span>
+                            <span class="mt-1 block truncate text-sm text-gray-400">{{ auth()->user()->email ?? 'Email unavailable' }}</span>
                         </div>
                         <div class="py-1">
                             <form action="{{ route('logout') }}" method="POST">

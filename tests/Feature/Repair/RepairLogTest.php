@@ -106,11 +106,11 @@ class RepairLogTest extends TestCase
 
     public function test_notification_job_is_dispatched_when_log_is_visible_to_customer()
     {
-        Queue::fake();
         $user = $this->createUser();
         $this->actingAs($user);
 
         $repair_ticket = $this->ticketRepairData();
+        Queue::fake();
 
         $response = $this->post(route('repair-ticket-logs', $repair_ticket), [
             'user_id' => $user->id,
@@ -130,11 +130,11 @@ class RepairLogTest extends TestCase
 
     public function test_notification_job_is_not_dispatched_when_log_is_not_visible_to_customer()
     {
-        Queue::fake();
         $user = $this->createUser();
         $this->actingAs($user);
 
         $repair_ticket = $this->ticketRepairData();
+        Queue::fake();
 
         $response = $this->post(route('repair-ticket-logs', $repair_ticket), [
             'user_id' => $user->id,

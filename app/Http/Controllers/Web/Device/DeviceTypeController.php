@@ -16,10 +16,10 @@ class DeviceTypeController extends Controller
      */
     public function index()
     {
-        $devicetypes = DeviceType::latest()->paginate(3);
+        $devicetypes = DeviceType::latest()->paginate(10);
 
         return view('device.type.index', [
-         "devicetypes" => $devicetypes
+            "devicetypes" => $devicetypes
         ]);
     }
 
@@ -28,7 +28,7 @@ class DeviceTypeController extends Controller
      */
     public function create()
     {
-         return view('device.type.create');
+        return view('device.type.create');
     }
 
     /**
@@ -39,9 +39,9 @@ class DeviceTypeController extends Controller
         $deviceType = $request->validated();
         $deviceType['slug'] = Str::slug($deviceType['name']);
 
-        DeviceType::create( $deviceType );
+        DeviceType::create($deviceType);
 
-        return redirect()->route('devicetype.index')->with('success', 'a Device Type has bene craeted');
+        return redirect()->route('devicetype.index')->with('success', 'Device category has been created.');
     }
 
 
@@ -51,7 +51,6 @@ class DeviceTypeController extends Controller
     public function edit(DeviceType $devicetype)
     {
         return view('device.type.edit', ['devicetype' => $devicetype]);
-
     }
 
     /**
@@ -59,12 +58,12 @@ class DeviceTypeController extends Controller
      */
     public function update(UpdateDeviceTypeRequest $request, DeviceType $devicetype)
     {
-         $data = $request->validated([]);
+        $data = $request->validated([]);
 
-        $devicetype->update( $data );
+        $devicetype->update($data);
 
-        if($devicetype->wasChanged())
-            return redirect()->route('devicetype.index')->with('success', 'device type has bene updated');
+        if ($devicetype->wasChanged())
+            return redirect()->route('devicetype.index')->with('success', 'Device category has been updated.');
         else
             return redirect()->route('devicetype.index');
     }
@@ -77,6 +76,6 @@ class DeviceTypeController extends Controller
 
         $devicetype->delete();
 
-        return redirect()->route('devicetype.index')->with('success', 'Device Type has bene deleted');
+        return redirect()->route('devicetype.index')->with('success', 'Device category has been deleted.');
     }
 }

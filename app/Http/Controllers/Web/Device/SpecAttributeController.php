@@ -20,8 +20,10 @@ class SpecAttributeController extends Controller
      */
     public function index()
     {
+        $spc_attributes =  $this->spec_attributes_service->getList()->paginate(5);
+
         return view("device.spec-attributes.index", [
-            'spc_attributes' => $this->spec_attributes_service->getList()
+            'spc_attributes' => $spc_attributes
         ]);
     }
 
@@ -49,7 +51,7 @@ class SpecAttributeController extends Controller
         return $this->spec_attributes_service->to(
             'spec-attribute.index',
             'success',
-            'A Attribute has been created successfully.'
+            'Attribute has been created successfully.'
         );
     }
 

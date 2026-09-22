@@ -76,7 +76,7 @@ class RepairTicketController extends Controller
         return $this->to(
             'repair-tickets.index',
             'success',
-            'Ticket has bene created'
+            'Repair ticket has been created.'
         );
     }
 
@@ -131,7 +131,7 @@ class RepairTicketController extends Controller
         return $this->to(
             'repair-tickets.index',
             'updated',
-            'Ticket has bene updated'
+            'Repair ticket has been updated.'
         );
     }
 
@@ -145,7 +145,7 @@ class RepairTicketController extends Controller
         return $this->to(
             'repair-tickets.index',
             'deleted',
-            'Ticket has bene deleted'
+            'Repair ticket has been deleted.'
         );
     }
 

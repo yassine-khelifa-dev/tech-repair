@@ -39,6 +39,15 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('repair-tickets.index', absolute: false));
     }
 
+    public function test_authenticated_users_are_redirected_from_home_to_repair_tickets(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/');
+
+        $response->assertRedirect(route('repair-tickets.index', absolute: false));
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
