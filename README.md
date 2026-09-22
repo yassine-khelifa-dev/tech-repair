@@ -1,236 +1,174 @@
-# Repair Flow
+# Tech Repair Backend
 
-> Système de gestion des réparations pour ateliers de réparation.
+Tech Repair is a Laravel backend for a repair shop workflow. It covers the internal admin panel, the device catalog, dynamic model configuration, customer repair requests, repair tickets, logs, notifications, and the API consumed by the React customer app.
 
-Repair Flow permet aux clients de soumettre des demandes de réparation en ligne, et aux techniciens/administrateurs de gérer l'ensemble du processus via un tableau de bord d'administration.
+The core of the project is the catalog architecture. A repair shop can define brands, categories, attributes, attribute options, and device models. Each model can then be configured with only the options it actually supports. That keeps ticket creation and customer requests precise: users do not see every option stored in the database, only the options allowed for the selected model.
 
----
+## Project Links
 
-## Table des matières
+- Backend repository: https://github.com/yassine-khelifa-dev/tech-repair
+- Frontend repository: https://github.com/yassine-khelifa-dev/tech-repair-frontend
+- Backend/admin app: https://tech-repair.eprostam.com
+- Customer request app: https://repair-request.eprostam.com
 
-- [Architecture](#architecture)
-- [Fonctionnalités principales](#fonctionnalités-principales)
-- [Catalogue d'appareils](#catalogue-dappareils)
-- [Système de spécifications](#système-de-spécifications)
-- [Workflow de réparation](#workflow-de-réparation)
-- [Notifications](#notifications)
-- [API](#api)
-- [Frontend](#frontend)
-- [Tests](#tests)
+## Stack
 
----
+- Laravel
+- Blade
+- MySQL
+- Eloquent ORM
+- Form Requests
+- Laravel notifications
+- Laravel queues/jobs
+- Vite
+- Tailwind CSS
 
-## Architecture
+## Main Features
 
-| Couche | Technologies |
-|--------|-------------|
-| **Backend** | Laravel · Service Layer · API Resources · Form Requests · Jobs · Notifications · Feature Tests |
-| **Frontend** | React · TypeScript · React Router · React Hook Form · Zod · Axios · Tailwind CSS |
+- Admin authentication
+- Device brand management
+- Device category management
+- Dynamic specification attributes and options
+- Device model configuration with allowed options
+- Customer repair request review
+- Repair ticket creation and tracking
+- Repair logs and internal notes
+- Customer/admin notifications
+- API endpoints for the React frontend
 
----
+## Dynamic Catalog Model
 
-## Fonctionnalités principales
+The catalog is built to avoid hardcoding device specifications into the ticket form.
 
-- Soumission de demandes de réparation sans création de compte
-- Catalogue hiérarchique d'appareils (type → marque → modèle)
-- Spécifications dynamiques par modèle d'appareil
-- Suivi du statut de réparation en temps réel
-- Notifications asynchrones via Laravel Jobs
+Example:
 
----
+1. Create a category: `Smartphone`.
+2. Assign attributes to the category: `Color`, `RAM`, `Storage`.
+3. Add many possible options: `Blue`, `White`, `Black`, `8GB`, `12GB`, `256GB`, `512GB`.
+4. Create a model: `iPhone 17 Pro Max`.
+5. Configure that model with only the valid options, for example `Blue`, `White`, `8GB`, `256GB`, `512GB`.
+6. When creating a request or ticket for that model, only those configured options are available.
 
-## Catalogue d'appareils
+This design keeps the database flexible while keeping the user interface focused and clean.
 
-Le catalogue est organisé en trois niveaux hiérarchiques.
+## Data Relationships
 
-### Type d'appareil
+```text
+Brand
+  has many Device Models
 
-Représente une catégorie d'appareils.
+Device Category
+  has many Specification Attributes
 
-Exemples : `Smartphone` · `Tablette` · `Laptop`
+Specification Attribute
+  has many Specification Options
 
-### Marque
+Device Model
+  belongs to Brand
+  belongs to Device Category
+  has many allowed Specification Options
 
-Représente le fabricant.
+Repair Request
+  stores customer details, selected model, selected options, issue description, and images
 
-Exemples : `Apple` · `Samsung` · `Xiaomi`
-
-### Modèle d'appareil
-
-Représente un appareil spécifique.
-
-Exemples : `iPhone 17 Pro Max` · `Galaxy S24 Ultra`
-
-Chaque modèle appartient à **une marque** et **un type d'appareil**.
-
----
-
-## Système de spécifications
-
-Le système de spécifications est dynamique, basé sur des **Attributs** et des **Options**.
-
-### Attribut
-
-Décrit une caractéristique d'un appareil.
-
-| Attribut | Options disponibles |
-|----------|-------------------|
-| Couleur | Noir · Blanc · Bleu · Vert · Titane |
-| Stockage | 128 Go · 256 Go · 512 Go · 1 To |
-| RAM | 8 Go · 12 Go · 16 Go |
-
-### Options autorisées
-
-Chaque modèle d'appareil définit ses propres options autorisées.
-
-**Exemple :** L'application peut contenir 100 couleurs différentes, mais l'iPhone 17 Pro Max ne sera disponible qu'en Noir, Blanc, Bleu, Titane et Vert. Le frontend n'affichera que ces options pour ce modèle.
-
-### Relations
-
-```
-DeviceModel
-  ├── belongs to → Brand
-  ├── belongs to → DeviceType
-  └── has many  → SpecificationOptions (allowed)
-
-SpecificationAttribute
-  └── has many → SpecificationOptions
-
-SpecificationOption
-  ├── belongs to → SpecificationAttribute
-  └── can be assigned to many → DeviceModels
+Repair Ticket
+  stores approved/manual repairs, status, customer/device details, logs, and repair progress
 ```
 
----
+## Web Routes
 
-## Workflow de réparation
+```text
+GET     /                       Welcome page
+GET     /login                  Login page
+POST    /login                  Authenticate user
+POST    /logout                 Sign out
 
-### 1. Demande client
+GET     /dashboard              Admin dashboard
 
-Le client suit ces étapes sans avoir à créer de compte :
+GET     /brand                  Brand list
+GET     /devicetype             Category list
+GET     /spec-attribute         Attribute list
+GET     /devicemodel            Device model list
 
-1. Sélectionne un **type d'appareil**
-2. Sélectionne une **marque**
-3. Sélectionne un **modèle d'appareil**
-4. Sélectionne les **spécifications** disponibles
-5. Uploade des **photos** (optionnel)
-6. Décrit le **problème**
-7. Soumet la demande
+GET     /device-models/{model}/configuration
+PUT     /device-models/{model}/configuration
 
-La demande est enregistrée avec le statut `pending`.
+GET     /repair-requests
+GET     /repair-requests/{request}/review
+POST    /repair-requests/{request}/review
 
-### 2. Revue technicien
-
-L'administrateur peut :
-
-- Consulter les demandes
-- Approuver ou rejeter une demande
-- Créer un ticket de réparation
-- Ajouter des notes technicien
-- Uploader des photos de réparation
-- Ajouter des logs de réparation
-
-### 3. Ticket de réparation
-
-Un ticket contient :
-
-| Champ | Description |
-|-------|-------------|
-| Informations client | Nom, contact, etc. |
-| Informations appareil | Modèle, spécifications sélectionnées |
-| Statut | État courant de la réparation |
-| Notes technicien | Observations internes |
-| Tarification | Prix estimé / final |
-| Historique | Logs de toutes les actions effectuées |
-
----
-
-## Notifications
-
-Les notifications sont traitées de manière **asynchrone** via des Laravel Jobs.
-
-### Notifications client
-
-| Événement | Notification envoyée |
-|-----------|---------------------|
-| Demande approuvée | ✅ |
-| Demande rejetée | ✅ |
-| Log de réparation visible ajouté | ✅ |
-| Ticket créé manuellement par un admin | ✅ |
-
-### Notifications administrateur
-
-| Événement | Notification envoyée |
-|-----------|---------------------|
-| Nouvelle demande de réparation soumise | ✅ |
-
----
-
-## API
-
-Base URL : `/api`
-
-### Catalogue
-
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `GET` | `/device-types` | Liste tous les types d'appareils |
-| `GET` | `/brands` | Liste tous les fabricants |
-| `GET` | `/device-models` | Liste les modèles filtrés par `brand_id` et `device_type_id` |
-| `GET` | `/device-models/{device_model}/attributes` | Attributs et options autorisés pour un modèle |
-
-### Réparations
-
-| Méthode | Endpoint | Description |
-|---------|----------|-------------|
-| `POST` | `/repair-request/create` | Crée une nouvelle demande de réparation |
-
-#### Corps de la requête — `POST /repair-request/create`
-
-```json
-{
-  "customer": { ... },
-  "device": {
-    "device_model_id": 1,
-    "selected_options": [10, 23, 47]
-  },
-  "issue_description": "L'écran est fissuré.",
-  "images": ["<base64>", "..."]
-}
+GET     /repair-tickets
+GET     /repair-tickets/create
+GET     /repair-tickets/{ticket}
+GET     /repair-tickets/{ticket}/edit
 ```
 
----
+## API Routes
 
-## Frontend
+These routes are consumed by the React frontend:
 
-### Pages principales
+```text
+GET     /api/device-types
+GET     /api/brands
+GET     /api/device-models
+GET     /api/device-models/{device_model}/attributes
+POST    /api/repair-request/create
+```
 
-| Page | Description |
-|------|-------------|
-| **Home** | Landing page présentant les services |
-| **Repair Request** | Formulaire dynamique connecté à l'API |
-| **Success** | Confirmation après soumission réussie |
+## Local Installation
 
-### Formulaire de demande
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
+php artisan serve
+```
 
-Le formulaire charge dynamiquement :
-- Types d'appareils
-- Marques
-- Modèles d'appareils
-- Spécifications disponibles
+Configure `.env` with your local database and mail settings:
 
-via des appels API successifs selon les sélections de l'utilisateur.
+```env
+APP_URL=http://127.0.0.1:8000
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=tech_repair
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
----
+## Production Notes
 
-## Tests
+The production backend is deployed on Hostinger under:
 
-Le backend inclut des **Feature Tests** couvrant :
+```text
+/home/u384905436/domains/eprostam.com/public_html/tech-repair
+```
 
-- ✅ Demandes de réparation
-- ✅ Tickets de réparation
-- ✅ Logs de réparation
-- ✅ Notifications
-- ✅ Règles métier
+Useful production commands:
 
-Les tests valident le workflow complet de réparation ainsi que le comportement des endpoints API.
+```bash
+composer install --no-dev --optimize-autoloader --ignore-platform-req=php
+php artisan migrate --force
+php artisan config:clear
+php artisan cache:clear
+php artisan config:cache
+php artisan view:cache
+php artisan route:clear
+```
+
+Route cache is not enabled yet because the API currently has a duplicate route name that should be cleaned before using `php artisan route:cache`.
+
+## Related Frontend
+
+The customer-facing React app lives in a separate repository:
+
+https://github.com/yassine-khelifa-dev/tech-repair-frontend
+
+It uses this backend through:
+
+```env
+VITE_API_BASE_URL=https://tech-repair.eprostam.com/api
+```

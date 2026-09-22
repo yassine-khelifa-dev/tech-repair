@@ -27,7 +27,16 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('repair-tickets.index', absolute: false));
+    }
+
+    public function test_authenticated_users_are_redirected_away_from_login(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/login');
+
+        $response->assertRedirect(route('repair-tickets.index', absolute: false));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
