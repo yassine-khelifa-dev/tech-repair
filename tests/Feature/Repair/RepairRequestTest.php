@@ -52,12 +52,25 @@ class RepairRequestTest extends TestCase
             'converted_ticket_id' => null,
         ]);
 
+        Notification::assertSentOnDemand(
+            RepairRequestReceivedNotification::class,
+            function (
+                RepairRequestReceivedNotification $notification,
+                array $channels,
+                object $notifiable
+            ) {
+                return $channels === ['mail']
+                    && $notifiable->routes['mail'] === 'tech-repair-admin@eprostam.com';
+            }
+        );
+
         Notification::assertSentTo(
             $admin,
             RepairRequestReceivedNotification::class,
-            function (RepairRequestReceivedNotification $notification) use ($admin) {
-                return $notification->toMail($admin)->hasTo('tech-repair-admin@eprostam.com');
-            }
+            fn (
+                RepairRequestReceivedNotification $notification,
+                array $channels
+            ) => $channels === ['database']
         );
     }
 

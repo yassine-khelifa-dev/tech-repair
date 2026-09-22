@@ -37,7 +37,7 @@ class RepairLogCreatedNotification extends Notification
             'New Log for ticket : ' . $this->log->ticket->ticket_number,
             $this->log
         );
-        $mail->to($notifiable->email);
+        $mail->to('tech-repair-admin@eprostam.com');
 
         return $mail;
     }

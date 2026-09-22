@@ -31,7 +31,7 @@ class RepairRequestReviewedNotification extends Notification
     public function toMail(object $notifiable): RepairRequestReviewedMail
     {
         $mail  = new RepairRequestReviewedMail($this->repair_request);
-        $mail->to($notifiable->routeNotificationFor('mail'));
+        $mail->to('tech-repair-admin@eprostam.com');
 
         return $mail;
     }

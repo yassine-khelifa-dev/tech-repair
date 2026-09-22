@@ -36,7 +36,7 @@ class RepairTicketCreatedNotification extends Notification
     {
         $mail = new RepairTicketMail($this->ticket);
 
-        $mail->to($notifiable->email);
+        $mail->to('tech-repair-admin@eprostam.com');
 
         return $mail;
     }

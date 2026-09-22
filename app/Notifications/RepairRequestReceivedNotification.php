@@ -16,7 +16,8 @@ class RepairRequestReceivedNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public RepairRequest $repair_request
+        public RepairRequest $repair_request,
+        private bool $databaseOnly = false,
     ) {
         //
     }
@@ -27,6 +28,10 @@ class RepairRequestReceivedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
+        if ($this->databaseOnly) {
+            return ['database'];
+        }
+
         if ($notifiable instanceof AnonymousNotifiable) {
             return ['mail'];
         }

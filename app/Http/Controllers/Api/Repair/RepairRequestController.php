@@ -9,6 +9,7 @@ use App\Notifications\RepairRequestReceivedNotification;
 use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Http\Request;
 
 class RepairRequestController extends Controller
@@ -83,11 +84,11 @@ class RepairRequestController extends Controller
 
         // send notif to admin ( email, DB)
         try {
+            Notification::route('mail', 'tech-repair-admin@eprostam.com')
+                ->notify(new RepairRequestReceivedNotification($repair_request));
+
             if ($admin) {
-                $admin->notify(new RepairRequestReceivedNotification($repair_request));
-            } else {
-                Notification::route('mail', 'tech-repair-admin@eprostam.com')
-                    ->notify(new RepairRequestReceivedNotification($repair_request));
+                $admin->notify(new RepairRequestReceivedNotification($repair_request, databaseOnly: true));
             }
 
             Log::info("API: Notif has been sent (notif:new Repair Request) : repair-req-id: " . $repair_request->id);
