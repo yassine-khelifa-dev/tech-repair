@@ -40,7 +40,6 @@ class RepairRequestTest extends TestCase
     public function test_can_create_repair_request_via_api(): void
     {
         Notification::fake();
-        config(['mail.admin_address' => 'tech-repair-admin@eprostam.com']);
 
         $admin = $this->createUser();
         $admin->forceFill(['role' => 'admin'])->save();

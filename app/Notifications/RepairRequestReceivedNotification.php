@@ -40,7 +40,7 @@ class RepairRequestReceivedNotification extends Notification
     {
         $mail = new RepairRequestMail($this->repair_request);
 
-        $mail->to(config('mail.admin_address'));
+        $mail->to('tech-repair-admin@eprostam.com');
 
         return $mail;
     }

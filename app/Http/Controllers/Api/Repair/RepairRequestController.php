@@ -86,7 +86,7 @@ class RepairRequestController extends Controller
             if ($admin) {
                 $admin->notify(new RepairRequestReceivedNotification($repair_request));
             } else {
-                Notification::route('mail', config('mail.admin_address'))
+                Notification::route('mail', 'tech-repair-admin@eprostam.com')
                     ->notify(new RepairRequestReceivedNotification($repair_request));
             }
 
