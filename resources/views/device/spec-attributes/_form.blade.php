@@ -1,5 +1,5 @@
     <div class="mx-auto max-w-5xl px-4 py-8" x-data="{
-        form_input_type: {{ Js::from(old('input_type', $spec_attribute?->input_type ?? 'select')) }},
+        form_input_type: {{ Js::from('select') }},
         form_is_required: {{ Js::from(old('is_required', $spec_attribute?->is_required ?? false)) }},
         form_is_filterable: {{ Js::from(old('is_filterable', $spec_attribute?->is_filterable ?? false)) }},
         form_attribute_name: {{ Js::from(old('name', $spec_attribute?->name ?? '')) }},
@@ -35,6 +35,14 @@
                 id: null,
                 value: ''
             })
+        },
+
+        isSelectType() {
+            return this.form_input_type === 'select'
+        },
+
+        isVisibleOption(row) {
+            return this.isSelectType() || row === 0
         }
     }">
 
@@ -91,16 +99,28 @@
                             {{-- Input Type --}}
                             <div>
                                 <x-forms.select name="input_type" label="Input Type" model="form_input_type">
-                                    <option class="bg-gray-950 text-white" value="">
-                                        Select input type...
+                                    <option class="bg-gray-950 text-white" value="select">
+                                        Select - recommended for phone specifications
                                     </option>
 
-                                    @foreach (\App\Enums\SpecInputType::cases() as $type)
-                                        <option value="{{ $type->value }}">
-                                            {{ $type->value }}
-                                        </option>
-                                    @endforeach
+                                    <option class="bg-gray-950 text-gray-500" value="text" disabled>
+                                        Text - planned
+                                    </option>
+                                    <option class="bg-gray-950 text-gray-500" value="number" disabled>
+                                        Number - planned
+                                    </option>
+                                    <option class="bg-gray-950 text-gray-500" value="textarea" disabled>
+                                        Text area - planned
+                                    </option>
+                                    <option class="bg-gray-950 text-gray-500" value="boolean" disabled>
+                                        Boolean - planned
+                                    </option>
                                 </x-forms.select>
+                                <p class="mt-2 text-xs leading-relaxed text-gray-500">
+                                    Phone specifications are currently handled as controlled choices, such as color,
+                                    RAM, storage, screen size, and condition. Other input types are reserved for a
+                                    future version.
+                                </p>
                                 <x-forms.error-message name="input_type" />
                             </div>
 
@@ -196,15 +216,17 @@
 
 
                     <template x-for="(option, row) in form_spec_options" :key="row">
-                        <div class="mt-2 flex items-center gap-2">
+                        <div class="mt-2 flex items-center gap-2" x-show="isVisibleOption(row)">
 
                             <span x-text="option.id"></span>
-                            <input type="hidden" :name="'spec_options[' + row + '][id]'" :value="option.id">
+                            <input type="hidden" :name="'spec_options[' + row + '][id]'" :value="option.id"
+                                :disabled="!isVisibleOption(row)">
                             <input :id="'attribute_' + row" type="text" x-bind:placeholder="form_attribute_name"
                                 :name="'spec_options[' + row + '][value]'" x-model="option.value"
+                                :disabled="!isVisibleOption(row)"
                                 class="block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
 
-                            <div x-show="['select','multiselect'].includes(form_input_type)">
+                            <div x-show="isSelectType()">
                                 {{-- Add --}}
                                 <button type="button" @click="addOption()"
                                     class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500 text-white transition hover:bg-indigo-400">

@@ -14,7 +14,11 @@ class DeviceModelConfigurationController extends Controller
     public function edit(DeviceModel $devicemodel)
     {
 
-        $devicemodel->load(['brand', 'type.specAttributes.specOptions', 'allowed_options']);
+        $devicemodel->load([
+            'brand',
+            'type.specAttributes.specOptions' => fn ($query) => $query->where('is_active', true),
+            'allowed_options',
+        ]);
 
         return view('device.model-configurations.edit', compact('devicemodel'));
     }

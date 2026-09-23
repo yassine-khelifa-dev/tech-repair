@@ -16,7 +16,10 @@ class SpecAttributesService
 
     public function getList()
     {
-        return  SpecAttribute::with(['specOptions', 'deviceTypes'])
+        return  SpecAttribute::with([
+                'specOptions' => fn ($query) => $query->where('is_active', true),
+                'deviceTypes',
+            ])
             ->orderBy('sort_order')
             ->latest()
             ;
@@ -26,6 +29,7 @@ class SpecAttributesService
     public function insert(array $data)
     {
         DB::transaction(function ()  use ($data) {
+            $isOptionList = ($data['input_type'] ?? null) === 'select';
 
             $attributeData = collect($data)
                 ->except(['spec_options', 'devicetypes'])
@@ -43,7 +47,7 @@ class SpecAttributesService
                         'value' => str($option['value'])->slug('_'),
                         'label' => $option['value'],
                         'sort_order' => $i,
-                        'is_active' => true,
+                        'is_active' => $isOptionList || $i === 0,
                     ]
                 )->values()
                 ->toArray();
@@ -59,6 +63,7 @@ class SpecAttributesService
     public function update(array $data, SpecAttribute $spec_attribute)
     {
         DB::transaction(function ()  use ($data, $spec_attribute) {
+            $isOptionList = ($data['input_type'] ?? null) === 'select';
 
             $attributeData = collect($data)
                 ->except(['spec_options', 'devicetypes'])
@@ -75,11 +80,11 @@ class SpecAttributesService
                         'value' => str($option['value'])->slug('_'),
                         'label' => $option['value'],
                         'sort_order' => $i,
-                        'is_active' => true,
+                        'is_active' => $isOptionList || $i === 0,
                     ]
                 );
 
-            // delete  options :
+            // Remove options that are no longer submitted by the form.
             $options_ids_old = $spec_attribute->specOptions()->pluck('id')->toArray();
             $options_ids_new = $spec_options->pluck('id')->toArray();
 
@@ -88,7 +93,6 @@ class SpecAttributesService
             $spec_attribute->specOptions()
                 ->whereIn('id', $options_ids_deleted)
                 ->delete();
-                //Todo: ->update(['is_active' => false])
 
             //update  options :
             foreach ($spec_options as $option) {

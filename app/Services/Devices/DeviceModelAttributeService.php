@@ -33,6 +33,7 @@ class DeviceModelAttributeService
     public function getSpecificationsWithOptions(DeviceModel $deviceModel)
     {
         return $deviceModel->allowed_options
+            ->where('is_active', true)
             ->groupBy('specAttribute.id')
             ->map(function ($options) {
                 $attribute = $options->first()->specAttribute;

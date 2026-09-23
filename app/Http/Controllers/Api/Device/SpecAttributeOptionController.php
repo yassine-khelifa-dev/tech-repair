@@ -16,7 +16,9 @@ class SpecAttributeOptionController extends Controller
     #[ExcludeRouteFromDocs]
     public function index()
     {
-        $_options = SpecAttributeOption::with('specAttribute')->get();
+        $_options = SpecAttributeOption::with('specAttribute')
+            ->where('is_active', true)
+            ->get();
         return SpecAttributeOptionResource::collection($_options);
     }
 }
