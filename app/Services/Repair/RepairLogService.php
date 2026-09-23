@@ -53,8 +53,7 @@ class RepairLogService
         // Job Send Notif:
         if (
             $log  &&
-            $log->is_visible_to_customer &&
-            filled($repair_ticket->customer?->email)
+            $log->is_visible_to_customer
         ) {
             try {
                 SendRepairLogNotificationJob::dispatch($log);

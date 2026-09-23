@@ -2,11 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Models\Customer;
+use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairLog;
-use App\Notifications\RepairLogCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Mail;
 
 class SendRepairLogNotificationJob implements ShouldQueue
 {
@@ -24,10 +24,12 @@ class SendRepairLogNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $customer = $this->log->ticket->customer;
-        $customer->notify(
-            new RepairLogCreatedNotification(
-                 $this->log
+        $this->log->loadMissing('ticket');
+
+        Mail::to('tech-repair-admin@eprostam.com')->send(
+            new RepairLogMail(
+                'New Log for ticket : ' . $this->log->ticket->ticket_number,
+                $this->log
             )
         );
     }

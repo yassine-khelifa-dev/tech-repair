@@ -14,6 +14,10 @@ class RepairLog extends Model
           'is_visible_to_customer'
     ];
 
+    protected $casts = [
+        'is_visible_to_customer' => 'boolean',
+    ];
+
     public function ticket(){
         return $this->belongsTo(RepairTicket::class,'repair_ticket_id');
     }
@@ -22,5 +26,4 @@ class RepairLog extends Model
         return $this->hasMany(RepairLogImage::class, 'repair_log_id');
     }
 }
-
 
