@@ -2,11 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairLog;
+use App\Notifications\RepairLogCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class SendRepairLogNotificationJob implements ShouldQueue
 {
@@ -26,11 +27,14 @@ class SendRepairLogNotificationJob implements ShouldQueue
     {
         $this->log->loadMissing('ticket');
 
-        Mail::to('tech-repair-admin@eprostam.com')->send(
-            new RepairLogMail(
-                'New Log for ticket : ' . $this->log->ticket->ticket_number,
-                $this->log
-            )
-        );
+        Notification::route('mail', 'tech-repair-admin@eprostam.com')
+            ->notify(new RepairLogCreatedNotification($this->log));
+
+        Log::info('Repair log email notification sent', [
+            'repair_log_id' => $this->log->id,
+            'repair_ticket_id' => $this->log->repair_ticket_id,
+            'ticket_number' => $this->log->ticket->ticket_number,
+            'to' => 'tech-repair-admin@eprostam.com',
+        ]);
     }
 }

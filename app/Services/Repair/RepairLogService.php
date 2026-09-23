@@ -56,7 +56,7 @@ class RepairLogService
             $log->is_visible_to_customer
         ) {
             try {
-                SendRepairLogNotificationJob::dispatch($log);
+                SendRepairLogNotificationJob::dispatchSync($log);
 
                 Log::info("Notif has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
             } catch (\Throwable $th) {
