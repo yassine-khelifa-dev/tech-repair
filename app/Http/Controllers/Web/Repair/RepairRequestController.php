@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Http\Controllers\Web\Repair;
 
+use App\Enums\RepairRequestStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\ReviewRepairRequestRequest;
 use App\Models\RepairRequest;
@@ -34,12 +36,16 @@ class RepairRequestController extends Controller
      */
     public function show(RepairRequest $repair_request)
     {
-        // mark notification as read
         DatabaseNotification::where('data->id_repair_request', $repair_request->id)
             ->whereNull('read_at')
-            ->update([
-                'read_at' => now(),
-            ]);
+            ->update(['read_at' => now()]);
+
+        if (
+            $repair_request->status === RepairRequestStatus::approved->value
+            && $repair_request->converted_ticket_id
+        ) {
+            return redirect()->route('repair-tickets.show', $repair_request->converted_ticket_id);
+        }
 
         return view(
             'repair.requests.show',
@@ -60,6 +66,4 @@ class RepairRequestController extends Controller
         return redirect()->route('repair-tickets.index')
             ->with('success', 'Repair request has been reviewed.');
     }
-
-
 }
