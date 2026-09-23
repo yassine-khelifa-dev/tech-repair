@@ -8,8 +8,8 @@ The core of the project is the catalog architecture. A repair shop can define br
 
 - Backend repository: https://github.com/yassine-khelifa-dev/tech-repair
 - Frontend repository: https://github.com/yassine-khelifa-dev/tech-repair-frontend
-- Backend/admin app: https://tech-repair.eprostam.com
-- Customer request app: https://repair-request.eprostam.com
+
+The backend and frontend are deployed separately. Runtime URLs and server paths are intentionally kept out of this repository.
 
 ## Stack
 
@@ -134,23 +134,19 @@ APP_URL=http://127.0.0.1:8000
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=tech_repair
-DB_USERNAME=root
-DB_PASSWORD=
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
 ```
 
 ## Production Notes
 
-The production backend is deployed on Hostinger under:
+Use environment variables for production configuration. Do not commit real domains, server paths, database credentials, mail credentials, API keys, or deployment-specific secrets.
 
-```text
-/home/u384905436/domains/eprostam.com/public_html/tech-repair
-```
-
-Useful production commands:
+Typical production commands:
 
 ```bash
-composer install --no-dev --optimize-autoloader --ignore-platform-req=php
+composer install --no-dev --optimize-autoloader
 php artisan migrate --force
 php artisan config:clear
 php artisan cache:clear
@@ -159,16 +155,14 @@ php artisan view:cache
 php artisan route:clear
 ```
 
-Route cache is not enabled yet because the API currently has a duplicate route name that should be cleaned before using `php artisan route:cache`.
-
 ## Related Frontend
 
 The customer-facing React app lives in a separate repository:
 
 https://github.com/yassine-khelifa-dev/tech-repair-frontend
 
-It uses this backend through:
+It uses this backend through an environment variable:
 
 ```env
-VITE_API_BASE_URL=https://tech-repair.eprostam.com/api
+VITE_API_BASE_URL=https://your-backend-domain.example/api
 ```
