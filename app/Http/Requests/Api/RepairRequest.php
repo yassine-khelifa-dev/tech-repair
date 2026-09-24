@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Models\DeviceModel;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class RepairRequest extends FormRequest
 {
@@ -38,6 +40,29 @@ class RepairRequest extends FormRequest
             'option_ids.*'      => 'integer|exists:spec_attribute_options,id',
             'images_device' => ['nullable', 'array'],
             'images_device.*' => ['image', 'max:5120'],
+        ];
+    }
+
+
+    public function after(): array
+    {
+
+        return [
+            function (Validator $validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    return;
+                }
+
+                $device_model = DeviceModel::find($this->device_model_id);
+                $check = $device_model->hasOptions($this->option_ids);
+
+                if (! $check) {
+                    $validator->errors()->add(
+                        'option_ids',
+                        'One or more selected options are not allowed for this device model.'
+                    );
+                }
+            }
         ];
     }
 }

@@ -18,10 +18,10 @@ class DeviceModelController extends Controller
      */
     public function index()
     {
-        $devicemodels = DeviceModel::with(['brand', 'type' ])->latest()->paginate(7);
+        $devicemodels = DeviceModel::with(['brand', 'type'])->latest()->paginate(7);
 
         return view('device.model.index', [
-             "devicemodels" => $devicemodels
+            "devicemodels" => $devicemodels
         ]);
     }
 
@@ -43,9 +43,9 @@ class DeviceModelController extends Controller
         $devicemodel = $request->validated();
         $devicemodel['slug'] = Str::slug($devicemodel['name']);
 
-        DeviceModel::create( $devicemodel );
+        DeviceModel::create($devicemodel);
 
-        if( $request->action == "save")
+        if ($request->action == "save")
             return redirect()->route('devicemodel.index')->with('success', 'Device model has been created.');
 
         return redirect()->route('devicemodel.create')->with('success', 'Device model has been created.');
@@ -54,10 +54,7 @@ class DeviceModelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DeviceModel $deviceModel)
-    {
-
-    }
+    public function show(DeviceModel $deviceModel) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -79,9 +76,9 @@ class DeviceModelController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
 
-        $devicemodel->update( $data );
+        $devicemodel->update($data);
 
-        if($devicemodel->wasChanged())
+        if ($devicemodel->wasChanged())
             return redirect()->route('devicemodel.index')->with('success', 'Device model has been updated.');
         else
             return redirect()->route('devicemodel.index');

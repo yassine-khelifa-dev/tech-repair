@@ -25,8 +25,8 @@ class RepairTicketTest extends TestCase
         );
 
         $this->assertDatabaseHas('customers', [
-            'fullname' => 'yassine',
-            'email' => 'yassine@fr.lo',
+            'fullname' => 'User Test',
+            'email' => "test@test.com",
         ]);
 
         $this->assertDatabaseHas('repair_tickets', [

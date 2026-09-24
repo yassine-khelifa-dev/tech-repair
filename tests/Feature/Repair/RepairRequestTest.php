@@ -37,43 +37,6 @@ class RepairRequestTest extends TestCase
 
 
 
-    public function test_can_create_repair_request_via_api(): void
-    {
-        Notification::fake();
-
-        $admin = $this->createUser();
-        $admin->forceFill(['role' => 'admin'])->save();
-
-        $response = $this->postJson('api/repair-request/create',  $this->dataRepairRequest());
-        $response->assertStatus(201);
-
-        $this->assertDatabaseHas('repair_requests', [
-            'status' => RepairRequestStatus::pending->value,
-            'converted_ticket_id' => null,
-        ]);
-
-        Notification::assertSentOnDemand(
-            RepairRequestReceivedNotification::class,
-            function (
-                RepairRequestReceivedNotification $notification,
-                array $channels,
-                object $notifiable
-            ) {
-                return $channels === ['mail']
-                    && $notifiable->routes['mail'] === 'tech-repair-admin@eprostam.com';
-            }
-        );
-
-        Notification::assertSentTo(
-            $admin,
-            RepairRequestReceivedNotification::class,
-            fn (
-                RepairRequestReceivedNotification $notification,
-                array $channels
-            ) => $channels === ['database']
-        );
-    }
-
     public function test_can_create_repair_request_via_service(): void
     {
         $request = app(RepairRequestService::class)

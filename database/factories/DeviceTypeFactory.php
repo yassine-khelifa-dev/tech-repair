@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Brand;
+use App\Models\DeviceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 /**
- * @extends Factory<Brand>
+ * @extends Factory<DeviceType>
  */
-class BrandFactory extends Factory
+class DeviceTypeFactory extends Factory
 {
     /**
      * Define the model's default state.

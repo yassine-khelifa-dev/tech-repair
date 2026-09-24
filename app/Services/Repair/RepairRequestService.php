@@ -189,6 +189,7 @@ class RepairRequestService
         $data['images_device_path'] =
             $this->file_upload_service->storeImages($data['images_device'] ?? [], 'repair-devices');
 
+        unset($data['images_device']);
         return  RepairRequest::create(
             [
                 'data' =>  $data,

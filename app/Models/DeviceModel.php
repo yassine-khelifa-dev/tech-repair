@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DeviceModel extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'slug', 'brand_id', 'device_type_id', 'is_active'];
 
     public function brand()
@@ -27,5 +30,18 @@ class DeviceModel extends Model
             'device_model_id',
             'spec_attribute_option_id'
         );
+    }
+
+    public function hasOptions(array $options)
+    {
+        $data = $this->load('type.specAttributes.specOptions');
+
+        $all_my_options = [];
+
+        $data->type->specAttributes->map(function ($attr)  use (&$all_my_options) {
+            $all_my_options = array_merge($all_my_options, $attr->specOptions->pluck('id')->all());
+        });
+
+        return  empty(array_diff($options, $all_my_options));
     }
 }
