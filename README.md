@@ -1,6 +1,7 @@
 # Tech Repair Backend
 
-Tech Repair is a Laravel backend for a repair shop workflow. It covers the internal admin panel, the device catalog, dynamic model configuration, customer repair requests, repair tickets, logs, notifications, and the API consumed by the React customer app.
+Tech Repair is a Laravel backend for a repair shop workflow.
+It covers the internal admin panel, the device catalog, dynamic model configuration, customer repair requests, repair tickets, logs, notifications, and the API consumed by the React customer app.
 
 The core of the project is the catalog architecture. A repair shop can define brands, categories, attributes, attribute options, and device models. Each model can then be configured with only the options it actually supports. That keeps ticket creation and customer requests precise: users do not see every option stored in the database, only the options allowed for the selected model.
 
@@ -12,7 +13,6 @@ The core of the project is the catalog architecture. A repair shop can define br
 The backend and frontend are deployed separately. Runtime URLs and server paths are intentionally kept out of this repository.
 
 ## Stack
-
 - Laravel
 - Blade
 - MySQL
@@ -24,7 +24,6 @@ The backend and frontend are deployed separately. Runtime URLs and server paths 
 - Tailwind CSS
 
 ## Main Features
-
 - Admin authentication
 - Device brand management
 - Device category management
