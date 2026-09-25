@@ -8,18 +8,21 @@ use App\Http\Requests\Device\UpdateSpecAttributeRequest;
 use App\Models\DeviceType;
 use App\Models\SpecAttribute;
 use App\Services\Devices\SpecAttributesService;
+use Illuminate\Support\Facades\Gate;
 
 class SpecAttributeController extends Controller
 {
     public function __construct(
-        public SpecAttributesService $spec_attributes_service)
-    {}
+        public SpecAttributesService $spec_attributes_service
+    ) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        Gate::authorize('viewAny', SpecAttribute::class);
+
         $spc_attributes =  $this->spec_attributes_service->getList()->paginate(5);
 
         return view("device.spec-attributes.index", [
@@ -32,6 +35,8 @@ class SpecAttributeController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', SpecAttribute::class);
+
         return view('device.spec-attributes.create', [
             'devicetypes' => DeviceType::all()
         ]);
@@ -42,6 +47,8 @@ class SpecAttributeController extends Controller
      */
     public function store(StoreSpecAttributeRequest $request)
     {
+        Gate::authorize('create', SpecAttribute::class);
+
         $data = $request->validated();
         $data['is_filterable']   = $request->boolean('is_filterable');
         $data['is_required']     = $request->boolean('is_required');
@@ -60,6 +67,8 @@ class SpecAttributeController extends Controller
      */
     public function edit(SpecAttribute $spec_attribute)
     {
+        Gate::authorize('update', $spec_attribute);
+
         $spec_attribute->load('specOptions', 'deviceTypes');
 
         return view("device.spec-attributes.edit", [
@@ -73,6 +82,8 @@ class SpecAttributeController extends Controller
      */
     public function update(UpdateSpecAttributeRequest $request, SpecAttribute $spec_attribute)
     {
+        Gate::authorize('update', $spec_attribute);
+
         $data = $request->validated();
         $data['is_filterable'] = $request->boolean('is_filterable');
         $data['is_required']     = $request->boolean('is_required');
@@ -91,6 +102,8 @@ class SpecAttributeController extends Controller
      */
     public function destroy(SpecAttribute $spec_attribute)
     {
+        Gate::authorize('delete', $spec_attribute);
+
         $this->spec_attributes_service->delete($spec_attribute);
 
         return $this->spec_attributes_service->to(

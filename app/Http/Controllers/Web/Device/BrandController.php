@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Web\Device;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\StoreBrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 class BrandController extends Controller
@@ -16,15 +19,17 @@ class BrandController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Brand::class);
         $brands = Brand::latest()->paginate(10);
-        return view('device.brand.index',compact('brands'));
+        return view('device.brand.index', compact('brands'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create( Request $request)
+    public function create(Request $request)
     {
+        Gate::authorize('create', Brand::class);
         return view('device.brand.create');
     }
 
@@ -33,10 +38,12 @@ class BrandController extends Controller
      */
     public function store(StoreBrandRequest $request)
     {
+        Gate::authorize('create', Brand::class);
+
         $brand = $request->validated();
         $brand['slug'] = Str::slug($brand['name']);
 
-        Brand::create( $brand );
+        Brand::create($brand);
         return redirect()->route('brand.index')->with('success', 'Brand has been created.');
     }
 
@@ -45,8 +52,9 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        return view('device.brand.edit', ['brand' => $brand]);
+        Gate::authorize('update', $brand);
 
+        return view('device.brand.edit', ['brand' => $brand]);
     }
 
     /**
@@ -54,17 +62,18 @@ class BrandController extends Controller
      */
     public function update(Request $request, Brand $brand)
     {
+        Gate::authorize('update', $brand);
+
         $data = $request->validate([
             'name' => 'required|min:3|max:255|unique:brands,name,' . $brand->id,
         ]);
 
-        $brand->update( $data );
+        $brand->update($data);
 
-        if($brand->wasChanged())
+        if ($brand->wasChanged())
             return redirect()->route('brand.index')->with('success', 'Brand has been updated.');
         else
             return redirect()->route('brand.index');
-
     }
 
     /**
@@ -72,8 +81,10 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-       $brand->delete();
+        Gate::authorize('delete', $brand);
 
-       return redirect()->route('brand.index')->with('success', 'Brand has been deleted.');
+        $brand->delete();
+
+        return redirect()->route('brand.index')->with('success', 'Brand has been deleted.');
     }
 }

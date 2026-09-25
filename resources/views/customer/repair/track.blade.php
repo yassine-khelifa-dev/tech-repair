@@ -35,10 +35,13 @@
             @endauth
 
 
-            <a href="{{ route('repair-tickets.download', $repair_ticket->id) }}"
+            @php use Illuminate\Support\Facades\URL;  @endphp
+            <a href="{{ URL::temporarySignedRoute('repair-tickets.download', now()->addMinutes(10), [
+                'repair_ticket' => $repair_ticket->id,
+            ]) }}"
                 class="px-4 py-2 rounded bg-green-700 hover:bg-red-600 text-white">
-                Download Ticket recipe
 
+                Download Ticket receipt
             </a>
 
 

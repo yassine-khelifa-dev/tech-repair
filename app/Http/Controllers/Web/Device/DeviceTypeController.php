@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Device\StoreDeviceTypeRequest;
 use App\Http\Requests\Device\UpdateDeviceTypeRequest;
+use Illuminate\Support\Facades\Gate;
 
 class DeviceTypeController extends Controller
 {
@@ -16,6 +17,8 @@ class DeviceTypeController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', DeviceType::class);
+
         $devicetypes = DeviceType::latest()->paginate(10);
 
         return view('device.type.index', [
@@ -28,6 +31,8 @@ class DeviceTypeController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', DeviceType::class);
+
         return view('device.type.create');
     }
 
@@ -36,6 +41,8 @@ class DeviceTypeController extends Controller
      */
     public function store(StoreDeviceTypeRequest $request)
     {
+        Gate::authorize('create', DeviceType::class);
+
         $deviceType = $request->validated();
         $deviceType['slug'] = Str::slug($deviceType['name']);
 
@@ -50,6 +57,8 @@ class DeviceTypeController extends Controller
      */
     public function edit(DeviceType $devicetype)
     {
+        Gate::authorize('update', $devicetype);
+
         return view('device.type.edit', ['devicetype' => $devicetype]);
     }
 
@@ -58,6 +67,8 @@ class DeviceTypeController extends Controller
      */
     public function update(UpdateDeviceTypeRequest $request, DeviceType $devicetype)
     {
+        Gate::authorize('update', $devicetype);
+
         $data = $request->validated([]);
 
         $devicetype->update($data);
@@ -73,6 +84,7 @@ class DeviceTypeController extends Controller
      */
     public function destroy(DeviceType $devicetype)
     {
+        Gate::authorize('delete', $devicetype);
 
         $devicetype->delete();
 

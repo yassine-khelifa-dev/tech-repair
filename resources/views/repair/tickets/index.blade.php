@@ -4,9 +4,12 @@
     <div class="mx-auto max-w-7xl">
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-300 shadow-lg shadow-blue-900/20">
-                    <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 2.25a1.875 1.875 0 011.16 0l1.558.52a1.875 1.875 0 001.802-.354l1.36-.98a1.875 1.875 0 012.54.18l1.01 1.01a1.875 1.875 0 01.18 2.54l-.98 1.36a1.875 1.875 0 00-.354 1.802l.52 1.558a1.875 1.875 0 010 1.16l-.52 1.558a1.875 1.875 0 00.354 1.802l.98 1.36a1.875 1.875 0 01-.18 2.54l-1.01 1.01a1.875 1.875 0 01-2.54.18l-1.36-.98a1.875 1.875 0 00-1.802-.354l-1.558.52a1.875 1.875 0 01-1.16 0l-1.558-.52a1.875 1.875 0 00-1.802.354l-1.36.98a1.875 1.875 0 01-2.54-.18l-1.01-1.01a1.875 1.875 0 01-.18-2.54l.98-1.36a1.875 1.875 0 00.354-1.802l-.52-1.558a1.875 1.875 0 010-1.16l.52-1.558a1.875 1.875 0 00-.354-1.802l-.98-1.36a1.875 1.875 0 01.18-2.54l1.01-1.01a1.875 1.875 0 012.54-.18l1.36.98a1.875 1.875 0 001.802.354l1.558-.52z" />
+                <div
+                    class="flex h-12 w-12 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-300 shadow-lg shadow-blue-900/20">
+                    <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M11.42 2.25a1.875 1.875 0 011.16 0l1.558.52a1.875 1.875 0 001.802-.354l1.36-.98a1.875 1.875 0 012.54.18l1.01 1.01a1.875 1.875 0 01.18 2.54l-.98 1.36a1.875 1.875 0 00-.354 1.802l.52 1.558a1.875 1.875 0 010 1.16l-.52 1.558a1.875 1.875 0 00.354 1.802l.98 1.36a1.875 1.875 0 01-.18 2.54l-1.01 1.01a1.875 1.875 0 01-2.54.18l-1.36-.98a1.875 1.875 0 00-1.802-.354l-1.558.52a1.875 1.875 0 01-1.16 0l-1.558-.52a1.875 1.875 0 00-1.802.354l-1.36.98a1.875 1.875 0 01-2.54-.18l-1.01-1.01a1.875 1.875 0 01-.18-2.54l.98-1.36a1.875 1.875 0 00.354-1.802l-.52-1.558a1.875 1.875 0 010-1.16l.52-1.558a1.875 1.875 0 00-.354-1.802l-.98-1.36a1.875 1.875 0 01.18-2.54l1.01-1.01a1.875 1.875 0 012.54-.18l1.36.98a1.875 1.875 0 001.802.354l1.558-.52z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
@@ -18,34 +21,59 @@
                 </div>
             </div>
 
-            <a href="{{ route('repair-tickets.create') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                New Ticket
-            </a>
+            @can('create', App\Modles\RepairTicket::class)
+                <a href="{{ route('repair-tickets.create') }}"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    New Ticket
+                </a>
+            @endcan
+
         </div>
 
         @if (session('success') || session('updated') || session('deleted'))
             <div @class([
                 'mb-6 flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium',
-                'border-emerald-400/20 bg-emerald-500/10 text-emerald-200' => session('success'),
+                'border-emerald-400/20 bg-emerald-500/10 text-emerald-200' => session(
+                    'success'),
                 'border-amber-400/20 bg-amber-500/10 text-amber-200' => session('updated'),
                 'border-red-400/20 bg-red-500/10 text-red-200' => session('deleted'),
             ])>
                 <svg class="h-5 w-5 flex-none" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.86-9.61a.75.75 0 00-1.22-.88l-3.23 4.5-1.54-1.54a.75.75 0 10-1.06 1.06l2.17 2.17a.75.75 0 001.14-.09l3.74-5.22z" clip-rule="evenodd" />
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.86-9.61a.75.75 0 00-1.22-.88l-3.23 4.5-1.54-1.54a.75.75 0 10-1.06 1.06l2.17 2.17a.75.75 0 001.14-.09l3.74-5.22z"
+                        clip-rule="evenodd" />
                 </svg>
                 {{ session('success') ?? (session('updated') ?? session('deleted')) }}
             </div>
         @endif
 
-        <div class="mb-5 grid gap-3 rounded-xl border border-blue-400/15 bg-blue-500/10 p-4 shadow-lg shadow-blue-900/10 md:grid-cols-[1.4fr_1fr]">
+
+        @if (session('error'))
+            <div
+                class="mb-6 flex items-center gap-3 rounded-lg border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-200">
+                <svg class="h-5 w-5 flex-none text-red-300" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-11a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 7zm0 7a1 1 0 100-2 1 1 0 000 2z"
+                        clip-rule="evenodd" />
+                </svg>
+
+                {{ session('error') }}
+            </div>
+        @endif
+
+
+        <div
+            class="mb-5 grid gap-3 rounded-xl border border-blue-400/15 bg-blue-500/10 p-4 shadow-lg shadow-blue-900/10 md:grid-cols-[1.4fr_1fr]">
             <div>
                 <h2 class="text-base font-semibold text-white">What this page is for</h2>
                 <p class="mt-1 text-sm leading-6 text-gray-300">
-                    Repair tickets are the devices already accepted for work: phones deposited by customers or approved from repair requests. Open a ticket to follow the repair, customer details, device information, status, photos, and logs.
+                    Repair tickets are the devices already accepted for work: phones deposited by customers or approved from
+                    repair requests. Open a ticket to follow the repair, customer details, device information, status,
+                    photos, and logs.
                 </p>
             </div>
 
@@ -99,9 +127,12 @@
                                 class="group cursor-pointer transition-colors duration-200 hover:bg-white/[.04]">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-300 ring-1 ring-blue-400/20 transition-transform duration-200 group-hover:scale-105">
+                                        <div
+                                            class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-300 ring-1 ring-blue-400/20 transition-transform duration-200 group-hover:scale-105">
                                             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2h14V5a2 2 0 00-2-2H5zm12 6H3v6a2 2 0 002 2h10a2 2 0 002-2V9zm-9 2a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" />
+                                                <path fill-rule="evenodd"
+                                                    d="M5 3a2 2 0 00-2 2v2h14V5a2 2 0 00-2-2H5zm12 6H3v6a2 2 0 002 2h10a2 2 0 002-2V9zm-9 2a1 1 0 100 2h4a1 1 0 100-2H8z"
+                                                    clip-rule="evenodd" />
                                             </svg>
                                         </div>
                                         <div>
@@ -130,41 +161,61 @@
                                 </td>
 
                                 <td class="px-6 py-4" onclick="event.stopPropagation()">
+
                                     <div class="flex flex-wrap items-center justify-end gap-2">
-                                        <a href="{{ route('repair-tickets.show', $ticket->id) }}"
-                                            title="Open ticket details, repair status, photos, and logs"
-                                            class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
-                                            aria-label="Open {{ $ticket->ticket_number }}">
-                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z" />
-                                            </svg>
-                                            Open
-                                        </a>
 
-                                        <a href="{{ route('repair-tickets.edit', $ticket->id) }}"
-                                            title="Edit customer, device, issue, price, or ticket status"
-                                            class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
-                                            aria-label="Edit {{ $ticket->ticket_number }}">
-                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
-                                            </svg>
-                                            Edit
-                                        </a>
-
-                                        <form action="{{ route('repair-tickets.destroy', $ticket->id) }}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                onclick="return confirm('Are you sure to delete this ticket {{ $ticket->ticket_number }}?')"
-                                                title="Delete this ticket permanently after confirmation"
-                                                class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-red-300/50 hover:bg-red-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-800"
-                                                aria-label="Delete {{ $ticket->ticket_number }}">
-                                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                        <!-- Action: SHOW -->
+                                        @can('view', $ticket)
+                                            <a href="{{ route('repair-tickets.show', $ticket->id) }}"
+                                                title="Open ticket details, repair status, photos, and logs"
+                                                class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-xs font-semibold text-emerald-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-300/50 hover:bg-emerald-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                                aria-label="Open {{ $ticket->ticket_number }}">
+                                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z" />
                                                 </svg>
-                                                Delete
-                                            </button>
-                                        </form>
+                                                Open
+                                            </a>
+                                        @endcan
+
+
+                                        <!-- Action: Edit -->
+                                        @can('update', $ticket)
+                                            <a href="{{ route('repair-tickets.edit', $ticket->id) }}"
+                                                title="Edit customer, device, issue, price, or ticket status"
+                                                class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300/50 hover:bg-blue-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                                aria-label="Edit {{ $ticket->ticket_number }}">
+                                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" />
+                                                </svg>
+                                                Edit
+                                            </a>
+                                        @endcan
+
+
+
+                                        <!-- Action: Delete -->
+                                        @can('delete', $ticket)
+                                            <form action="{{ route('repair-tickets.destroy', $ticket->id) }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    onclick="return confirm('Are you sure to delete this ticket {{ $ticket->ticket_number }}?')"
+                                                    title="Delete this ticket permanently after confirmation"
+                                                    class="inline-flex min-w-20 items-center justify-center gap-1.5 rounded-lg border border-red-400/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition-all duration-200 hover:-translate-y-0.5 hover:border-red-300/50 hover:bg-red-500/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-gray-800"
+                                                    aria-label="Delete {{ $ticket->ticket_number }}">
+                                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                                        stroke-width="1.8" stroke="currentColor" aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M6 18 18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
@@ -172,13 +223,18 @@
                             <tr>
                                 <td colspan="6" class="px-6 py-12 text-center">
                                     <div class="mx-auto flex max-w-sm flex-col items-center">
-                                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-gray-400 ring-1 ring-white/10">
-                                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                <path fill-rule="evenodd" d="M5 3a2 2 0 00-2 2v2h14V5a2 2 0 00-2-2H5zm12 6H3v6a2 2 0 002 2h10a2 2 0 002-2V9zm-9 2a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" />
+                                        <div
+                                            class="flex h-12 w-12 items-center justify-center rounded-lg bg-white/5 text-gray-400 ring-1 ring-white/10">
+                                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20"
+                                                aria-hidden="true">
+                                                <path fill-rule="evenodd"
+                                                    d="M5 3a2 2 0 00-2 2v2h14V5a2 2 0 00-2-2H5zm12 6H3v6a2 2 0 002 2h10a2 2 0 002-2V9zm-9 2a1 1 0 100 2h4a1 1 0 100-2H8z"
+                                                    clip-rule="evenodd" />
                                             </svg>
                                         </div>
                                         <h3 class="mt-4 text-base font-semibold text-white">No tickets found</h3>
-                                        <p class="mt-1 text-sm text-gray-400">Create a ticket or adjust the filters to see results.</p>
+                                        <p class="mt-1 text-sm text-gray-400">Create a ticket or adjust the filters to see
+                                            results.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -189,7 +245,8 @@
         </div>
 
         @if ($tickets->hasPages())
-            <div class="mt-5 flex flex-col gap-4 rounded-xl border border-white/10 bg-gray-800/70 px-4 py-3 text-sm text-gray-300 shadow-lg shadow-black/10 sm:flex-row sm:items-center sm:justify-between">
+            <div
+                class="mt-5 flex flex-col gap-4 rounded-xl border border-white/10 bg-gray-800/70 px-4 py-3 text-sm text-gray-300 shadow-lg shadow-black/10 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     Showing
                     <span class="font-semibold text-white">{{ $tickets->firstItem() }}</span>
@@ -202,23 +259,29 @@
 
                 <div class="flex flex-wrap items-center gap-2">
                     @if ($tickets->onFirstPage())
-                        <span class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">Previous</span>
+                        <span
+                            class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">Previous</span>
                     @else
-                        <a href="{{ $tickets->previousPageUrl() }}" class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">Previous</a>
+                        <a href="{{ $tickets->previousPageUrl() }}"
+                            class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">Previous</a>
                     @endif
 
                     @foreach ($tickets->getUrlRange(1, $tickets->lastPage()) as $page => $url)
                         @if ($page == $tickets->currentPage())
-                            <span class="rounded-lg bg-blue-600 px-3 py-2 font-semibold text-white">{{ $page }}</span>
+                            <span
+                                class="rounded-lg bg-blue-600 px-3 py-2 font-semibold text-white">{{ $page }}</span>
                         @else
-                            <a href="{{ $url }}" class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">{{ $page }}</a>
+                            <a href="{{ $url }}"
+                                class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">{{ $page }}</a>
                         @endif
                     @endforeach
 
                     @if ($tickets->hasMorePages())
-                        <a href="{{ $tickets->nextPageUrl() }}" class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">Next</a>
+                        <a href="{{ $tickets->nextPageUrl() }}"
+                            class="rounded-lg border border-white/10 px-3 py-2 transition hover:border-blue-300/50 hover:bg-blue-500/10 hover:text-white">Next</a>
                     @else
-                        <span class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">Next</span>
+                        <span
+                            class="rounded-lg border border-white/10 px-3 py-2 text-gray-500 cursor-not-allowed">Next</span>
                     @endif
                 </div>
             </div>

@@ -21,6 +21,11 @@ class DeviceModel extends Model
         return $this->belongsTo(DeviceType::class, 'device_type_id');
     }
 
+    public function tickets()
+    {
+        return $this->hasMany(RepairTicket::class);
+    }
+
 
     public function allowed_options()
     {

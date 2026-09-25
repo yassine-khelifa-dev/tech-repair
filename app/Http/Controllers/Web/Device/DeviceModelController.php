@@ -8,6 +8,7 @@ use App\Http\Requests\Device\UpdateDeviceModelRequest;
 use App\Models\Brand;
 use App\Models\DeviceModel;
 use App\Models\DeviceType;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 
@@ -18,6 +19,8 @@ class DeviceModelController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', DeviceModel::class);
+
         $devicemodels = DeviceModel::with(['brand', 'type'])->latest()->paginate(7);
 
         return view('device.model.index', [
@@ -30,6 +33,8 @@ class DeviceModelController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', DeviceModel::class);
+
         $devicetypes = DeviceType::all();
         $brands = Brand::all();
         return view('device.model.create', compact('devicetypes', 'brands'));
@@ -40,6 +45,8 @@ class DeviceModelController extends Controller
      */
     public function store(StoreDeviceModelRequest $request)
     {
+        Gate::authorize('create', DeviceModel::class);
+
         $devicemodel = $request->validated();
         $devicemodel['slug'] = Str::slug($devicemodel['name']);
 
@@ -51,16 +58,14 @@ class DeviceModelController extends Controller
         return redirect()->route('devicemodel.create')->with('success', 'Device model has been created.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DeviceModel $deviceModel) {}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(DeviceModel $devicemodel)
     {
+        Gate::authorize('update', $devicemodel);
+
         $devicemodel->load(['type', 'brand']);
         $brands = Brand::all();
         $devicetypes = DeviceType::all();
@@ -73,6 +78,8 @@ class DeviceModelController extends Controller
      */
     public function update(UpdateDeviceModelRequest $request, DeviceModel $devicemodel)
     {
+        Gate::authorize('update', $devicemodel);
+
         $data = $request->validated();
         $data['slug'] = Str::slug($data['name']);
 
@@ -89,7 +96,18 @@ class DeviceModelController extends Controller
      */
     public function destroy(DeviceModel $devicemodel)
     {
+        Gate::authorize('delete', $devicemodel);
+
+        if ($devicemodel->tickets()->exists()) {
+            return redirect()
+                ->back()
+                ->with('error', 'This device model cannot be deleted because it already has repair tickets.');
+        }
+
         $devicemodel->delete();
-        return redirect()->route('devicemodel.index')->with('success', 'Device model has been deleted.');
+
+        return redirect()
+            ->route('devicemodel.index')
+            ->with('success', 'Device model has been deleted.');
     }
 }

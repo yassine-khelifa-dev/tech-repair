@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Repair;
 
+use App\Enums\RepairStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Http\Requests\Repair\UpdateRepairTicketRequest;
@@ -9,7 +10,8 @@ use App\Models\RepairTicket;
 use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairPdfService;
 use App\Services\Repair\RepairTicketService;
-use Illuminate\Http\Request ;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RepairTicketController extends Controller
 {
@@ -27,7 +29,7 @@ class RepairTicketController extends Controller
      */
     public function index(Request $request)
     {
-
+        Gate::authorize('viewAny', RepairTicket::class);
         return view(
             'repair.tickets.index',
             $this->repair_ticket_service->getList($request->query())
@@ -39,6 +41,8 @@ class RepairTicketController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', RepairTicket::class);
+
         return view(
             'repair.tickets.create',
             $this->repair_ticket_service->getFormData()
@@ -50,6 +54,8 @@ class RepairTicketController extends Controller
      */
     public function show(RepairTicket $repair_ticket)
     {
+        Gate::authorize('view', $repair_ticket);
+
         $repair_ticket->load([
             'customer',
             'deviceModel.brand',
@@ -69,6 +75,8 @@ class RepairTicketController extends Controller
      */
     public function store(StoreRepairTicketRequest $request)
     {
+        Gate::authorize('create', RepairTicket::class);
+
         $data = $request->validated();
 
         $this->repair_ticket_service->create($data);
@@ -85,6 +93,10 @@ class RepairTicketController extends Controller
      */
     public function download(RepairTicket $repair_ticket)
     {
+        /*
+        * This method is already protected by route middleware,
+        * so no additional Gate authorization is required here.
+        */
         $repair_ticket->load([
             'customer',
             'deviceModel.brand',
@@ -101,6 +113,8 @@ class RepairTicketController extends Controller
      */
     public function edit(RepairTicket $repair_ticket)
     {
+        Gate::authorize('update', $repair_ticket);
+
         $repair_ticket->load([
             'customer',
             'deviceModel.brand',
@@ -124,6 +138,8 @@ class RepairTicketController extends Controller
      */
     public function update(UpdateRepairTicketRequest $request, RepairTicket $repair_ticket)
     {
+        Gate::authorize('update', $repair_ticket);
+
         $data = $request->validated();
 
         $this->repair_ticket_service->update($data, $repair_ticket);
@@ -140,6 +156,16 @@ class RepairTicketController extends Controller
      */
     public function destroy(RepairTicket $repair_ticket)
     {
+
+        Gate::authorize('delete', $repair_ticket);
+
+
+        if ($repair_ticket->status !== RepairStatus::CANCELLED->value) {
+            return redirect()
+                ->back()
+                ->with('error', 'This ticket can only be deleted if its status is CANCELLED.');
+        }
+
         $repair_ticket->delete();
 
         return $this->to(
@@ -155,7 +181,4 @@ class RepairTicketController extends Controller
             ->route($route)
             ->with($key, $message);
     }
-
-
-
 }
