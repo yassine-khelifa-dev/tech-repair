@@ -120,7 +120,7 @@
                     @endphp
 
                     <li>
-                        <div class="mb-2 flex items-center gap-2 px-2">
+                        <div class="mb-2 flex items-center gap-2 px-2 mt-5">
                             <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></span>
                             <span
                                 class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
@@ -130,6 +130,34 @@
                         </div>
 
                         <ul class="space-y-1">
+
+
+                            <li>
+                                <a href="{{ route('dashboard') }}"
+                                    class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                    {{ request()->routeIs('dashboard.*')
+                        ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
+                                    @if (request()->routeIs('brand.*'))
+                                        <span
+                                            class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                                    @endif
+                                    <span
+                                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"
+                                            aria-hidden="true">
+                                            <path d="M4 4a2 2 0 012-2h4l6 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                            <path d="M11 2v5a1 1 0 001 1h5" fill="#111827" opacity=".35" />
+                                        </svg>
+                                    </span>
+                                    <span class="truncate">Home</span>
+                                </a>
+                            </li>
+
+
+
+
+
                             <li>
                                 <a href="{{ route('brand.index') }}"
                                     class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
