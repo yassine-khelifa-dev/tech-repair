@@ -107,7 +107,7 @@
         <aside
             class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
             aria-label="Sidenav" id="drawer-navigation">
-            <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
+            <div class="overflow-y-auto py-2 px-3 h-full bg-white dark:bg-gray-800">
                 <ul class="space-y-6">
                     @php
                         $isDevicesActive = request()->routeIs(
@@ -120,106 +120,120 @@
                     @endphp
 
                     <li>
-                        <div class="mb-2 flex items-center gap-2 px-2">
-                            <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></span>
-                            <span
-                                class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                Inventory
-                            </span>
-                            <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></span>
-                        </div>
 
-                        <ul class="space-y-1">
-                            <li>
-                                <a href="{{ route('brand.index') }}"
-                                    class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                    <li>
+                        <a href="{{ route('dashboard') }}"
+                            class="group relative flex items-center gap-3 rounded-lg px-3 pt-5 text-sm font-medium transition
+                    {{ request()->routeIs('dashboard.*')
+                        ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
+                            @if (request()->routeIs('brand.*'))
+                                <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                            @endif
+                            <span
+                                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path
+                                        d="M3 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1V3zM11 3a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V3zM3 11a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zM11 11a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                                </svg>
+                            </span>
+                            <span class="truncate">Dashboard</span>
+                        </a>
+                    </li>
+
+
+                    <div class="flex items-center gap-2">
+
+                        <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></span>
+                        <span class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                            Inventory
+                        </span>
+                        <span class="h-px flex-1 bg-gray-200 dark:bg-gray-700"></span>
+                    </div>
+
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="{{ route('brand.index') }}"
+                                class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
                     {{ request()->routeIs('brand.*')
                         ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
-                                    @if (request()->routeIs('brand.*'))
-                                        <span
-                                            class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
-                                    @endif
-                                    <span
-                                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
-                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"
-                                            aria-hidden="true">
-                                            <path d="M4 4a2 2 0 012-2h4l6 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
-                                            <path d="M11 2v5a1 1 0 001 1h5" fill="#111827" opacity=".35" />
-                                        </svg>
-                                    </span>
-                                    <span class="truncate">Brands</span>
-                                </a>
-                            </li>
+                                @if (request()->routeIs('brand.*'))
+                                    <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                                @endif
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path d="M4 4a2 2 0 012-2h4l6 6v8a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                        <path d="M11 2v5a1 1 0 001 1h5" fill="#111827" opacity=".35" />
+                                    </svg>
+                                </span>
+                                <span class="truncate">Brands</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="{{ route('devicetype.index') }}"
-                                    class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                        <li>
+                            <a href="{{ route('devicetype.index') }}"
+                                class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
                     {{ request()->routeIs('devicetype.*')
                         ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
-                                    @if (request()->routeIs('devicetype.*'))
-                                        <span
-                                            class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
-                                    @endif
-                                    <span
-                                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
-                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"
-                                            aria-hidden="true">
-                                            <path
-                                                d="M5 3a2 2 0 00-2 2v3h14V5a2 2 0 00-2-2H5zM3 10v5a2 2 0 002 2h10a2 2 0 002-2v-5H3z" />
-                                        </svg>
-                                    </span>
-                                    <span class="truncate">Categories</span>
-                                </a>
-                            </li>
+                                @if (request()->routeIs('devicetype.*'))
+                                    <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                                @endif
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path
+                                            d="M5 3a2 2 0 00-2 2v3h14V5a2 2 0 00-2-2H5zM3 10v5a2 2 0 002 2h10a2 2 0 002-2v-5H3z" />
+                                    </svg>
+                                </span>
+                                <span class="truncate">Categories</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="{{ route('spec-attribute.index') }}"
-                                    class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                        <li>
+                            <a href="{{ route('spec-attribute.index') }}"
+                                class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
                     {{ request()->routeIs('spec-attribute.*', 'spec-attribute-option.*')
                         ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
-                                    @if (request()->routeIs('spec-attribute.*', 'spec-attribute-option.*'))
-                                        <span
-                                            class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
-                                    @endif
-                                    <span
-                                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
-                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.53 1.53 0 01-2.29.95c-1.37-.84-2.94.73-2.1 2.1a1.53 1.53 0 01-.95 2.29c-1.56.38-1.56 2.6 0 2.98a1.53 1.53 0 01.95 2.29c-.84 1.37.73 2.94 2.1 2.1a1.53 1.53 0 012.29.95c.38 1.56 2.6 1.56 2.98 0a1.53 1.53 0 012.29-.95c1.37.84 2.94-.73 2.1-2.1a1.53 1.53 0 01.95-2.29c1.56-.38 1.56-2.6 0-2.98a1.53 1.53 0 01-.95-2.29c.84-1.37-.73-2.94-2.1-2.1a1.53 1.53 0 01-2.29-.95zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <span class="truncate">Attributes</span>
-                                </a>
-                            </li>
+                                @if (request()->routeIs('spec-attribute.*', 'spec-attribute-option.*'))
+                                    <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                                @endif
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.53 1.53 0 01-2.29.95c-1.37-.84-2.94.73-2.1 2.1a1.53 1.53 0 01-.95 2.29c-1.56.38-1.56 2.6 0 2.98a1.53 1.53 0 01.95 2.29c-.84 1.37.73 2.94 2.1 2.1a1.53 1.53 0 012.29.95c.38 1.56 2.6 1.56 2.98 0a1.53 1.53 0 012.29-.95c1.37.84 2.94-.73 2.1-2.1a1.53 1.53 0 01.95-2.29c1.56-.38 1.56-2.6 0-2.98a1.53 1.53 0 01-.95-2.29c.84-1.37-.73-2.94-2.1-2.1a1.53 1.53 0 01-2.29-.95zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <span class="truncate">Attributes</span>
+                            </a>
+                        </li>
 
-                            <li>
-                                <a href="{{ route('devicemodel.index') }}"
-                                    class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                        <li>
+                            <a href="{{ route('devicemodel.index') }}"
+                                class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
                     {{ request()->routeIs('devicemodel.*')
                         ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
-                                    @if (request()->routeIs('devicemodel.*'))
-                                        <span
-                                            class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
-                                    @endif
-                                    <span
-                                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
-                                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </span>
-                                    <span class="truncate">Device Models</span>
-                                </a>
-                            </li>
-                        </ul>
+                                @if (request()->routeIs('devicemodel.*'))
+                                    <span class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-blue-500"></span>
+                                @endif
+                                <span
+                                    class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-gray-500 ring-1 ring-gray-200 transition group-hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-700">
+                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zm3 14a1 1 0 100-2 1 1 0 000 2z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                <span class="truncate">Device Models</span>
+                            </a>
+                        </li>
+                    </ul>
                     </li>
 
 
