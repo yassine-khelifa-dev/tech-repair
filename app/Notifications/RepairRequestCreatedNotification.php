@@ -4,11 +4,12 @@ namespace App\Notifications;
 
 use App\Mail\Repair\RepairRequestMail;
 use App\Models\RepairRequest;
+use App\Notifications\Channels\TwilioWhatsAppChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
 
-class RepairRequestReceivedNotification extends Notification
+class RepairRequestCreatedNotification extends Notification
 {
     use Queueable;
 
@@ -33,10 +34,10 @@ class RepairRequestReceivedNotification extends Notification
         }
 
         if ($notifiable instanceof AnonymousNotifiable) {
-            return ['mail'];
+            return ['mail', TwilioWhatsAppChannel::class];
         }
 
-        return ['mail', 'database'];
+        return ['mail', 'database', TwilioWhatsAppChannel::class];
     }
     /**
      * Get the mail representation of the notification.
@@ -58,6 +59,18 @@ class RepairRequestReceivedNotification extends Notification
     {
         return [
             'id_repair_request' =>  $this->repair_request->id,
+        ];
+    }
+
+
+    public function toWhatsApp($notifiable): array
+    {
+        return [
+            'content_sid' => config('services.twilio.repair_request_template_sid'),
+            'variables' => [
+                '1' => (string) $this->repair_request->id,
+                '2' => $this->repair_request->customer->name ?? 'N/A',
+            ],
         ];
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Observers\RepairLogObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
-
+#[ObservedBy([RepairLogObserver::class])]
 class RepairLog extends Model
 {
     protected $fillable = [

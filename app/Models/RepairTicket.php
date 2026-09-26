@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Observers\RepairTicketObserver;
 use Illuminate\Database\Eloquent\Model;
 use Override;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Support\Str;
+
+#[ObservedBy([RepairTicketObserver::class])]
 class RepairTicket extends Model
 {
     protected $fillable = [

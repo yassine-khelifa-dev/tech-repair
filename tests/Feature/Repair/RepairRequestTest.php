@@ -5,7 +5,6 @@ namespace Tests\Feature\Repair;
 use App\Enums\RepairRequestStatus;
 use App\Enums\RepairStatus;
 use App\Models\RepairTicket;
-use App\Notifications\RepairRequestReceivedNotification;
 use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

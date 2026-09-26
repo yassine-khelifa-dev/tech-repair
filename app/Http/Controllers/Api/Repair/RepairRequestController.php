@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Repair;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RepairRequest;
 use App\Models\User;
-use App\Notifications\RepairRequestReceivedNotification;
+use App\Notifications\RepairRequestCreatedNotification;
 use App\Services\AI\AIRepairRequestService;
 use App\Services\Repair\RepairRequestService;
 use Illuminate\Support\Facades\Log;
@@ -78,26 +78,6 @@ class RepairRequestController extends Controller
 
         // save the repair request :
         $repair_request =  $this->repair_request_service->create($data);
-
-        // get first admin:
-        $admin = User::where('role', 'admin')->first();
-
-        // send notif to admin ( email, DB)
-        try {
-            Notification::route('mail', 'tech-repair-admin@eprostam.com')
-                ->notify(new RepairRequestReceivedNotification($repair_request));
-
-            if ($admin) {
-                $admin->notify(new RepairRequestReceivedNotification($repair_request, databaseOnly: true));
-            }
-
-            Log::info("API: Notif has been sent (notif:new Repair Request) : repair-req-id: " . $repair_request->id);
-        } catch (\Throwable $th) {
-            Log::error("API: Notif failed", [
-                'API:repair_request_id' => $repair_request->id,
-                'message' => $th->getMessage(),
-            ]);
-        }
 
         return response()->json([
             'message' => 'Repair request submitted successfully.',

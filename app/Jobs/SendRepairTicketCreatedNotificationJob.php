@@ -7,7 +7,7 @@ use App\Notifications\RepairTicketCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class SendRepairTicketNotificationJob implements ShouldQueue
+class SendRepairTicketCreatedNotificationJob implements ShouldQueue
 {
     use Queueable;
 
@@ -32,7 +32,6 @@ class SendRepairTicketNotificationJob implements ShouldQueue
         if (! $this->ticket->customer?->email) {
             return;
         }
-
         $this->ticket->customer->notify(
             new RepairTicketCreatedNotification($this->ticket)
         );

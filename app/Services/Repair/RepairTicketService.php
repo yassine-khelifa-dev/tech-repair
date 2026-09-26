@@ -2,7 +2,6 @@
 
 namespace App\Services\Repair;
 
-use App\Jobs\SendRepairTicketNotificationJob;
 use App\Models\Brand;
 use App\Models\Customer;
 use App\Models\DeviceType;
@@ -114,21 +113,6 @@ class RepairTicketService
                 }
             }
         });
-
-        // send to customer first email ( new ticket )
-        {
-            try {
-                SendRepairTicketNotificationJob::dispatch($ticket);
-
-                Log::info("New ticket notification job dispatched: ticket-id: " . $ticket->id);
-            } catch (\Throwable $th) {
-                Log::error("Notif failed", [
-                    'ticket_id' => $ticket->id,
-                    'message' => $th->getMessage(),
-                ]);
-            }
-        }
-
         return $ticket;
     }
 

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Observers\RepairRequestObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
-
+#[ObservedBy([RepairRequestObserver::class])]
 class RepairRequest extends Model
 {
     protected $fillable = ['data', 'converted_ticket_id', 'response', 'status'];

@@ -73,7 +73,7 @@ class RepairRequestTest extends TestCase
  *
  *
  *  Notification::assertSentOnDemand(
-            RepairRequestReceivedNotification::class,
+            RepairRequestCreatedNotification::class,
             function (
                 RepairRequestReceivedNotification $notification,
                 array $channels,
@@ -88,7 +88,7 @@ class RepairRequestTest extends TestCase
             $admin,
             RepairRequestReceivedNotification::class,
             fn (
-                RepairRequestReceivedNotification $notification,
+                RepairRequestCreatedNotification $notification,
                 array $channels
             ) => $channels === ['database']
         );

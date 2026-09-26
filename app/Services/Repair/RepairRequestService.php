@@ -4,15 +4,13 @@ namespace App\Services\Repair;
 
 use App\Enums\RepairRequestStatus;
 use App\Enums\RepairStatus;
+use App\Events\RepairRequestReviewed;
 use App\Http\Requests\Repair\StoreRepairTicketRequest;
 use App\Models\DeviceModel;
 use App\Models\RepairRequest;
-use App\Notifications\RepairRequestReviewedNotification;
 use App\Services\FileUploadService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class RepairRequestService
@@ -111,21 +109,10 @@ class RepairRequestService
                     "Invalid repair request status: {$request_status}"
                 );
         }
-
         // send a notif to customer
-        try {
-            $email = $data['email'];
-            Notification::route('mail', $email)
-                ->notify(
-                    new RepairRequestReviewedNotification($repair_request)
-                );
-            Log::info("Notif has been sent (notif: send review) : repair-req-id: " . $repair_request->id);
-        } catch (\Throwable $th) {
-            Log::error("Notif failed(Reviewed)", [
-                'repair_ticket_id' => $repair_request->id,
-                'message' => $th->getMessage(),
-            ]);
-        }
+        $email = $data['email'];
+        RepairRequestReviewed::dispatch($repair_request, $email);
+
     }
 
 

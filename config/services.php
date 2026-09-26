@@ -39,4 +39,14 @@ return [
         'key' => env('GROQ_API_KEY'),
     ],
 
+
+
+
+    'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        'from_number' => env('TWILIO_FROM_NUMBER'),
+        'repair_request_template_sid' => env('TWILIO_REPAIR_REQUEST_TEMPLATE_SID'),
+    ],
+
 ];

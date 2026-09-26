@@ -2,7 +2,6 @@
 
 namespace App\Services\Repair;
 
-use App\Jobs\SendRepairLogNotificationJob;
 use App\Models\RepairTicket;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\DB;
@@ -50,24 +49,8 @@ class RepairLogService
             }
         });
 
-        // Job Send Notif:
-        if (
-            $log  &&
-            $log->is_visible_to_customer
-        ) {
-            try {
-                SendRepairLogNotificationJob::dispatchSync($log);
 
-                Log::info("Notif has been sent (notif:new Log) : repair-id: " . $repair_ticket->id);
-            } catch (\Throwable $th) {
-                Log::error("Notif failed", [
-                    'repair_ticket_id' => $repair_ticket->id,
-                    'message' => $th->getMessage(),
-                ]);
-            }
-        }
         Log::info("Create Log for ticket ID: " . $repair_ticket->id);
-
         //return $log;
     }
 }
