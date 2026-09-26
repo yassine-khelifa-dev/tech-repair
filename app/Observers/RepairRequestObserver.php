@@ -16,8 +16,10 @@ class RepairRequestObserver
     {
         try {
             Notification::route('mail', 'tech-repair-admin@eprostam.com')
-             //   ->route('whatsapp', '+393516332693')
-                ->notify(new RepairRequestCreatedNotification($repairRequest));
+                //   ->route('whatsapp', '+393516332693')
+                ->notify(
+                    new RepairRequestCreatedNotification($repairRequest)
+                );
 
             Log::info("RepairRequestObserver: Notif has been sent (notif:new Repair Request) : repair-req-id: " . $repairRequest->id);
         } catch (\Throwable $th) {

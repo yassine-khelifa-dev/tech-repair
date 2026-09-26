@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Jobs\SendRepairTicketCreatedNotificationJob;
 use App\Models\RepairTicket;
+use App\Notifications\RepairTicketCreatedNotification;
 use Illuminate\Support\Facades\Log;
 
 class RepairTicketObserver
@@ -13,12 +13,24 @@ class RepairTicketObserver
      */
     public function created(RepairTicket $repairTicket): void
     {
+        $repairTicket->load([
+            'customer',
+            'deviceModel.brand',
+            'deviceModel.type',
+        ]);
+
         // send to customer first email ( new ticket )
         try {
-            SendRepairTicketCreatedNotificationJob::dispatch($repairTicket);
-            Log::info("RepairTicketObserver: New ticket notification job dispatched: ticket-id: " . $repairTicket->id);
+            if (! $repairTicket->customer?->email) {
+                return;
+            }
+            $repairTicket->customer->notify(
+                new RepairTicketCreatedNotification($repairTicket)
+            );
+
+            Log::info("RepairTicketObserver: New RepairTicketCreatedNotification  : ticket-id: " . $repairTicket->id);
         } catch (\Throwable $th) {
-            Log::error("RepairTicketObserver:Notif failed", [
+            Log::error("RepairTicketObserver: RepairTicketCreatedNotification failed", [
                 'ticket_id' => $repairTicket->id,
                 'message' => $th->getMessage(),
             ]);

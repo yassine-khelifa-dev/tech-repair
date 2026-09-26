@@ -6,10 +6,11 @@ use App\Mail\Repair\RepairRequestMail;
 use App\Models\RepairRequest;
 use App\Notifications\Channels\TwilioWhatsAppChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
 
-class RepairRequestCreatedNotification extends Notification
+class RepairRequestCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

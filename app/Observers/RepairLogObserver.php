@@ -2,9 +2,10 @@
 
 namespace App\Observers;
 
-use App\Jobs\SendRepairLogNotificationJob;
 use App\Models\RepairLog;
+use App\Notifications\RepairLogCreatedNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class RepairLogObserver
 {
@@ -18,16 +19,15 @@ class RepairLogObserver
             $repairLog &&
             $repairLog->is_visible_to_customer
         ) {
-            try {
-                SendRepairLogNotificationJob::dispatch($repairLog);
+            Notification::route('mail', 'tech-repair-admin@eprostam.com')
+                ->notify(new RepairLogCreatedNotification($repairLog));
 
-                Log::info("RepairLogObserver:Notif has been sent (notif:new Log) : repair-id: " . $repairLog->repair_ticket_id);
-            } catch (\Throwable $th) {
-                Log::error("RepairLogObserver:Notif failed", [
-                    'repair_ticket_id' => $repairLog->repair_ticket_id,
-                    'message' => $th->getMessage(),
-                ]);
-            }
+            Log::info('Repair log email notification sent', [
+                'repair_log_id' => $repairLog->id,
+                'repair_ticket_id' => $repairLog->repair_ticket_id,
+                'ticket_number' => $repairLog->ticket->ticket_number,
+                'to' => 'tech-repair-admin@eprostam.com',
+            ]);
         }
     }
 

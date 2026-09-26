@@ -5,10 +5,11 @@ namespace App\Notifications;
 use App\Mail\Repair\RepairLogMail;
 use App\Models\RepairLog;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
 
-class RepairLogCreatedNotification extends Notification
+class RepairLogCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

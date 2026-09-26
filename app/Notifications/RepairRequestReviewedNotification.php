@@ -5,9 +5,10 @@ namespace App\Notifications;
 use App\Mail\Repair\RepairRequestReviewedMail;
 use App\Models\RepairRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class RepairRequestReviewedNotification extends Notification
+class RepairRequestReviewedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
