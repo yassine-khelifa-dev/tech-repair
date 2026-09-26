@@ -121,9 +121,9 @@
 
                     <li>
 
-                    <li>
+                    <li class="py-2">
                         <a href="{{ route('dashboard') }}"
-                            class="group relative flex items-center gap-3 rounded-lg px-3 pt-5 text-sm font-medium transition
+                            class="group relative flex items-center gap-3 rounded-lg px-3 py-2.5  text-sm font-medium transition
                     {{ request()->routeIs('dashboard.*')
                         ? 'bg-gray-100 text-gray-950 shadow-sm dark:bg-gray-700 dark:text-white'
                         : 'text-gray-600 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-300 dark:hover:bg-gray-700/70 dark:hover:text-white' }}">
